@@ -29,3 +29,45 @@
 - Entrant
 - Organizer
 - Administrator
+
+## Organizer
+### Responsibilities:
+- Has profile
+- Maintains list of events made 
+- Make events
+- Generate QR code for event
+- Upload poster image for events
+- Edit events
+- View entrants for an event
+- Access the waitlist
+- Send entrants notification
+- Remove unregistered entrants
+
+### Collaborators:
+- Profile
+- EventList
+- Event
+- QR code
+- Waitlist 
+- Notification 
+- Lottery
+- Camera
+
+## Event
+### Responsibilities:
+- Has event details
+- Created by organizers 
+- Maintains a waitlist of entrants
+- Maintains a chosen list of entrants
+- Maintains list of cancelled entrants 
+- Associated with a QR code
+
+
+### Collaborators:
+- EventDetails 
+- Organizer
+- Entrant
+- Waitlist
+- Notification 
+- QR Code
+
