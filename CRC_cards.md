@@ -1,122 +1,5 @@
 # Object-Oriented Analysis: CRC Cards
 
-## Welcome Screen
-### Responsibilities:
-- Display initial navigation options: “Log In” or “Sign Up”.
-- Route users to the appropriate page based on selection.
-- Maintain a visually engaging entry point (branding, theme colors).
-### Collaborators: 
-- LoginScreen
-- SignUpScreen
-- NavigationController
-
-## Login Screen
-### Responsibilities:
-- Provide input fields for email and password.
-- Validate inputs (non-empty, correct format).
-- Call AuthController to verify credentials.
-- Display errors (invalid credentials, empty fields).
-- Provide “Forgot Password” and “Sign Up” redirects.
-### Collaborators:
-- AuthController
-- Validator
-- ForgotPasswordScreen
-- SignUpScreen
-- NotificationService
-
-## Forgot Password Screen
-### Responsibilities:
-- Accept user’s registered email.
-- Send password reset request to backend.
-- Display confirmation when reset link is sent.
-## Collaborators:
-- AuthController
-- EmailService
-- Validator
-- NotificationService
-
-## Sign Up Screen
-### Responsibilities:
-- Provide fields for email and password input.
-- Validate and sanitize input.
-- Trigger account creation through AuthController.
-- Offer “Already have an account? Log In” redirect.
-### Collaborators:
-- AuthController
-- Validator
-- NotificationService
-- ChooseRoleScreen
-- LoginScreen
-
-## Choose Role Screen  
-### Responsibilities:
-- Display available roles (Organiser, Entrant, Administrator).  
-- Send selected role to backend for user profile setup.  
-- Route user to the next appropriate dashboard view.  
-## Collaborators:
-- RoleController  
-- AuthController  
-- NavigationController  
-- UserProfile  
-
-## AuthController  
-### Responsibilities:
-- Handle login, signup, and password reset logic.  
-- Interact with backend APIs.  
-- Store authentication tokens or session info.  
-## Collaborators:
-- Validator  
-- NotificationService  
-- UserRepository  
-- TokenService  
-
-## Validator  
-### Responsibilities:
-- Validate input fields (email format, password length, etc.).  
-- Return user-friendly error messages.  
-## Collaborators:
-- LoginScreen  
-- SignUpScreen  
-- ForgotPasswordScreen  
-
-## NotificationService  
-### Responsibilities:
-- Show success, warning, or error messages to user.  
-- Manage toast/snackbar or dialog prompts.  
-## Collaborators:
-- WelcomeScreen  
-- LoginScreen  
-- SignUpScreen  
-- ForgotPasswordScreen  
-- ChooseRoleScreen  
-
-## NavigationController  
-### Responsibilities:
-- Handle page transitions and routing logic between screens.  
-## Collaborators:
-- WelcomeScreen  
-- LoginScreen  
-- SignUpScreen  
-- ChooseRoleScreen  
-
-## RoleController  
-### Responsibilities:
-- Assign user roles (Organiser, Entrant, Administrator).  
-- Update user profile and permissions accordingly.  
-- Notify the backend of role selections.  
-## Collaborators:
-- ChooseRoleScreen  
-- AuthController  
-- UserProfile  
-
-## UserProfile  
-### Responsibilities:
-- Store and manage user data and selected role.  
-- Provide access to personalized dashboards or views.  
-## Collaborators:
-- RoleController  
-- AuthController  
-
 ## Entrant
 ### Responsibilities:
 - Has profile
@@ -159,7 +42,6 @@
 - Access the waitlist
 - Send entrants notification
 - Remove unregistered entrants
-
 ### Collaborators:
 - Profile
 - EventList
@@ -178,8 +60,6 @@
 - Maintains a chosen list of entrants
 - Maintains list of cancelled entrants 
 - Associated with a QR code
-
-
 ### Collaborators:
 - EventDetails 
 - Organizer
@@ -187,4 +67,133 @@
 - Waitlist
 - Notification 
 - QR Code
+
+## Event Details  
+### Responsibilities:
+- Know Event Name  
+- Know Event Description  
+- Know Event Organizer  
+- Know Registration Period  
+- Know Status (open/closed)  
+- Has event poster (optional)  
+## Collaborators:
+- Event  
+
+## EventList  
+### Responsibilities:
+- Has list of events  
+## Collaborators:
+- Event  
+- Organizer  
+- Entrant  
+- Search  
+- Home
+#### Note: has subclasses of EventLists: OrganizerEventList, EntrantEventList, HomeEventList, SearchEventList
+- OrganizerEventList: List of events the organizer made
+- EntrantEventList: List of events the entrant joined the waitlist for
+- HomeEventList: List of all events that appear on the entrant’s home page
+- SearchEventList: List of events shown on the search page
+
+## OrganizerEventList  
+### Responsibilities:
+- List of events the organizer made  
+## Collaborators:
+- Event  
+- Organizer  
+
+## EntrantEventList  
+### Responsibilities:
+- List of events the entrant joined the waitlist for  
+## Collaborators:
+- Event  
+- Entrant  
+
+## HomeEventList  
+### Responsibilities:
+- List of all events that appear on the entrant’s home page  
+## Collaborators:
+- Event  
+- Entrant  
+
+## SearchEventList  
+### Responsibilities:
+- List of events shown on the search page  
+## Collaborators:
+- Event  
+- Entrant  
+
+## Search  
+### Responsibilities:
+- Search events in an event list by the keyword entrant provided  
+- Return filtered results from event lists  
+## Collaborators:
+- EventList  
+- Entrant  
+
+## WaitList  
+### Responsibilities:
+- Store list of entrants for each event  
+- Sends list to lottery for entrants to be chosen  
+## Collaborators:
+- Event  
+- Entrant  
+- Organizer  
+- Lottery  
+
+## Lottery  
+### Responsibilities:
+- Randomly draws a specified number of entrants  
+- Updates the chosen list of entrants for an Event  
+- Notify entrants who were selected or not  
+## Collaborators:
+- WaitList  
+- Event  
+- Notification  
+
+## Administrator  
+### Responsibilities:
+- Has profile  
+- Manage organizers who violate app policy  
+- Browse events, profiles and logs  
+- Monitor participant activity (entrants, organizers and events)  
+- Review notification logs sent to Entrants  
+- Remove events or users  
+## Collaborators:
+- Organizer  
+- Entrant  
+- Event  
+
+## QR Code  
+### Responsibilities:
+- Generate QR code for the event  
+- Connect QR code to an event  
+- Scanned by camera  
+## Collaborators:
+- Organizer  
+- Event  
+- Camera  
+
+## Camera  
+### Responsibilities:
+- Scan the QR code  
+- Take picture for posters  
+## Collaborators:
+- Event  
+- QR Code  
+
+## Notification  
+### Responsibilities:
+- Store Entrants who received the notification  
+- Store Organizer who sent the notification  
+- Will have subclasses based on the different notification type:  
+  - LotteryNotification (for selected entrants)  
+  - WaitlistNotification (for entrants on waitlist)  
+  - CancellationNotification (for cancelled entrants)  
+## Collaborators:
+- Organizer  
+- Entrant  
+- Event  
+- Administrator  
+
+
 
