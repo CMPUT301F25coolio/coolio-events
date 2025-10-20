@@ -193,7 +193,7 @@
 - Organizer  
 - Entrant  
 - Event  
-- Administrator  
-
+- Administrator
+#### Note:  will have subclasses based on the different notification type: LotteryNotification (for selected entrants), WaitlistNotification (for entrants on waitlist), CancellationNotification (for cancelled entrants)
 
 
