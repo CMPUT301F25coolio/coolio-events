@@ -76,13 +76,13 @@
 - Know Registration Period  
 - Know Status (open/closed)  
 - Has event poster (optional)  
-## Collaborators:
+### Collaborators:
 - Event  
 
 ## EventList  
 ### Responsibilities:
 - Has list of events  
-## Collaborators:
+### Collaborators:
 - Event  
 - Organizer  
 - Entrant  
@@ -97,28 +97,28 @@
 ## OrganizerEventList  
 ### Responsibilities:
 - List of events the organizer made  
-## Collaborators:
+### Collaborators:
 - Event  
 - Organizer  
 
 ## EntrantEventList  
 ### Responsibilities:
 - List of events the entrant joined the waitlist for  
-## Collaborators:
+### Collaborators:
 - Event  
 - Entrant  
 
 ## HomeEventList  
 ### Responsibilities:
 - List of all events that appear on the entrant’s home page  
-## Collaborators:
+### Collaborators:
 - Event  
 - Entrant  
 
 ## SearchEventList  
 ### Responsibilities:
 - List of events shown on the search page  
-## Collaborators:
+### Collaborators:
 - Event  
 - Entrant  
 
@@ -126,7 +126,7 @@
 ### Responsibilities:
 - Search events in an event list by the keyword entrant provided  
 - Return filtered results from event lists  
-## Collaborators:
+### Collaborators:
 - EventList  
 - Entrant  
 
@@ -134,7 +134,7 @@
 ### Responsibilities:
 - Store list of entrants for each event  
 - Sends list to lottery for entrants to be chosen  
-## Collaborators:
+### Collaborators:
 - Event  
 - Entrant  
 - Organizer  
@@ -145,7 +145,7 @@
 - Randomly draws a specified number of entrants  
 - Updates the chosen list of entrants for an Event  
 - Notify entrants who were selected or not  
-## Collaborators:
+### Collaborators:
 - WaitList  
 - Event  
 - Notification  
@@ -158,7 +158,7 @@
 - Monitor participant activity (entrants, organizers and events)  
 - Review notification logs sent to Entrants  
 - Remove events or users  
-## Collaborators:
+### Collaborators:
 - Organizer  
 - Entrant  
 - Event  
@@ -168,7 +168,7 @@
 - Generate QR code for the event  
 - Connect QR code to an event  
 - Scanned by camera  
-## Collaborators:
+### Collaborators:
 - Organizer  
 - Event  
 - Camera  
@@ -177,7 +177,7 @@
 ### Responsibilities:
 - Scan the QR code  
 - Take picture for posters  
-## Collaborators:
+### Collaborators:
 - Event  
 - QR Code  
 
@@ -189,7 +189,7 @@
   - LotteryNotification (for selected entrants)  
   - WaitlistNotification (for entrants on waitlist)  
   - CancellationNotification (for cancelled entrants)  
-## Collaborators:
+### Collaborators:
 - Organizer  
 - Entrant  
 - Event  
