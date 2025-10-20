@@ -1,5 +1,15 @@
 # Object-Oriented Analysis: CRC Cards
 
+## Welcome Screen
+### Responsibilities:
+- Display initial navigation options: “Log In” or “Sign Up”.
+- Route users to the appropriate page based on selection.
+- Maintain a visually engaging entry point (branding, theme colors).
+### Collaborators: 
+- LoginScreen
+- SignUpScreen
+- NavigationController
+  
 ## Entrant
 ### Responsibilities:
 - Has profile
