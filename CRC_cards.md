@@ -9,7 +9,7 @@
 - Entering the wait list for an event
 - Register or decline an event, or cancel registration
 - Receives notifications 
-- Scan QR code
+- Scan QR Code
 ### Collaborators:
 - Profile
 - Search
@@ -46,7 +46,7 @@
 - Profile
 - EventList
 - Event
-- QR code
+- QR Code
 - Waitlist 
 - Notification 
 - Lottery
@@ -59,7 +59,7 @@
 - Maintains a waitlist of entrants
 - Maintains a chosen list of entrants
 - Maintains list of cancelled entrants 
-- Associated with a QR code
+- Associated with a QR Code
 ### Collaborators:
 - EventDetails 
 - Organizer
