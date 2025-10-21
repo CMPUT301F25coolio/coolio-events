@@ -1,5 +1,5 @@
 # coolio-studio
-**CCIDs: **
+**CCIDs:**
 pmittal1
 eldiep
 niharik2
