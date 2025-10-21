@@ -157,10 +157,7 @@
 #### Responsibilities:
 - Store Entrants who received the notification  
 - Store Organizer who sent the notification  
-- Will have subclasses based on the different notification type:  
-  - LotteryNotification (for selected entrants)  
-  - WaitlistNotification (for entrants on waitlist)  
-  - CancellationNotification (for cancelled entrants)  
+- Has notification message
 #### Collaborators:
 - Organizer  
 - Entrant  
