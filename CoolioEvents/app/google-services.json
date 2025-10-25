@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "689846412223",
+    "project_id": "coolio-events",
+    "storage_bucket": "coolio-events.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689846412223:android:09dc6d12634e86ec34f70a",
+        "android_client_info": {
+          "package_name": "com.example.coolioevents"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIyzVtr10FxjZaCVZEOgpGaz4xOBZt_To"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
