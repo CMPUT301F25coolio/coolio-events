@@ -26,6 +26,7 @@ public class Event {
         this.cancelledEntrants = new ArrayList<>();
     }
 
+
     // Getters
 
     /**

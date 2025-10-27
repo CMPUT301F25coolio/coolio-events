@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.coolioevents.Entrant.EntrantActivity;
 import com.example.coolioevents.R;
 import com.example.coolioevents.organizer.OrganizerActivity;
+import com.example.coolioevents.organizer.OrganizerHome;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -106,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                     if (userRoles.get(user.getUid()).equals("Organizer")){
                                         //If the user that signed in has role organizer, send them to organizer activity
-                                        startActivity(new Intent(LoginActivity.this, OrganizerActivity.class));
+                                        startActivity(new Intent(LoginActivity.this, OrganizerHome.class));
 
                                     } else if (userRoles.get(user.getUid()).equals("Entrant")) {
                                         //If the user that signed in has role organizer, send them to entrant activity

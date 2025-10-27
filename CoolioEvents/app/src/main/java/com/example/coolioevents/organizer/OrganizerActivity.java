@@ -1,5 +1,6 @@
 package com.example.coolioevents.organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -67,6 +68,11 @@ public class OrganizerActivity extends AppCompatActivity {
                         if (userid.equals(user.getUid())) {
                             Profile currentOrganizerProfile = organizerMap.get(user.getUid()).getProfile();
                             info.setText(String.format("username: %s\nname: %s\nemail: %s", currentOrganizerProfile.getUsername(), currentOrganizerProfile.getName(), currentOrganizerProfile.getEmail()));
+
+                            //go to OrganizerHome page
+                            Intent intent = new Intent(OrganizerActivity.this, OrganizerHome.class);
+                            startActivity(intent);
+                            finish(); // close OrganizerActivity
                         }
                     }
                 }

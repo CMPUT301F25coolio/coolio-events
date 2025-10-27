@@ -97,9 +97,9 @@ public class CreateEventActivity extends AppCompatActivity{
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Event created successfully!", Toast.LENGTH_SHORT).show();
                     // Go to MyEvents screen
-                    Intent intent = new Intent(CreateEventActivity.this, MyEventsActivity.class);
-                    startActivity(intent);
-                    finish();
+                    //Intent intent = new Intent(CreateEventActivity.this, MyEventsActivity.class);
+                    //startActivity(intent);
+                    //finish();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show();

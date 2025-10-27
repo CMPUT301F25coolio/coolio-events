@@ -20,15 +20,17 @@ public class OrganizerHome extends AppCompatActivity {
         LinearLayout optSendNotification = findViewById(R.id.optSendNotification);
 
         optMakeEvent.setOnClickListener(v ->
-                startActivity(new Intent(this, MakeEvent.class)));
+                startActivity(new Intent(this, CreateEventActivity.class)));
 
+        /**
         optMyEvents.setOnClickListener(v ->
-                startActivity(new Intent(this, MyEventsy.class)));
+                startActivity(new Intent(this, MyEvents.class)));
 
         optMyProfile.setOnClickListener(v ->
                 startActivity(new Intent(this, Profile.class)));
 
         optSendNotification.setOnClickListener(v ->
                 startActivity(new Intent(this, SendNotification.class)));
+         **/
     }
 }
