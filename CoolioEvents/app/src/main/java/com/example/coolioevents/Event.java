@@ -2,8 +2,11 @@ package com.example.coolioevents;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * This is a class the defines an Event
+ */
 public class Event {
+
     private String eventId; // optional for Firebase
     private EventDetails details;
     private List<String> waitlistEntrants;
@@ -14,6 +17,7 @@ public class Event {
         // Empty constructor for Firebase
     }
 
+
     public Event(String eventId, EventDetails details) {
         this.eventId = eventId;
         this.details = details;
@@ -23,13 +27,38 @@ public class Event {
     }
 
     // Getters
+
+    /**
+     * This method gets the event's eventID
+     * @return
+     *      Returns Event's ID
+     */
     public String getEventId() { return eventId; }
+
+    /**
+     * This method gets the event's details
+     * @return
+     *      Returns the details of the event
+     */
     public EventDetails getDetails() { return details; }
+
     public List<String> getWaitlistEntrants() { return waitlistEntrants; }
     public List<String> getChosenEntrants() { return chosenEntrants; }
     public List<String> getCancelledEntrants() { return cancelledEntrants; }
 
     // Setters
+
+    /**
+     * This method sets the event's id to eventId
+     * @param eventId
+     *      The ID the event is set to
+     */
     public void setEventId(String eventId) { this.eventId = eventId; }
+
+    /**
+     * This method sets the event's details
+     * @param details
+     *      The details of the event
+     */
     public void setDetails(EventDetails details) { this.details = details; }
 }

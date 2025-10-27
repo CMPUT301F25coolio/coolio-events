@@ -35,11 +35,11 @@ public class LoginActivity extends AppCompatActivity {
     EditText emailEditText; // edittext where user inputs email
     EditText passwordEditText; // edittext where user inputs email
 
-    TextView warnText; // edittext where user inputs email
+    TextView warnText; // Textview which shows any login warnings
     Button loginButton; // edittext where user inputs email
     private FirebaseAuth mAuth; //  authenticator to create user accounts
     private FirebaseFirestore db; // database
-    private CollectionReference userCollection;
+    private CollectionReference userCollection; // Reference to users collection in db
     Map<String, String> userRoles; // Map containing each user's role (Entrant or Organizer)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
 
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-
         warnText = findViewById(R.id.warnText);
 
         loginButton = findViewById(R.id.loginButton);
@@ -63,6 +62,8 @@ public class LoginActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         userCollection = db.collection("users");
         userRoles = new HashMap<>();
+
+        //Snapshot listener which updates userRoles to have mapping of userid to userroles
         userCollection.addSnapshotListener((value, error) -> {
             if (value !=null && !value.isEmpty()){
                 userRoles.clear();
@@ -72,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
         // Login button on click listner - allows user to login to their account if valid details provided
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
