@@ -1,58 +1,79 @@
 package com.example.coolioevents.organizer;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.coolioevents.Event;
 import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
+import com.example.coolioevents.util.QRCodeUtil;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-public class CreateEventActivity extends AppCompatActivity{
+import java.util.UUID;
+
+public class CreateEventActivity extends AppCompatActivity {
+
     private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit;
-    private Button btnCreate;
+    private Button btnCreate, btnPickPoster;
     private ImageButton btnBack;
+    private ImageView imgPosterPreview;
 
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
+    private FirebaseStorage storage;
+
+    private Uri posterUri = null;
+
+    private final ActivityResultLauncher<String> pickPosterLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+                if (uri != null) {
+                    posterUri = uri;
+                    imgPosterPreview.setImageURI(uri);
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        // Initialize Firebase
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Bind UI elements
         etTitle = findViewById(R.id.etEventTitle);
         etDescription = findViewById(R.id.etEventDescription);
         etRegistrationPeriod = findViewById(R.id.etRegistrationPeriod);
         etEntrantLimit = findViewById(R.id.etEntrantLimit);
         btnCreate = findViewById(R.id.btnCreate);
         btnBack = findViewById(R.id.btnBack);
+        imgPosterPreview = findViewById(R.id.imgPosterPreview);
+        btnPickPoster = findViewById(R.id.btnPickPoster);
 
-        // Handle back arrow
-        btnBack.setOnClickListener(v -> {
-            finish(); // Return to Organizer Home
-        });
-
-        // Handle create button
+        btnBack.setOnClickListener(v -> finish());
+        btnPickPoster.setOnClickListener(v -> pickPosterLauncher.launch("image/*"));
         btnCreate.setOnClickListener(v -> createEvent());
     }
 
@@ -77,33 +98,86 @@ public class CreateEventActivity extends AppCompatActivity{
         }
 
         String organizerId = currentUser != null ? currentUser.getUid() : "unknown";
-        String status = "open"; // Default for new events
+        String status = "open";
+        String eventId = UUID.randomUUID().toString();
+        String deepLink = "coolioevents://event/" + eventId;
 
-        // Create EventDetails object
-        EventDetails eventDetails = new EventDetails(title, description, registrationPeriod, entrantLimit, status);
+        EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, status);
+        Event event = new Event(eventId, details);
 
-        // Create Event object (without poster/QR)
-        String eventId = db.collection("events").document().getId(); // Auto-generate ID
-        Event event = new Event(eventId, eventDetails);
+        Map<String, Object> map = new HashMap<>();
+        map.put("eventId", eventId);
+        map.put("details", details);
+        map.put("organizerId", organizerId);
+        map.put("deepLink", deepLink);
+        map.put("posterUrl", null);
+        map.put("promoQrUrl", null);
 
-        // Convert to Firestore-friendly map
-        Map<String, Object> eventMap = new HashMap<>();
-        eventMap.put("eventId", eventId);
-        eventMap.put("details", eventDetails);
-
-        // Save event to Firestore
-        db.collection("events").document(eventId)
-                .set(eventMap)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Event created successfully!", Toast.LENGTH_SHORT).show();
-                    // Go to MyEvents screen
-                    //Intent intent = new Intent(CreateEventActivity.this, MyEventsActivity.class);
-                    //startActivity(intent);
-                    //finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        // 1) Create Firestore doc
+        db.collection("events").document(eventId).set(map)
+                .addOnSuccessListener(aVoid -> uploadAssetsAndFinish(eventId, deepLink))
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    private void uploadAssetsAndFinish(String eventId, String deepLink) {
+        // 2) Upload poster (if selected) AND upload QR image, then update Firestore with URLs
+
+        StorageReference postersRef = storage.getReference().child("posters/" + eventId + ".jpg");
+        StorageReference qrRef = storage.getReference().child("qrcodes/" + eventId + ".png");
+
+        // Task A: Poster upload (optional)
+        var posterTask = Tasks.forResult((String) null);
+        if (posterUri != null) {
+            try {
+                InputStream in = getContentResolver().openInputStream(posterUri);
+                Bitmap bmp = BitmapFactory.decodeStream(in);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+                byte[] data = bos.toByteArray();
+                posterTask = postersRef.putBytes(data)
+                        .continueWithTask(t -> postersRef.getDownloadUrl())
+                        .continueWith(t -> t.getResult() != null ? t.getResult().toString() : null);
+            } catch (Exception e) {
+                // Keep going even if poster fails
+                posterTask = Tasks.forResult((String) null);
+            }
+        }
+
+        // Task B: QR bitmap -> upload -> URL
+        var qrTask = Tasks.call(() -> {
+            Bitmap qr = QRCodeUtil.generateQRCode(deepLink);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            qr.compress(Bitmap.CompressFormat.PNG, 100, bos);
+            return bos.toByteArray();
+        }).onSuccessTask(bytes -> qrRef.putBytes(bytes)
+        ).continueWithTask(t -> qrRef.getDownloadUrl()
+        ).continueWith(t -> t.getResult() != null ? t.getResult().toString() : null);
+
+        // When both finish, update doc
+        Tasks.whenAllSuccess(posterTask, qrTask).addOnSuccessListener(results -> {
+            String posterUrl = (String) results.get(0);
+            String qrUrl = (String) results.get(1);
+
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("posterUrl", posterUrl);
+            updates.put("promoQrUrl", qrUrl);
+
+            db.collection("events").document(eventId).update(updates)
+                    .addOnSuccessListener(x -> {
+                        Toast.makeText(this, "Event created! Poster/QR saved.", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(CreateEventActivity.this, OrganizerActivity.class));
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Event created, but asset update failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(CreateEventActivity.this, OrganizerActivity.class));
+                        finish();
+                    });
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Event created, asset upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            startActivity(new Intent(CreateEventActivity.this, OrganizerActivity.class));
+            finish();
+        });
+    }
 }
