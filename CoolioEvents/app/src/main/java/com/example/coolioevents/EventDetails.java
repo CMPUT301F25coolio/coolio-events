@@ -1,14 +1,22 @@
 package com.example.coolioevents;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * This is a class the defines an Event's Details
  */
 public class EventDetails {
     private String eventName;
     private String eventDescription;
-    private String registrationPeriod;
+    private String registrationPeriod; // string input, e.g. "2025/10/28 - 2025/11/11"
     private int entrantLimit;
     private String status; // "open" or "closed"
+
+    private Date startDate;
+    private Date endDate;
 
     public EventDetails() {
         // Empty constructor needed for Firebase
@@ -21,6 +29,10 @@ public class EventDetails {
         this.registrationPeriod = registrationPeriod;
         this.entrantLimit = entrantLimit;
         this.status = status;
+
+        parseRegistrationPeriod();  // Convert to date objects
+        updateStatus();             // Update open/closed based on date
+
     }
 
     // Getters
@@ -80,7 +92,11 @@ public class EventDetails {
      * @param registrationPeriod
      *      The registration period of the vent
      */
-    public void setRegistrationPeriod(String registrationPeriod) { this.registrationPeriod = registrationPeriod; }
+    public void setRegistrationPeriod(String registrationPeriod) {
+        this.registrationPeriod = registrationPeriod;
+        parseRegistrationPeriod();
+        updateStatus();
+    }
 
     /**
      * This method sets the entrant limit of the event to entrantLimit
@@ -95,4 +111,47 @@ public class EventDetails {
      *      The status of the event
      */
     public void setStatus(String status) { this.status = status; }
+
+    /**
+     * Parses the registration period string (e.g., "2025/10/28 - 2025/11/11") into startDate and endDate.
+     */
+    private void parseRegistrationPeriod() {
+        if (registrationPeriod == null || !registrationPeriod.contains("-")) {
+            startDate = null;
+            endDate = null;
+            return;
+        }
+
+        try {
+            String[] parts = registrationPeriod.split("-");
+            if (parts.length == 2) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+                startDate = sdf.parse(parts[0].trim());
+                endDate = sdf.parse(parts[1].trim());
+            }
+        } catch (ParseException e) {
+            startDate = null;
+            endDate = null;
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates the event's status based on the current date and registration period.
+     * - "open" if today's date is between start and end
+     * - "closed" otherwise
+     */
+    private void updateStatus() {
+        if (startDate == null || endDate == null) {
+            status = "unknown";
+            return;
+        }
+
+        Date now = new Date();
+        if (now.after(startDate) && now.before(endDate)) {
+            status = "open";
+        } else {
+            status = "closed";
+        }
+    }
 }
