@@ -31,6 +31,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -104,7 +105,7 @@ public class CreateEventActivity extends AppCompatActivity {
         String eventId = UUID.randomUUID().toString();
         String deepLink = "coolioevents://event/" + eventId;
 
-        EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, status);
+        EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, status, new Date());
         Event event = new Event(eventId, details);
 
         Map<String, Object> map = new HashMap<>();

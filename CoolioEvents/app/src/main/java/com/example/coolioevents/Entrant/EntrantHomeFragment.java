@@ -18,6 +18,7 @@ import com.example.coolioevents.R;
 import com.example.coolioevents.events.EventArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 
 /**
@@ -58,6 +59,7 @@ public class EntrantHomeFragment extends Fragment {
                 eventsList.clear();
                 System.out.println("CHANGED OMG");
                 eventsList.addAll(events);
+                Collections.sort(eventsList);
                 eventAdapter.notifyDataSetChanged();
             }
         });

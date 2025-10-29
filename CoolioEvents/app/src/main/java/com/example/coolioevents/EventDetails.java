@@ -14,7 +14,7 @@ public class EventDetails {
     private String registrationPeriod; // string input, e.g. "2025/10/28 - 2025/11/11"
     private int entrantLimit;
     private String status; // "open" or "closed"
-
+    private Date postedDate;
     private Date startDate;
     private Date endDate;
 
@@ -23,12 +23,13 @@ public class EventDetails {
     }
 
     public EventDetails(String eventName, String eventDescription, String registrationPeriod,
-                        int entrantLimit, String status) {
+                        int entrantLimit, String status, Date postedDate) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.registrationPeriod = registrationPeriod;
         this.entrantLimit = entrantLimit;
         this.status = status;
+        this.postedDate = postedDate;
 
         parseRegistrationPeriod();  // Convert to date objects
         updateStatus();             // Update open/closed based on date
@@ -70,6 +71,13 @@ public class EventDetails {
      *      The status of the event
      */
     public String getStatus() { return status; }
+
+    /**
+     * This method gets the date the the event was posted.
+     * @return
+     *      The date the event was posted
+     */
+    public Date getPostedDate() { return postedDate; }
 
     // Setters
 

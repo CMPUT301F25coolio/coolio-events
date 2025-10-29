@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class EventService {
     public Task<Void> createEventWithQR(Context ctx, String title, String description,
                                         String registrationPeriod, int entrantLimit) {
         String eventId = db.collection("events").document().getId();
-        EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, "open");
+        EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, "open", new Date());
 
         Map<String, Object> doc = new HashMap<>();
         doc.put("eventId", eventId);

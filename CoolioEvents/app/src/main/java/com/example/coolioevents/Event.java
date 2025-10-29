@@ -1,11 +1,12 @@
 package com.example.coolioevents;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 /**
  * This is a class the defines an Event
  */
-public class Event {
+public class Event implements Comparable<Event> {
 
     private String eventId; // optional for Firebase
     private EventDetails details;
@@ -62,4 +63,17 @@ public class Event {
      *      The details of the event
      */
     public void setDetails(EventDetails details) { this.details = details; }
+
+
+
+    @Override
+    public int compareTo(Event e) {
+        if (getClass() == e.getClass()){
+            // Events that are posted sooner are sorted higher
+            return ((Event) e).getDetails().getPostedDate().compareTo(this.getDetails().getPostedDate());
+        }
+        return -1;
+    }
+
+
 }
