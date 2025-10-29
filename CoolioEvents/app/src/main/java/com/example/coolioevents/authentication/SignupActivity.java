@@ -103,6 +103,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+
         // Organizer Button On Click Listener - User chooses their account type as organizer
         organizerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,7 +162,8 @@ public class SignupActivity extends AppCompatActivity {
 
                 }
                 if (TextUtils.isEmpty(password)){
-                    // If Password pr             warnText.setText("Please put in a password");ovided is empty warn user they need to put in an email
+                    // If Password provided is empty warn user they need to put in a password
+                    warnText.setText("Please put in a password");
 
                     return;
                 }
@@ -195,9 +197,6 @@ public class SignupActivity extends AppCompatActivity {
                                                 startActivity(new Intent(SignupActivity.this, OrganizerActivity.class));
                                             }
                                         });
-
-
-
                                     } else if (accountType == 1) {
                                         // If user selected Entrant as account type, set their role as Organizer
                                         // Send user to EntrantActivity

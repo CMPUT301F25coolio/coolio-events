@@ -8,9 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
-import com.example.coolioevents.events.EventList;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +31,7 @@ public class EntrantActivity extends AppCompatActivity {
 
     private Fragment homeFragment; //Fragment for home screen
     private BottomNavigationView bottomNavView;
-    private EventList eventList;
+
 
 
     private Map<String, Entrant> entrantMap;
@@ -49,8 +50,8 @@ public class EntrantActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
         bottomNavView = findViewById(R.id.bottomNavigationView);
 
-        eventList = new EventList(); // MODEL
         homeFragment = new EntrantHomeFragment(); // VIEW
+
         SwitchFragment(homeFragment);
 
         bottomNavView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -60,6 +61,7 @@ public class EntrantActivity extends AppCompatActivity {
                     // If home item is selected in nav bar switch to home fragment
                     SwitchFragment(homeFragment);
                 }
+
                 return false;
             }
         });
