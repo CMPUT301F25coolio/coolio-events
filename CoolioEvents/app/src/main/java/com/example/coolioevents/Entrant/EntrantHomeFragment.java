@@ -27,11 +27,10 @@ import java.util.Observable;
  * create an instance of this fragment.
  */
 public class EntrantHomeFragment extends Fragment {
-    EntrantViewModel viewModel;
-    ArrayList<Event> eventsList;
-    EventArrayAdapter eventAdapter;
-
-    ListView eventsListView;
+    EntrantViewModel viewModel; // View Model containing eventList, organizerList, entrantList
+    ArrayList<Event> eventsList; // Home specific arraylist for array adapter ()
+    EventArrayAdapter eventAdapter; // Array adapter for events
+    ListView eventsListView; // ListView on home fragment screen
 
     public EntrantHomeFragment() {
         // Required empty public constructor
@@ -52,8 +51,8 @@ public class EntrantHomeFragment extends Fragment {
         eventsList = new ArrayList<>();
 
 
-
         viewModel.getEventList().observe(this, new Observer<ArrayList<Event>>() {
+            // When eventlist in viewmodel is updated, update eventList too (aswell as notify array adapter)
             @Override
             public void onChanged(ArrayList<Event> events) {
                 eventsList.clear();
