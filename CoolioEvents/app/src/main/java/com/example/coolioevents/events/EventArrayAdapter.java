@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
+import com.example.coolioevents.Entrant.EntrantViewModel;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
 
@@ -32,11 +34,33 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         if(view == null){
             view = LayoutInflater.from(context).inflate(R.layout.event_content, parent,false);
         }
-
+        EntrantViewModel viewModel = new EntrantViewModel();
         Event event = eventList.get(position);
         TextView eventName = view.findViewById(R.id.eventName);
-
+        TextView eventOrganizer = view.findViewById(R.id.eventOrganizer);
+        TextView eventDescription = view.findViewById(R.id.eventDescription);
+        TextView eventTime = view.findViewById(R.id.eventTime);
+        TextView eventLocation = view.findViewById(R.id.eventLocation);
+        TextView eventRegPrd = view.findViewById(R.id.eventRegPeriod);
+        TextView eventMaxEntrees = view.findViewById(R.id.eventmaxEntrees);
+        TextView eventStatus = view.findViewById(R.id.eventStatus);
+        TextView eventWaitingCount = view.findViewById(R.id.eventWaitingCount);
         eventName.setText(event.getDetails().getEventName());
+        eventOrganizer.setText(String.format("Posted By: %s", event.getOrganizerId())); // Sets event organizer text
+        eventDescription.setText(String.format("Description: %s", event.getDetails().getEventDescription())); // Sets event description text
+        eventRegPrd.setText(String.format("Registration Period: %s", event.getDetails().getRegistrationPeriod())); // Sets event registration period text
+        eventMaxEntrees.setText(String.format("Entrant Limit: %s", String.valueOf(event.getDetails().getEntrantLimit()))); // Sets entrant limit organizer text
+        if (event.getDetails().getStatus().equals("open")) {
+            //If event open make text open with green background
+            eventStatus.setText("Open");
+            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
+        }
+        else{
+            //If event closed make text open with red background
+            eventStatus.setText(event.getDetails().getStatus());
+            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
+        }
+
 
         return view;
     }

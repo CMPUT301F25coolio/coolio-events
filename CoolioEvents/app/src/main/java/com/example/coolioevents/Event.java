@@ -9,6 +9,7 @@ import java.util.List;
 public class Event implements Comparable<Event> {
 
     private String eventId; // optional for Firebase
+    private String organizerId;
     private EventDetails details;
     private List<String> waitlistEntrants;
     private List<String> chosenEntrants;
@@ -19,7 +20,7 @@ public class Event implements Comparable<Event> {
     }
 
 
-    public Event(String eventId, EventDetails details) {
+    public Event(String eventId, String organizerId, EventDetails details) {
         this.eventId = eventId;
         this.details = details;
         this.waitlistEntrants = new ArrayList<>();
@@ -36,6 +37,12 @@ public class Event implements Comparable<Event> {
      *      Returns Event's ID
      */
     public String getEventId() { return eventId; }
+    /**
+     * This method gets the event's organizer's userID
+     * @return
+     *      Returns Event's organizer's userID
+     */
+    public String getOrganizerId() { return organizerId; }
 
     /**
      * This method gets the event's details

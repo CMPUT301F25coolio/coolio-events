@@ -106,7 +106,7 @@ public class CreateEventActivity extends AppCompatActivity {
         String deepLink = "coolioevents://event/" + eventId;
 
         EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, status, new Date());
-        Event event = new Event(eventId, details);
+        Event event = new Event(eventId, organizerId, details);
 
         Map<String, Object> map = new HashMap<>();
         map.put("eventId", eventId);
