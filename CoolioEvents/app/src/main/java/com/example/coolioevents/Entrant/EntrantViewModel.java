@@ -70,6 +70,7 @@ public class EntrantViewModel extends ViewModel {
 
                 for (QueryDocumentSnapshot snapshot : value){
                     Event newEvent = snapshot.toObject(Event.class);
+                    newEvent.setOrganizer(organizerMap.getValue().get(newEvent.getOrganizerId()));
                     newlist.add(newEvent);
                 }
                 eventList.setValue(newlist);
@@ -91,4 +92,7 @@ public class EntrantViewModel extends ViewModel {
     public MutableLiveData<Map<String, Entrant>> getEntrantMap() {
         return entrantMap;
     }
+
+
+
 }

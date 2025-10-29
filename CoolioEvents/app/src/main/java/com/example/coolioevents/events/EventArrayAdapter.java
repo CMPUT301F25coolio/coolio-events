@@ -45,8 +45,9 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         TextView eventMaxEntrees = view.findViewById(R.id.eventmaxEntrees);
         TextView eventStatus = view.findViewById(R.id.eventStatus);
         TextView eventWaitingCount = view.findViewById(R.id.eventWaitingCount);
+
         eventName.setText(event.getDetails().getEventName());
-        eventOrganizer.setText(String.format("Posted By: %s", event.getOrganizerId())); // Sets event organizer text
+        eventOrganizer.setText(String.format("Posted By: %s", event.getOrganizer().getProfile().getUsername())); // Sets event organizer text
         eventDescription.setText(String.format("Description: %s", event.getDetails().getEventDescription())); // Sets event description text
         eventRegPrd.setText(String.format("Registration Period: %s", event.getDetails().getRegistrationPeriod())); // Sets event registration period text
         eventMaxEntrees.setText(String.format("Entrant Limit: %s", String.valueOf(event.getDetails().getEntrantLimit()))); // Sets entrant limit organizer text

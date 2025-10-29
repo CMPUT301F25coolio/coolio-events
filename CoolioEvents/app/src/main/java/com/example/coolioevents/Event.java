@@ -1,5 +1,7 @@
 package com.example.coolioevents;
 
+import com.example.coolioevents.organizer.Organizer;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.List;
 public class Event implements Comparable<Event> {
 
     private String eventId; // optional for Firebase
+    private Organizer organizer;
     private String organizerId;
     private EventDetails details;
     private List<String> waitlistEntrants;
@@ -22,6 +25,7 @@ public class Event implements Comparable<Event> {
 
     public Event(String eventId, String organizerId, EventDetails details) {
         this.eventId = eventId;
+        this.organizerId = organizerId;
         this.details = details;
         this.waitlistEntrants = new ArrayList<>();
         this.chosenEntrants = new ArrayList<>();
@@ -37,6 +41,13 @@ public class Event implements Comparable<Event> {
      *      Returns Event's ID
      */
     public String getEventId() { return eventId; }
+    /**
+     * This method gets the event's organizer object
+     * @return
+     *      Returns Event's organizer object
+     */
+    public Organizer getOrganizer() {return organizer;}
+
     /**
      * This method gets the event's organizer's userID
      * @return
@@ -63,6 +74,14 @@ public class Event implements Comparable<Event> {
      *      The ID the event is set to
      */
     public void setEventId(String eventId) { this.eventId = eventId; }
+    /**
+     * This method sets the event's organizer object to organizer
+     * @param organizer
+     *      The event's organizer object
+     */
+    public void setOrganizer(Organizer organizer) {
+        this.organizer = organizer;
+    }
 
     /**
      * This method sets the event's details
