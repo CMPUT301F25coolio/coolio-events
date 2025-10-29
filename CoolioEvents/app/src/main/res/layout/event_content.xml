@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dp">
+    android:layout_height="275dp">
 
     <TextView
         android:id="@+id/eventName"
@@ -81,7 +81,6 @@
         android:layout_width="90dp"
         android:layout_height="20dp"
 
-        android:layout_marginTop="0dp"
         android:text="Event Status: "
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,14 +91,13 @@
         android:layout_width="90dp"
         android:layout_height="20dp"
 
-        android:layout_marginTop="0dp"
-        android:text="Open"
-        android:textSize="15sp"
-        app:layout_constraintStart_toEndOf="@+id/eventStatusLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventmaxEntrees"
         android:background="@drawable/greenshapebackground"
         android:gravity="center"
-        android:textColor="@color/white"/>
+        android:text="Open"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/eventStatusLabel"
+        app:layout_constraintTop_toBottomOf="@+id/eventmaxEntrees" />
 
     <TextView
         android:id="@+id/eventWaitingCount"
@@ -122,4 +120,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/userStatusLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Status:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventStatusLabel" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+
+        android:background="@drawable/greybuttonbackground"
+        android:gravity="center"
+        android:text="Not In Waiting List"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/userStatusLabel"
+        app:layout_constraintTop_toBottomOf="@+id/eventStatus" />/>
 </androidx.constraintlayout.widget.ConstraintLayout>

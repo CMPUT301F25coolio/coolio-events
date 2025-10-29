@@ -36,8 +36,6 @@ public class EntrantHomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-
     public static EntrantHomeFragment newInstance(String param1, String param2) {
         EntrantHomeFragment fragment = new EntrantHomeFragment();
         return fragment;
