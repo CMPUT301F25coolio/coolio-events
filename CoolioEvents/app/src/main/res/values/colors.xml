@@ -3,4 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="android_green">#A4C639</color>
+    <color name="joinwaitinglist">#4CBB17</color>
+    <color name="leavewaitinglist">#D22B2B</color>
+    <color name="back">#0047AB</color>
 </resources>

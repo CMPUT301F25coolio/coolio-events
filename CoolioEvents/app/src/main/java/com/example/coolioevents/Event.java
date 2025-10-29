@@ -1,6 +1,8 @@
 package com.example.coolioevents;
 
+import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.organizer.Organizer;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,8 +92,7 @@ public class Event implements Comparable<Event> {
      */
     public void setDetails(EventDetails details) { this.details = details; }
 
-
-
+    //!!!!Add description
     @Override
     public int compareTo(Event e) {
         if (getClass() == e.getClass()){
@@ -100,6 +101,5 @@ public class Event implements Comparable<Event> {
         }
         return -1;
     }
-
 
 }
