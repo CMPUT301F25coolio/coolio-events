@@ -64,8 +64,25 @@ public class Event implements Comparable<Event> {
      */
     public EventDetails getDetails() { return details; }
 
+    /**
+     * This method gets the Entrants in the event's Waitlist
+     * @return
+     *      Returns the entrants in the waitlist of the event
+     */
     public List<String> getWaitlistEntrants() { return waitlistEntrants; }
+
+    /**
+     * This method gets the Entrants that were chosen for the event
+     * @return
+     *      Returns the entrants that were chosen for the event
+     */
     public List<String> getChosenEntrants() { return chosenEntrants; }
+
+    /**
+     * This method gets the Entrants that were cancelled from the event
+     * @return
+     *      Returns the entrants that were cancelled from the event
+     */
     public List<String> getCancelledEntrants() { return cancelledEntrants; }
 
     // Setters

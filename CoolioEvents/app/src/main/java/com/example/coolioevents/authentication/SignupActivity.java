@@ -42,7 +42,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText emailEditText; // edittext where user inputs email
     EditText passwordEditText; // edittext where user inputs password
 
-
+    Button backButton; //button to go back to welcome screen
     Button organizerButton; //choose organizer button
     Button entrantButton; //choose entrant button
     TextView warnText; // textview used for warnings (eg. invalid password, email, etc.)
@@ -75,9 +75,11 @@ public class SignupActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
 
+        backButton = findViewById(R.id.backButton);
         entrantButton = findViewById(R.id.entrantButton);
         organizerButton = findViewById(R.id.organizerButton);
         warnText = findViewById(R.id.warnText);
+
 
         createAccountButton = findViewById(R.id.createAccountButton);
 
@@ -98,8 +100,13 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
-
-
+        // Back Button On Click Listener - sends user back to welcome screen
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         // Organizer Button On Click Listener - User chooses their account type as organizer
         organizerButton.setOnClickListener(new View.OnClickListener() {
             @Override
