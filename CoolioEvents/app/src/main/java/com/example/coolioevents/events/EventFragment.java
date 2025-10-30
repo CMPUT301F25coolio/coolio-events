@@ -109,15 +109,17 @@ public class EventFragment extends Fragment {
                     }
                     //Change button based on user status
                     updateButtonState();
-
+                    System.out.println("WE MADE IT HERE");
                     //Updating UI components to match clicked event
                     eventNameTextView.setText(details.getEventName());
                     eventDescriptionTextView.setText(details.getEventDescription());
+
                     //eventPosterImageView - how to do
                     // -- something to do with getPosterUrl() in events
                     //eventTimeTextView.setText(details.getEventTime()); - add getEventTime
                     eventRegistrationPeriodTextView.setText(details.getRegistrationPeriod());
-                    eventEntrantLimitTextView.setText(Integer.toString(details.getEntrantLimit()));
+                    eventEntrantLimitTextView.setText(String.valueOf(details.getEntrantLimit()));
+
                     if (event.getDetails().getStatus().equals("open")) {
                         //If event open make text open with green background
                         eventStatusTextView.setText("Open");

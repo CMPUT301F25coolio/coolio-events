@@ -31,6 +31,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -112,6 +113,7 @@ public class CreateEventActivity extends AppCompatActivity {
         map.put("eventId", eventId);
         map.put("details", details);
         map.put("organizerId", organizerId);
+        map.put("waitlistEntrants", new ArrayList<String>());
         map.put("deepLink", deepLink);
         map.put("posterUrl", null);
         map.put("promoQrUrl", null);
