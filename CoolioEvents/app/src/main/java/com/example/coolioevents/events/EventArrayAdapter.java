@@ -59,6 +59,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         eventRegPrd.setText(String.format("Registration Period: %s", event.getDetails().getRegistrationPeriod())); // Sets event registration period text
         eventMaxEntrees.setText(String.format("Entrant Limit: %s", String.valueOf(event.getDetails().getEntrantLimit()))); // Sets entrant limit organizer text
 
+        //Setting event status text
         if (event.getDetails().getStatus().equals("open")) {
             //If event open make text open with green background
             eventStatus.setText("Open");
@@ -69,6 +70,8 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
             eventStatus.setText(event.getDetails().getStatus());
             eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
         }
+
+        //Setting user status text
         if (event.getWaitlistEntrants().contains(currentUser.getUid())){
             //If the current user is in the waitlist, display an indicator that user is in the waiting list
             eventUserStatus.setText("In Waiting List");
@@ -79,6 +82,16 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
             eventUserStatus.setText("Not In Waiting List");
             eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greybuttonbackground));
         }
+
+        //Set waiting list count text
+        if (event.getWaitlistEntrants().size() == 1){
+            // If
+            eventWaitingCount.setText("1 PERSON IN WAITING LIST"); //Set waiting list count
+        }
+        else {
+            eventWaitingCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(event.getWaitlistEntrants().size()))); //Set waiting list count
+        }
+
         return view;
     }
 

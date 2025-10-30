@@ -57,11 +57,15 @@ public class EntrantHomeFragment extends Fragment {
             public void onChanged(ArrayList<Event> events) {
                 eventsList.clear();
                 System.out.println("CHANGED OMG");
-                eventsList.addAll(events);
+                for (Event event : events){
+                    if (event.getDetails().getStatus().equals("open")){
+                        //Only add events that are currently open
+                        eventsList.add(event);
+                     }
                 Collections.sort(eventsList);
                 eventAdapter.notifyDataSetChanged();
             }
-        });
+        }});
 
     }
     @Override

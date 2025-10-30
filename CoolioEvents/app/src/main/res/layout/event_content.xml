@@ -104,7 +104,7 @@
         android:layout_width="200dp"
         android:layout_height="20dp"
 
-        android:background="@drawable/bluebackground"
+        android:background="@drawable/purplecircularbackground"
         android:gravity="center"
         android:text="0 PEOPLE WAITING IN WAITLIST"
         android:autoSizeTextType="uniform"

@@ -163,7 +163,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:autoSizeTextType="uniform"
-        android:background="@drawable/bluebackground"
+        android:background="@drawable/purplecircularbackground"
         android:gravity="center"
         android:text="0 PEOPLE WAITING IN WAITLIST"
         android:textColor="@color/white"

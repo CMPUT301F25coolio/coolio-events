@@ -30,6 +30,7 @@ public class EntrantActivity extends AppCompatActivity {
 
 
     private Fragment homeFragment; //Fragment for home screen
+    private Fragment myEventsFragment; //Fragment for home screen
     private BottomNavigationView bottomNavView;
 
 
@@ -42,7 +43,10 @@ public class EntrantActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrant);
-        SwitchFragment(new EntrantHomeFragment()); //Default fragment is home
+        homeFragment = new EntrantHomeFragment();
+        myEventsFragment = new EntrantMyEventsFragment();
+
+        SwitchFragment(homeFragment); //Default fragment is home
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -50,7 +54,6 @@ public class EntrantActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
         bottomNavView = findViewById(R.id.bottomNavigationView);
 
-        homeFragment = new EntrantHomeFragment(); // VIEW
 
         SwitchFragment(homeFragment);
 
@@ -60,6 +63,9 @@ public class EntrantActivity extends AppCompatActivity {
                 if (menuItem.getItemId() == R.id.home){
                     // If home item is selected in nav bar switch to home fragment
                     SwitchFragment(homeFragment);
+                } else if (menuItem.getItemId() == R.id.myevents) {
+                    // If myevents item is selected in nav bar switch to home fragment
+                    SwitchFragment(myEventsFragment);
                 }
 
                 return false;

@@ -3,7 +3,6 @@ package com.example.coolioevents.authentication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,12 +27,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,7 +105,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 accountType = 0;
-                organizerButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.bluebuttonbackground));
+                organizerButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.purplecircularbackground));
                 entrantButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.greybuttonbackground));
 
             }
@@ -120,7 +116,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 accountType = 1;
-                entrantButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.bluebuttonbackground));
+                entrantButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.purplecircularbackground));
                 organizerButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.greybuttonbackground));
             }
         });
