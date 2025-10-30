@@ -16,9 +16,10 @@ public class Event implements Comparable<Event> {
     private Organizer organizer;
     private String organizerId;
     private EventDetails details;
-    private List<String> waitlistEntrants;
-    private List<String> chosenEntrants;
-    private List<String> cancelledEntrants;
+    private List<String> waitlistEntrants;  // Entrants who are in the waitlist
+    private List<String> chosenEntrants;  // Entrants who were chosen from the waitlist
+    private List<String> cancelledEntrants;  // Entrants who cancelled their invite
+    private List<String> acceptedEntrants;  // Entrants who accepted their invite
 
     public Event() {
         // Empty constructor for Firebase
@@ -84,6 +85,13 @@ public class Event implements Comparable<Event> {
      *      Returns the entrants that were cancelled from the event
      */
     public List<String> getCancelledEntrants() { return cancelledEntrants; }
+
+    /**
+     * This method gets the Entrants that accepted their invite
+     * @return
+     *      Returns the entrants that accepted their invite
+     */
+    public List<String> getAcceptedEntrants() { return acceptedEntrants; }
 
     // Setters
 
