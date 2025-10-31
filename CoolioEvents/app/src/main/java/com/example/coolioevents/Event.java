@@ -117,7 +117,18 @@ public class Event implements Comparable<Event> {
      */
     public void setDetails(EventDetails details) { this.details = details; }
 
-    //!!!!Add description
+    /**
+     * This is the comparison method for Events
+     * Events that are posted more recently are deemed higher.
+     *
+     * @param e
+     *      Event to be compared to this event
+     * @return
+     *      A negative integer, zero, or positive integer
+     *      negative int: Indicates this event is lower then event e
+     *      zero: Indicates this event is on the same level as event e
+     *      positive: Indicates this event is higher then event e
+     */
     @Override
     public int compareTo(Event e) {
         if (getClass() == e.getClass()){
