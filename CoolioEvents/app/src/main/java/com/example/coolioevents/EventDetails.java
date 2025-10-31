@@ -11,6 +11,8 @@ import java.util.Locale;
 public class EventDetails {
     private String eventName;
     private String eventDescription;
+    private String eventTime;
+    private String eventLocation;
     private String registrationPeriod; // string input, e.g. "2025/10/28 - 2025/11/11"
     private int entrantLimit;
     private String status; // "open" or "closed"
@@ -22,10 +24,12 @@ public class EventDetails {
         // Empty constructor needed for Firebase
     }
 
-    public EventDetails(String eventName, String eventDescription, String registrationPeriod,
+    public EventDetails(String eventName, String eventDescription, String eventTime, String eventLocation, String registrationPeriod,
                         int entrantLimit, String status, Date postedDate) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
+        this.eventTime = eventTime;
+        this.eventLocation = eventLocation;
         this.registrationPeriod = registrationPeriod;
         this.entrantLimit = entrantLimit;
         this.status = status;
@@ -51,6 +55,21 @@ public class EventDetails {
      *      The description of the event
      */
     public String getEventDescription() { return eventDescription; }
+
+    /**
+     * This method gets the description of the event.
+     * @return
+     *      The time of the event
+     */
+    public String getEventTime() { return eventTime; }
+
+    /**
+     * This method gets the description of the event.
+     * @return
+     *      The location of the event
+     */
+    public String getEventLocation() { return eventLocation; }
+
     /**
      * This method gets the registration period of the event.
      * @return
