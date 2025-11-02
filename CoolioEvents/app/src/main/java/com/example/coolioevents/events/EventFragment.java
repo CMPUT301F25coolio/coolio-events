@@ -223,11 +223,82 @@ public class EventFragment extends Fragment {
             }
         });
 
-        // Accept invite button onclick activity - WIP
+        // Accept invite button onclick activity
+        acceptInviteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                eventViewModel.getEventById(currentEventId).observe(getViewLifecycleOwner(), event -> {
+                    if (event != null) {
+                        String currentUserId = currentUser.getUid();
+                        eventViewModel.acceptInvite(currentEventId, currentUserId);  // Update firebase
+                        Toast.makeText(getContext(), "You have registered for this event.", Toast.LENGTH_SHORT).show();  // Confirmation message
 
-        // Decline invite button onclick activity - WIP
+                        //Change the User state
+                        isUserChosen = false;
+                        isUserAccepted = true;
+                        //Change button state
+                        updateButtonState();
 
-        // Unregister button onclick activity - WIP
+                        // TEMPORARY: Go back to My Events fragment
+                        getParentFragmentManager().popBackStack();
+                        // TODO: Juliane - Show unregister button once user accepts invite
+                    }
+                    else {
+                        Toast.makeText(getContext(), "You were not registered for this event.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        // Decline invite button onclick activity
+        declineInviteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                eventViewModel.getEventById(currentEventId).observe(getViewLifecycleOwner(), event -> {
+                    if (event != null) {
+                        String currentUserId = currentUser.getUid();
+                        eventViewModel.declineInvite(currentEventId, currentUserId);  // Update firebase
+                        Toast.makeText(getContext(), "You have declined this event.", Toast.LENGTH_SHORT).show();  // Confirmation message
+
+                        //Change the User state
+                        isUserChosen = false;
+                        //Change button state
+                        updateButtonState();
+
+                        // Go back to My Events fragment
+                        getParentFragmentManager().popBackStack();
+                    }
+                    else {
+                        Toast.makeText(getContext(), "You did not decline this event.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        // Unregister button onclick activity
+        unregisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                eventViewModel.getEventById(currentEventId).observe(getViewLifecycleOwner(), event -> {
+                    if (event != null) {
+                        String currentUserId = currentUser.getUid();
+                        eventViewModel.unregisterFromEvent(currentEventId, currentUserId);  // Update firebase
+                        Toast.makeText(getContext(), "You have unregistered from this event.", Toast.LENGTH_SHORT).show();  // Confirmation message
+
+                        //Change the User state
+                        isUserAccepted = false;
+                        //Change button state
+                        updateButtonState();
+
+                        // Go back to My Events fragment
+                        getParentFragmentManager().popBackStack();
+                    }
+                    else {
+                        Toast.makeText(getContext(), "You were not unregistered from this event.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
 
         // Back button onclick activity
         backButton.setOnClickListener(new View.OnClickListener() {

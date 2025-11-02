@@ -94,5 +94,86 @@ public class EventViewModel extends ViewModel {
                 });
     }
 
-    //TODO: make similar functions for cancelledEntrants, and chosenEntrants
+    /**
+     * This is called when a user chooses to accept the invite for an event.
+     * Removes a user from an event's list of chosen entrants,
+     * adds a user to an event's list of accepted entrants,
+     * and updates the firebase.
+     *
+     * @param eventId
+     *      event that the user is accepting the invite for
+     * @param userId
+     *       the user that accepts the invite
+     */
+    public void acceptInvite(String eventId, String userId) {
+        if (eventId == null || userId == null) {
+            return;
+        }
+
+        db.collection("events").document(eventId)
+                .update(
+                        "chosenEntrants", FieldValue.arrayRemove(userId),
+                        "acceptedEntrants", FieldValue.arrayUnion(userId)
+                )
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("ViewModel", "SUCCESS: User " + userId + " removed from chosenEntrants and added to acceptedEntrants for event " + eventId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "FAILURE: Could not update chosenEntrants and acceptedEntrants for event " + eventId, e);
+                });
+    }
+
+    /**
+     * This is called when a user chooses to decline the invite for an event.
+     * Removes a user from an event's list of chosen entrants,
+     * adds a user to an event's list of cancelled entrants,
+     * and updates the firebase.
+     *
+     * @param eventId
+     *      event that the user is declining the invite for
+     * @param userId
+     *       the user that declines the invite
+     */
+    public void declineInvite(String eventId, String userId) {
+        if (eventId == null || userId == null) {
+            return;
+        }
+
+        db.collection("events").document(eventId)
+                .update(
+                        "chosenEntrants", FieldValue.arrayRemove(userId),
+                        "cancelledEntrants", FieldValue.arrayUnion(userId)
+                )
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("ViewModel", "SUCCESS: User " + userId + " removed from chosenEntrants and added to cancelledEntrants for event " + eventId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "FAILURE: Could not update chosenEntrants and cancelledEntrants for event " + eventId, e);
+                });
+    }
+
+    /**
+     * This is called when a user chooses to unregister from an event.
+     * Removes a user from an event's list of accepted entrants and updates the firebase.
+     *
+     * @param eventId
+     *      event that the user is unregistering from
+     * @param userId
+     *       the user that unregisters from the event
+     */
+    public void unregisterFromEvent(String eventId, String userId) {
+        if (eventId == null || userId == null) {
+            return;
+        }
+
+        db.collection("events").document(eventId)
+                .update("acceptedEntrants", FieldValue.arrayRemove(userId))
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("ViewModel", "SUCCESS: User " + userId + " removed from acceptedEntrants for event " + eventId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "FAILURE: Could not update acceptedEntrants for event " + eventId, e);
+                });
+    }
+
 }
