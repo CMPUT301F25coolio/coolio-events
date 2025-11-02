@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,8 +65,13 @@ public class EntrantMyEventsFragment extends Fragment {
                 eventsList.clear();
                 System.out.println("CHANGED OMG");
                 for (Event event : events){
-                    if (event.getWaitlistEntrants().contains(user.getUid())){
-                        //Show events that user has joined waiting list for
+                    String userUID = user.getUid();
+                    List<String> waitlistEntrants = event.getWaitlistEntrants();
+                    List<String> chosenEntrants = event.getChosenEntrants();
+                    List<String> acceptedEntrants = event.getAcceptedEntrants();
+
+                    // Show events where the user is in the waitlist, is chosen, or accepted their invite
+                    if (waitlistEntrants.contains(userUID) || chosenEntrants.contains(userUID) || acceptedEntrants.contains(userUID)){
                         eventsList.add(event);
                     }
                     Collections.sort(eventsList);
