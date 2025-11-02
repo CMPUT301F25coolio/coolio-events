@@ -30,6 +30,8 @@ public class EventFragment extends Fragment {
     private FirebaseUser currentUser;
     private String currentEventId;
     private boolean isUserOnWaitList = false;
+    private boolean isUserChosen = false;
+    private boolean isUserAccepted = false;
 
     //Attributes for displaying details
     private TextView eventNameTextView;
@@ -54,14 +56,26 @@ public class EventFragment extends Fragment {
     // Rajesh Satvara on oct29
     // Helper function that could be turned into a class later for simplicity
     private void updateButtonState() {
+        // User is on the waitlist --> Button shows option to leave
         if (isUserOnWaitList) {
-            // User is on the list --> Button shows option to leave
             joinLeaveWaitlistButton.setText("Leave Waitlist");
             joinLeaveWaitlistButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.leavewaitinglist)));
-        } else {
-            // User is NOT on the list --> Button shows option to join
+        }
+
+        // User is NOT on the waitlist --> Button shows option to join
+        if (!isUserOnWaitList && !isUserChosen && !isUserAccepted) {
             joinLeaveWaitlistButton.setText("Join Waitlist");
             joinLeaveWaitlistButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.joinwaitinglist)));
+        }
+
+        // User is chosen --> Button shows options to accept or decline the invite
+        if (isUserChosen) {
+            // WIP
+        }
+
+        // User is accepted --> Button shows options to unregister from the event
+        if (isUserAccepted) {
+            // WIP
         }
     }
 
@@ -99,14 +113,14 @@ public class EventFragment extends Fragment {
                 if (details != null) {
                     //Determining User Status
                     List<String> waitlist = event.getWaitlistEntrants();
+                    List<String> chosenEntrants = event.getChosenEntrants();
+                    List<String> acceptedEntrants = event.getAcceptedEntrants();
                     String userId = currentUser.getUid();
 
-                    if (waitlist.contains(userId)) {
-                        isUserOnWaitList = true;
-                    }
-                    else {
-                        isUserOnWaitList = false;
-                    }
+                    isUserOnWaitList = waitlist.contains(userId);
+                    isUserChosen = chosenEntrants.contains(userId);
+                    isUserAccepted = acceptedEntrants.contains(userId);
+
                     //Change button based on user status
                     updateButtonState();
                     System.out.println("WE MADE IT HERE");
