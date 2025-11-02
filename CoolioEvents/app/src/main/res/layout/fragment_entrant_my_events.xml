@@ -12,5 +12,11 @@
     <ListView
         android:id="@+id/eventList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:dividerHeight="5dp"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:divider="#DEDEDE"
+        android:background="#DEDEDE"
+        />
 </LinearLayout>

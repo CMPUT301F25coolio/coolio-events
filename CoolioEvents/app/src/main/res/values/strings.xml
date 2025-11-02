@@ -2,4 +2,5 @@
     <string name="app_name">Coolio Events</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bold">abc<b>Description</b>efg</string>
 </resources>
