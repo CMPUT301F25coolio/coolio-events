@@ -42,7 +42,11 @@ public class EventFragment extends Fragment {
     private TextView eventEntrantLimitTextView;
     private TextView eventStatusTextView;
     private TextView eventUserStatusView;
+    private TextView eventWaitlistEntrantCount;
     private Button joinLeaveWaitlistButton;
+    private Button acceptInviteButton;
+    private Button declineInviteButton;
+    private Button unregisterButton;
 
     public static EventFragment newInstance(String eventId) {
         EventFragment fragment = new EventFragment();
@@ -58,24 +62,50 @@ public class EventFragment extends Fragment {
     private void updateButtonState() {
         // User is on the waitlist --> Button shows option to leave
         if (isUserOnWaitList) {
+            // Set visibility of buttons
+            joinLeaveWaitlistButton.setVisibility(View.VISIBLE);
+            acceptInviteButton.setVisibility(View.GONE);
+            declineInviteButton.setVisibility(View.GONE);
+            unregisterButton.setVisibility(View.GONE);
+            eventWaitlistEntrantCount.setVisibility(View.VISIBLE);
+
+            // Set text and colour of button
             joinLeaveWaitlistButton.setText("Leave Waitlist");
             joinLeaveWaitlistButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.leavewaitinglist)));
         }
 
         // User is NOT on the waitlist --> Button shows option to join
         if (!isUserOnWaitList && !isUserChosen && !isUserAccepted) {
+            // Set visibility of buttons
+            joinLeaveWaitlistButton.setVisibility(View.VISIBLE);
+            acceptInviteButton.setVisibility(View.GONE);
+            declineInviteButton.setVisibility(View.GONE);
+            unregisterButton.setVisibility(View.GONE);
+            eventWaitlistEntrantCount.setVisibility(View.VISIBLE);
+
+            // Set text and colour of button
             joinLeaveWaitlistButton.setText("Join Waitlist");
             joinLeaveWaitlistButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.joinwaitinglist)));
         }
 
         // User is chosen --> Button shows options to accept or decline the invite
         if (isUserChosen) {
-            // WIP
+            // Set visibility of buttons
+            joinLeaveWaitlistButton.setVisibility(View.GONE);
+            acceptInviteButton.setVisibility(View.VISIBLE);
+            declineInviteButton.setVisibility(View.VISIBLE);
+            unregisterButton.setVisibility(View.GONE);
+            eventWaitlistEntrantCount.setVisibility(View.GONE);
         }
 
         // User is accepted --> Button shows options to unregister from the event
         if (isUserAccepted) {
-            // WIP
+            // Set visibility of buttons
+            joinLeaveWaitlistButton.setVisibility(View.GONE);
+            acceptInviteButton.setVisibility(View.GONE);
+            declineInviteButton.setVisibility(View.GONE);
+            unregisterButton.setVisibility(View.VISIBLE);
+            eventWaitlistEntrantCount.setVisibility(View.GONE);
         }
     }
 
@@ -102,6 +132,7 @@ public class EventFragment extends Fragment {
         eventEntrantLimitTextView = view.findViewById(R.id.eventViewLimit);
         eventStatusTextView = view.findViewById(R.id.eventViewEventStatus);
         eventUserStatusView = view.findViewById(R.id.eventViewUserStatus);
+        eventWaitlistEntrantCount = view.findViewById(R.id.eventWaitlistEntrantCount);
 
         //Getting ViewModel and displaying event details
         eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
@@ -151,9 +182,12 @@ public class EventFragment extends Fragment {
 
         //Establishing Buttons
         joinLeaveWaitlistButton = view.findViewById(R.id.eventViewJoinWaitListButton);
+        acceptInviteButton = view.findViewById(R.id.eventAcceptInviteButton);
+        declineInviteButton = view.findViewById(R.id.eventDeclineInviteButton);
+        unregisterButton = view.findViewById(R.id.eventUnregisterButton);
         Button backButton = view.findViewById((R.id.eventViewBackButton));
 
-        //Utilizing Buttons
+        // Join/Leave waitlist button onclick activity
         joinLeaveWaitlistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,6 +223,13 @@ public class EventFragment extends Fragment {
             }
         });
 
+        // Accept invite button onclick activity - WIP
+
+        // Decline invite button onclick activity - WIP
+
+        // Unregister button onclick activity - WIP
+
+        // Back button onclick activity
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

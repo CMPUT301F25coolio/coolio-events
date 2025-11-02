@@ -5,5 +5,8 @@
     <color name="android_green">#A4C639</color>
     <color name="joinwaitinglist">#4CBB17</color>
     <color name="leavewaitinglist">#D22B2B</color>
+    <color name="acceptInvite">#4CBB17</color>
+    <color name="declineInvite">#D22B2B</color>
+    <color name="unregister">#D22B2B</color>
     <color name="back">#0047AB</color>
 </resources>

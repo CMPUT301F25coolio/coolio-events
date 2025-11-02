@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Poster -->
     <ImageView
         android:id="@+id/eventViewPoster"
         android:layout_width="wrap_content"
@@ -15,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <!-- Title -->
     <TextView
         android:id="@+id/eventViewName"
         android:layout_width="280dp"
@@ -26,6 +28,7 @@
         app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Organizer (poster) -->
     <TextView
         android:id="@+id/eventViewOrganizer"
         android:layout_width="280dp"
@@ -36,6 +39,7 @@
         app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
         app:layout_constraintTop_toBottomOf="@+id/eventViewName" />
 
+    <!-- Description -->
     <TextView
         android:id="@+id/eventViewDescription"
         android:layout_width="wrap_content"
@@ -49,6 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewPoster" />
 
+    <!-- Time -->
     <TextView
         android:id="@+id/eventViewTime"
         android:layout_width="wrap_content"
@@ -59,6 +64,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewDescription" />
 
+    <!-- Location -->
     <TextView
         android:id="@+id/eventViewLocation"
         android:layout_width="wrap_content"
@@ -69,6 +75,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewTime" />
 
+    <!-- Registration Period -->
     <TextView
         android:id="@+id/eventViewRegistrationPeriod"
         android:layout_width="wrap_content"
@@ -79,6 +86,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewLocation" />
 
+    <!-- Entrant Limit -->
     <TextView
         android:id="@+id/eventViewLimit"
         android:layout_width="wrap_content"
@@ -89,6 +97,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewRegistrationPeriod" />
 
+    <!-- Event Status -->
     <TextView
         android:id="@+id/eventViewEventStatusLabel"
         android:layout_width="wrap_content"
@@ -112,6 +121,7 @@
         app:layout_constraintStart_toEndOf="@+id/eventViewEventStatusLabel"
         app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
 
+    <!-- User Status -->
     <TextView
         android:id="@+id/eventViewUserStatusLabel"
         android:layout_width="wrap_content"
@@ -135,6 +145,7 @@
         app:layout_constraintStart_toEndOf="@+id/eventViewUserStatusLabel"
         app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatus" />
 
+    <!-- Back Button -->
     <Button
         android:id="@+id/eventViewBackButton"
         android:layout_width="wrap_content"
@@ -146,6 +157,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Join/Leave Waitlist Button -->
     <Button
         android:id="@+id/eventViewJoinWaitListButton"
         android:layout_width="wrap_content"
@@ -155,10 +167,59 @@
         app:backgroundTint="@color/joinwaitinglist"
         app:layout_constraintBottom_toTopOf="@+id/eventViewBackButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
 
+        android:visibility="gone"
+        />
+
+    <!-- Accept Event Invite Button -->
+    <Button
+        android:id="@+id/eventAcceptInviteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Accept"
+        app:backgroundTint="@color/acceptInvite"
+        app:layout_constraintBottom_toTopOf="@+id/eventViewBackButton"
+        app:layout_constraintEnd_toEndOf="@+id/eventDeclineInviteButton"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:visibility="gone"
+        />
+
+    <!-- Decline Event Invite Button -->
+    <Button
+        android:id="@+id/eventDeclineInviteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Decline"
+        app:backgroundTint="@color/declineInvite"
+        app:layout_constraintBottom_toTopOf="@+id/eventViewBackButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/eventAcceptInviteButton"
+
+        android:visibility="gone"
+    />
+
+    <!-- Unregister from Event Button -->
+    <Button
+        android:id="@+id/eventUnregisterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Unregister"
+        app:backgroundTint="@color/unregister"
+        app:layout_constraintBottom_toTopOf="@+id/eventViewBackButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:visibility="gone"
+        />
+
+    <!-- Number of people in waitlist -->
     <TextView
-        android:id="@+id/textView16"
+        android:id="@+id/eventWaitlistEntrantCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -169,6 +230,9 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/eventViewJoinWaitListButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:visibility="gone"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
