@@ -114,6 +114,9 @@ public class CreateEventActivity extends AppCompatActivity {
         map.put("details", details);
         map.put("organizerId", organizerId);
         map.put("waitlistEntrants", new ArrayList<String>());
+        map.put("chosenEntrants", new ArrayList<String>());
+        map.put("acceptedEntrants", new ArrayList<String>());
+        map.put("cancelledEntrants", new ArrayList<String>());
         map.put("deepLink", deepLink);
         map.put("posterUrl", null);
         map.put("promoQrUrl", null);
