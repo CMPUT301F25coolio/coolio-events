@@ -11,11 +11,13 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
 import com.example.coolioevents.events.EventArrayAdapter;
+import com.example.coolioevents.events.EventFragment;
 import com.example.coolioevents.events.EventViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -86,6 +88,30 @@ public class EntrantMyEventsFragment extends Fragment {
         eventsListView = view.findViewById(R.id.eventList);
         eventAdapter = new EventArrayAdapter(getActivity(), eventsList);
         eventsListView.setAdapter(eventAdapter);
+
+        //Getting EventViewModel
+        eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+
+        //Navigating to Event Fragment
+        eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event clickedEvent = (Event) parent.getItemAtPosition(position);
+
+                //If event is null do nothing
+                if (clickedEvent == null) {
+                    return;
+                }
+
+                EventFragment eventDetailsFragment = EventFragment.newInstance(clickedEvent.getEventId());
+
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, eventDetailsFragment) // Replace the current fragment
+                        .addToBackStack(null) // This allows the user to press the back button to return to the list
+                        .commit();
+            }
+        });
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
