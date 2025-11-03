@@ -42,21 +42,23 @@ public class EventFragment extends Fragment {
     private TextView eventEntrantLimitTextView;
     private TextView eventStatusTextView;
     private TextView eventUserStatusView;
+    private TextView eventUserStatusRegistrationView;
     private TextView eventWaitlistEntrantCount;
     private Button joinLeaveWaitlistButton;
     private Button acceptInviteButton;
     private Button declineInviteButton;
     private Button unregisterButton;
+    private int waitlistCount;
 
     public static EventFragment newInstance(String eventId) {
         EventFragment fragment = new EventFragment();
         Bundle args = new Bundle();
-        args.putString("event_id", eventId); //Bundle holds the event id
-        fragment.setArguments(args); //Attach the bundle to the fragment
+        args.putString("event_id", eventId); // Bundle holds the event id
+        fragment.setArguments(args); // Attach the bundle to the fragment
         return fragment;
     }
 
-    //getting color and setting button background - https://stackoverflow.com/questions/48717021/setbackgroundtintlist-for-button-programmatically-with-a-hex-value-colordrawab
+    // Getting color and setting button background - https://stackoverflow.com/questions/48717021/setbackgroundtintlist-for-button-programmatically-with-a-hex-value-colordrawab
     // Rajesh Satvara on oct29
     // Helper function that could be turned into a class later for simplicity
     private void updateButtonState() {
@@ -68,10 +70,15 @@ public class EventFragment extends Fragment {
             declineInviteButton.setVisibility(View.GONE);
             unregisterButton.setVisibility(View.GONE);
             eventWaitlistEntrantCount.setVisibility(View.VISIBLE);
+            eventUserStatusRegistrationView.setVisibility(View.GONE);
 
             // Set text and colour of button
             joinLeaveWaitlistButton.setText("Leave Waitlist");
             joinLeaveWaitlistButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.leavewaitinglist)));
+
+            // Set text and colour of user status
+            eventUserStatusView.setText("In Waitlist");
+            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
         }
 
         // User is NOT on the waitlist --> Button shows option to join
@@ -82,10 +89,15 @@ public class EventFragment extends Fragment {
             declineInviteButton.setVisibility(View.GONE);
             unregisterButton.setVisibility(View.GONE);
             eventWaitlistEntrantCount.setVisibility(View.VISIBLE);
+            eventUserStatusRegistrationView.setVisibility(View.GONE);
 
             // Set text and colour of button
             joinLeaveWaitlistButton.setText("Join Waitlist");
             joinLeaveWaitlistButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.joinwaitinglist)));
+
+            // Set text and colour of user status
+            eventUserStatusView.setText("Not in Waitlist");
+            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greybackground));
         }
 
         // User is chosen --> Button shows options to accept or decline the invite
@@ -96,6 +108,13 @@ public class EventFragment extends Fragment {
             declineInviteButton.setVisibility(View.VISIBLE);
             unregisterButton.setVisibility(View.GONE);
             eventWaitlistEntrantCount.setVisibility(View.GONE);
+
+            // Set visibility of registration status
+            eventUserStatusRegistrationView.setVisibility(View.VISIBLE);
+
+            // Set text and colour of user status
+            eventUserStatusView.setText("Chosen");
+            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
         }
 
         // User is accepted --> Button shows options to unregister from the event
@@ -106,6 +125,16 @@ public class EventFragment extends Fragment {
             declineInviteButton.setVisibility(View.GONE);
             unregisterButton.setVisibility(View.VISIBLE);
             eventWaitlistEntrantCount.setVisibility(View.GONE);
+
+            // Set visibility of registration status
+            eventUserStatusRegistrationView.setVisibility(View.VISIBLE);
+
+            // Set text and colour of user status
+            eventUserStatusView.setText("Chosen");
+            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
+
+            eventUserStatusRegistrationView.setText("Registered");
+            eventUserStatusRegistrationView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
         }
     }
 
@@ -123,7 +152,7 @@ public class EventFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Establishing UI components
+        // Establishing UI components
         eventNameTextView = view.findViewById(R.id.eventViewName);
         eventDescriptionTextView = view.findViewById(R.id.eventViewDescription);
         eventPosterImageView = view.findViewById(R.id.eventViewPoster);
@@ -133,9 +162,11 @@ public class EventFragment extends Fragment {
         eventStatusTextView = view.findViewById(R.id.eventViewEventStatus);
         eventUserStatusView = view.findViewById(R.id.eventViewUserStatus);
         eventWaitlistEntrantCount = view.findViewById(R.id.eventWaitlistEntrantCount);
+        eventUserStatusRegistrationView = view.findViewById(R.id.eventViewUserStatusRegistration);
 
-        //Getting ViewModel and displaying event details
+        // Getting ViewModel and displaying event details
         eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+
 
         //TODO: Implement a check to make sure the event ID exists
         eventViewModel.getEventById(currentEventId).observe(getViewLifecycleOwner(), event -> {
@@ -159,28 +190,32 @@ public class EventFragment extends Fragment {
                     eventNameTextView.setText(details.getEventName());
                     eventDescriptionTextView.setText(details.getEventDescription());
 
-                    //eventPosterImageView - how to do
+                    // TODO: eventPosterImageView - how to do
                     // -- something to do with getPosterUrl() in events
-                    //eventTimeTextView.setText(details.getEventTime()); - add getEventTime
+                    // TODO: eventTimeTextView.setText(details.getEventTime()); - add getEventTime
                     eventRegistrationPeriodTextView.setText(details.getRegistrationPeriod());
                     eventEntrantLimitTextView.setText(String.valueOf(details.getEntrantLimit()));
+                    eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(event.getWaitlistEntrants().size())));
+                    updateButtonState(); //--> make sure all buttons and text match user status
+
+                    // Keeping track of current waitlist size in a figure
+                    waitlistCount = event.getWaitlistEntrants().size();
 
                     if (event.getDetails().getStatus().equals("open")) {
-                        //If event open make text open with green background
+                        // If event open make text open with green background
                         eventStatusTextView.setText("Open");
                         eventStatusTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
                     }
                     else{
-                        //If event closed make text open with red background
+                        // If event closed make text open with red background
                         eventStatusTextView.setText("Closed");
                         eventStatusTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.redshapebackground));
                     }
-                    //eventUserStatusView = view.findViewById(R.id.eventViewUserStatus);
                 }
             }
         });
 
-        //Establishing Buttons
+        // Establishing Buttons
         joinLeaveWaitlistButton = view.findViewById(R.id.eventViewJoinWaitListButton);
         acceptInviteButton = view.findViewById(R.id.eventAcceptInviteButton);
         declineInviteButton = view.findViewById(R.id.eventDeclineInviteButton);
@@ -191,30 +226,35 @@ public class EventFragment extends Fragment {
         joinLeaveWaitlistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Add userId to event waitlist
+                // Add userId to event waitlist
                 eventViewModel.getEventById(currentEventId).observe(getViewLifecycleOwner(), event -> {
                     if (event != null) {
                         String currentUserId = currentUser.getUid();
 
-                        //Look at if user is on waitlist or not to see what the button click did
+                        // Look at if user is on waitlist or not to see what the button click did
                         if (isUserOnWaitList) { //User is currently in waiting list
                             eventViewModel.leaveWaitlist(currentEventId, currentUserId);
                             Toast.makeText(getContext(), "You have left the waitlist.", Toast.LENGTH_SHORT).show();
+
+                            // Update and display new waitlist count
+                            waitlistCount--;
+                            eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
                         }
                         else { //User not currently in waiting list
                             eventViewModel.joinWaitlist(currentEventId, currentUserId);
                             Toast.makeText(getContext(), "You have been added to the waitlist.", Toast.LENGTH_SHORT).show();
+
+                            // Update and display new waitlist count
+                            waitlistCount++;
+                            eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
                         }
 
-                        //Change the User state
+                        // Change the User state
                         isUserOnWaitList = !isUserOnWaitList;
-                        //Change button state
+                        // Change button state
                         updateButtonState();
 
-                        //Update number of people in event waitlist
-                        //updateWaitingListCount()
-
-                        //TODO: update the user status/figure out best way to show user status
+                        // TODO: update the user status/figure out best way to show user status
                     }
                     else {
                         Toast.makeText(getContext(), "You were not added to the waitlist.", Toast.LENGTH_SHORT).show();
@@ -233,10 +273,10 @@ public class EventFragment extends Fragment {
                         eventViewModel.acceptInvite(currentEventId, currentUserId);  // Update firebase
                         Toast.makeText(getContext(), "You have registered for this event.", Toast.LENGTH_SHORT).show();  // Confirmation message
 
-                        //Change the User state
+                        // Change the User state
                         isUserChosen = false;
                         isUserAccepted = true;
-                        //Change button state
+                        // Change button state
                         updateButtonState();
 
                         // TEMPORARY: Go back to My Events fragment
@@ -260,9 +300,9 @@ public class EventFragment extends Fragment {
                         eventViewModel.declineInvite(currentEventId, currentUserId);  // Update firebase
                         Toast.makeText(getContext(), "You have declined this event.", Toast.LENGTH_SHORT).show();  // Confirmation message
 
-                        //Change the User state
+                        // Change the User state
                         isUserChosen = false;
-                        //Change button state
+                        // Change button state
                         updateButtonState();
 
                         // Go back to My Events fragment
@@ -285,9 +325,9 @@ public class EventFragment extends Fragment {
                         eventViewModel.unregisterFromEvent(currentEventId, currentUserId);  // Update firebase
                         Toast.makeText(getContext(), "You have unregistered from this event.", Toast.LENGTH_SHORT).show();  // Confirmation message
 
-                        //Change the User state
+                        // Change the User state
                         isUserAccepted = false;
-                        //Change button state
+                        // Change button state
                         updateButtonState();
 
                         // Go back to My Events fragment
@@ -304,7 +344,7 @@ public class EventFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Go back to home fragment
+                // Go back to home fragment
                 getParentFragmentManager().popBackStack();
             }
         });

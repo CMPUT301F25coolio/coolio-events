@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="275dp"
+    android:layout_height="300dp"
     android:background="@drawable/whitebackground">
 
     <TextView
@@ -101,13 +101,13 @@
         android:layout_height="20dp"
 
         android:background="@drawable/greenshapebackground"
+        android:fontFamily="@font/clearsans_bold"
         android:gravity="center"
         android:text="Open"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/eventStatusLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventmaxEntrees"
-        android:fontFamily="@font/clearsans_bold"/>
+        app:layout_constraintTop_toBottomOf="@+id/eventmaxEntrees" />
 
     <TextView
         android:id="@+id/eventWaitingCount"
@@ -139,23 +139,45 @@
         android:id="@+id/userStatusLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/clearsans_regular"
         android:text="User Status:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventStatusLabel"
-        android:fontFamily="@font/clearsans_regular"/>
+        app:layout_constraintTop_toBottomOf="@+id/eventStatusLabel" />
 
     <TextView
         android:id="@+id/eventuserStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
+        android:layout_marginStart="5dp"
 
+        android:layout_marginTop="5dp"
         android:background="@drawable/greybackground"
+        android:fontFamily="@font/clearsans_bold"
         android:gravity="center"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:text="Not In Waiting List"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintStart_toEndOf="@+id/userStatusLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventStatus"
-        android:fontFamily="@font/clearsans_bold"/>/>
+        app:layout_constraintTop_toBottomOf="@+id/eventStatus" />
+
+    <TextView
+        android:id="@+id/eventUserStatusRegistration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/greybackground"
+        android:fontFamily="@font/clearsans_bold"
+        android:gravity="center"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="Not Registered"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/eventuserStatus"
+        app:layout_constraintTop_toBottomOf="@+id/eventStatus" />
 </androidx.constraintlayout.widget.ConstraintLayout>
