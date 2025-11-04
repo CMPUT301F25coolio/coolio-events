@@ -10,7 +10,7 @@ import java.util.List;
   Simple RecyclerView adapter that just lists entrant IDs as plain text.
   Used in OrganizerEntrantsActivity for showing waitlist/chosen/final lists
   Note nothing fancy here, just basic binding so its easier to test.*/
-public class EntrantIdAdapter extends RecyclerView.Adapter<EntrantIdAdapter.ViewHolder> {
+public class EntrantIDAdapter extends RecyclerView.Adapter<EntrantIDAdapter.ViewHolder> {
     // keeps the list of entrant IDs usually Firestore document uids
     private final List<String> entrantIds = new ArrayList<>();
     // replaces current data with a new list and refreshes the recycler

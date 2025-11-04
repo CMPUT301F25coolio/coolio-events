@@ -19,7 +19,7 @@ public class OrganizerEntrantsActivity extends AppCompatActivity {
     // data helper that actually talks to Firestore
     private EntrantsRepository repo;
     // recycler adapter that just shows a bunch of strings
-    private EntrantIdAdapter adapter;
+    private EntrantIDAdapter adapter;
     // lazy shortcut array so I don't hardcode strings in a switch every time
     private static final String[] LIST_OPTIONS = new String[]{
             "Waiting List",      // index 0
@@ -38,7 +38,7 @@ public class OrganizerEntrantsActivity extends AppCompatActivity {
         RecyclerView recycler = findViewById(R.id.recycler);
         // recycler setup (basic vertical list)
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new EntrantIdAdapter();
+        adapter = new EntrantIDAdapter();
         recycler.setAdapter(adapter);
         // spinner items I used a small array constant above
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
