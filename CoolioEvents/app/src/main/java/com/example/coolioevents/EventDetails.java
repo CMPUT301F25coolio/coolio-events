@@ -99,6 +99,20 @@ public class EventDetails {
      */
     public Date getPostedDate() { return postedDate; }
 
+    /**
+     * This method gets the startDate of the event's Registration Period.
+     * @return
+     *      The start Date of the event's Registration Period
+     */
+    public Date getStartDate() { return startDate; }
+
+    /**
+     * This method gets the endDate of the event's Registration Period.
+     * @return
+     *      The end Date of the event's Registration Period
+     */
+    public Date getEndDate() { return endDate; }
+
     // Setters
 
     /**
