@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--purpose is screen that lets the organizer type an event id,
+    pick which entrant list to see and then view it in a RecyclerView
+    I kept the same ids so Java code still works fine.-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FAFAFA">
+    <!-- text field for event id the doc id in Firestore basically -->
+    <EditText
+        android:id="@+id/eventIdInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event ID"
+        android:inputType="text"
+        android:singleLine="true"
+        android:imeOptions="actionDone" />
+    <!-- dropdown menu where I choose which list to show -->
+    <Spinner
+        android:id="@+id/spinnerListType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+    <!-- button to actually load entrants waitlist/chosen/enrolled -->
+    <Button
+        android:id="@+id/btnLoad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Load Entrants"
+        android:textAllCaps="false" />
+    <!-- recycler shows the uids after the query runs -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical" />
+</LinearLayout>
