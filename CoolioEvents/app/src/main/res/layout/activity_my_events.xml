@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Screen Quick utility panel for organizers to run a replacement draw
+  Note kept IDs the same so existing Activity code continues to work
+  Minor UX tweaks better tap targets, IME action, and simple a11y labels.-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FAFAFA">
+    <!-- Event ID input -->
+    <EditText
+        android:id="@+id/eventIdInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Event ID"
+        android:inputType="text"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:padding="10dp"
+        android:background="@android:drawable/editbox_background"
+        android:contentDescription="Text field to paste an event document ID" />
+    <!-- Big button because fat thumbs -->
+    <Button
+        android:id="@+id/btnDrawReplacement"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:text="Draw Replacement"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#3F51B5"
+        android:contentDescription="Run the replacement draw transaction" />
+    <!-- Status area to echo what happened picked UID, errors etc -->
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text=""
+        android:textSize="15sp"
+        android:textColor="#212121"
+        android:contentDescription="Result message for the draw action" />
+</LinearLayout>
