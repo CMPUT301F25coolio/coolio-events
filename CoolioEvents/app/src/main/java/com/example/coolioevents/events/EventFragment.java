@@ -33,7 +33,7 @@ public class EventFragment extends Fragment {
     private boolean isUserChosen = false;
     private boolean isUserAccepted = false;
 
-    //Attributes for displaying details
+    // Attributes for displaying details
     private TextView eventNameTextView;
     private TextView eventDescriptionTextView;
     private ImageView eventPosterImageView;
@@ -62,9 +62,9 @@ public class EventFragment extends Fragment {
     // Rajesh Satvara on oct29
     // Helper function that could be turned into a class later for simplicity
     private void updateButtonState() {
-        // User is on the waitlist --> Button shows option to leave
+        // User is on the waitlist --> Button shows option to leave, user status says "In Waitlist"
         if (isUserOnWaitList) {
-            // Set visibility of buttons
+            // Set visibility of buttons, waitlist entrants count, and user statuses
             joinLeaveWaitlistButton.setVisibility(View.VISIBLE);
             acceptInviteButton.setVisibility(View.GONE);
             declineInviteButton.setVisibility(View.GONE);
@@ -81,9 +81,9 @@ public class EventFragment extends Fragment {
             eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
         }
 
-        // User is NOT on the waitlist --> Button shows option to join
+        // User is NOT on the waitlist --> Button shows option to join, user status says "Not in Waitlist"
         if (!isUserOnWaitList && !isUserChosen && !isUserAccepted) {
-            // Set visibility of buttons
+            // Set visibility of buttons, waitlist entrants count, and user statuses
             joinLeaveWaitlistButton.setVisibility(View.VISIBLE);
             acceptInviteButton.setVisibility(View.GONE);
             declineInviteButton.setVisibility(View.GONE);
@@ -100,9 +100,9 @@ public class EventFragment extends Fragment {
             eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greybackground));
         }
 
-        // User is chosen --> Button shows options to accept or decline the invite
+        // User is chosen --> Button shows options to accept or decline the invite, user status says "Chosen" and "Not Registered"
         if (isUserChosen) {
-            // Set visibility of buttons
+            // Set visibility of buttons and waitlist entrants count
             joinLeaveWaitlistButton.setVisibility(View.GONE);
             acceptInviteButton.setVisibility(View.VISIBLE);
             declineInviteButton.setVisibility(View.VISIBLE);
@@ -117,9 +117,9 @@ public class EventFragment extends Fragment {
             eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
         }
 
-        // User is accepted --> Button shows options to unregister from the event
+        // User is accepted --> Button shows options to unregister from the event, user status says "Chosen" and "Registered"
         if (isUserAccepted) {
-            // Set visibility of buttons
+            // Set visibility of buttons and waitlist entrants count
             joinLeaveWaitlistButton.setVisibility(View.GONE);
             acceptInviteButton.setVisibility(View.GONE);
             declineInviteButton.setVisibility(View.GONE);
@@ -173,7 +173,7 @@ public class EventFragment extends Fragment {
             if (event != null) {
                 EventDetails details = event.getDetails();
                 if (details != null) {
-                    //Determining User Status
+                    // Determining User Status
                     List<String> waitlist = event.getWaitlistEntrants();
                     List<String> chosenEntrants = event.getChosenEntrants();
                     List<String> acceptedEntrants = event.getAcceptedEntrants();
@@ -183,10 +183,10 @@ public class EventFragment extends Fragment {
                     isUserChosen = chosenEntrants.contains(userId);
                     isUserAccepted = acceptedEntrants.contains(userId);
 
-                    //Change button based on user status
+                    // Change button based on user status
                     updateButtonState();
                     System.out.println("WE MADE IT HERE");
-                    //Updating UI components to match clicked event
+                    // Updating UI components to match clicked event
                     eventNameTextView.setText(details.getEventName());
                     eventDescriptionTextView.setText(details.getEventDescription());
 

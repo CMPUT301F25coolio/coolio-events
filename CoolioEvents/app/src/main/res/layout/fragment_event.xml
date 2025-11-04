@@ -148,6 +148,22 @@
         app:layout_constraintStart_toEndOf="@+id/eventViewUserStatusLabel"
         app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatus" />
 
+    <TextView
+        android:id="@+id/eventViewUserStatusRegistration"
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/greybuttonbackground"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingEnd="10dp"
+        android:text="Not Registered"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/eventViewUserStatus"
+        app:layout_constraintTop_toTopOf="@+id/eventViewUserStatus" />
+
     <!-- Back Button -->
     <Button
         android:id="@+id/eventViewBackButton"
@@ -237,21 +253,5 @@
 
         android:visibility="gone"
         />
-
-    <TextView
-        android:id="@+id/eventViewUserStatusRegistration"
-        android:layout_width="wrap_content"
-        android:layout_height="22dp"
-        android:layout_marginStart="10dp"
-        android:background="@drawable/greybuttonbackground"
-        android:gravity="center"
-        android:paddingLeft="10dp"
-        android:paddingEnd="10dp"
-        android:text="Not Registered"
-        android:textColor="@color/white"
-        android:textSize="17sp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/eventViewUserStatus"
-        app:layout_constraintTop_toTopOf="@+id/eventViewUserStatus" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
