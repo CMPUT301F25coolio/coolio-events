@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDF0ED"
@@ -22,7 +23,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
             android:src="@drawable/ic_arrow_back"
-            android:tint="#FFFFFF" />
+            app:tint="#FFFFFF" />
 
         <TextView
             android:layout_width="0dp"
@@ -151,6 +152,52 @@
                 android:paddingEnd="12dp"
                 android:textColor="#212121"
                 android:textColorHint="#9E9E9E" />
+
+            <!-- Event Time -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event time"
+                android:textColor="#212121"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/etEventTime"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/edittextbackground"
+                android:hint="Time of the event"
+                android:textColorHint="#9E9E9E"
+                android:textColor="#212121"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:inputType="text"
+                android:maxLines="1"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Event Location -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Location"
+                android:textColor="#212121"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/etEventLocation"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/edittextbackground"
+                android:hint="Location of the event"
+                android:textColorHint="#9E9E9E"
+                android:textColor="#212121"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:inputType="text"
+                android:maxLines="1"
+                android:layout_marginBottom="16dp"/>
 
             <!-- Poster -->
             <TextView

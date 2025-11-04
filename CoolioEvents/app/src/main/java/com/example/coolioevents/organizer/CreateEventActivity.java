@@ -39,7 +39,7 @@ import java.util.UUID;
 
 public class CreateEventActivity extends AppCompatActivity {
 
-    private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit;
+    private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventTime, etEventLocation;
     private Button btnCreate, btnPickPoster;
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
@@ -71,6 +71,8 @@ public class CreateEventActivity extends AppCompatActivity {
         etDescription = findViewById(R.id.etEventDescription);
         etRegistrationPeriod = findViewById(R.id.etRegistrationPeriod);
         etEntrantLimit = findViewById(R.id.etEntrantLimit);
+        etEventTime = findViewById(R.id.etEventTime);
+        etEventLocation = findViewById(R.id.etEventLocation);
         btnCreate = findViewById(R.id.btnCreate);
         btnBack = findViewById(R.id.btnBack);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
@@ -86,6 +88,8 @@ public class CreateEventActivity extends AppCompatActivity {
         String description = etDescription.getText().toString().trim();
         String registrationPeriod = etRegistrationPeriod.getText().toString().trim();
         String entrantLimitStr = etEntrantLimit.getText().toString().trim();
+        String eventTime = etEventTime.getText().toString().trim();
+        String eventLocation = etEventLocation.getText().toString().trim();
 
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) ||
                 TextUtils.isEmpty(registrationPeriod) || TextUtils.isEmpty(entrantLimitStr)) {
@@ -106,7 +110,7 @@ public class CreateEventActivity extends AppCompatActivity {
         String eventId = UUID.randomUUID().toString();
         String deepLink = "coolioevents://event/" + eventId;
 
-        EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, status, new Date());
+        EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, eventLocation, eventTime, status, new Date());
         Event event = new Event(eventId, organizerId, details);
 
         Map<String, Object> map = new HashMap<>();

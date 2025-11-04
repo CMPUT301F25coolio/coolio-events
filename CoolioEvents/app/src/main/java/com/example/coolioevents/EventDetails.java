@@ -24,27 +24,13 @@ public class EventDetails {
         // Empty constructor needed for Firebase
     }
 
-    /*
-    public EventDetails(String eventName, String eventDescription, String eventTime, String eventLocation, String registrationPeriod,
-                        int entrantLimit, String status, Date postedDate) {
+
+    public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, String eventTime, String eventLocation,
+                         String status, Date postedDate) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventTime = eventTime;
         this.eventLocation = eventLocation;
-        this.registrationPeriod = registrationPeriod;
-        this.entrantLimit = entrantLimit;
-        this.status = status;
-        this.postedDate = postedDate;
-
-        parseRegistrationPeriod();  // Convert to date objects
-        updateStatus();             // Update open/closed based on date
-
-    }
-     */
-    public EventDetails(String eventName, String eventDescription, String registrationPeriod,
-                        int entrantLimit, String status, Date postedDate) {
-        this.eventName = eventName;
-        this.eventDescription = eventDescription;
         this.registrationPeriod = registrationPeriod;
         this.entrantLimit = entrantLimit;
         this.status = status;
