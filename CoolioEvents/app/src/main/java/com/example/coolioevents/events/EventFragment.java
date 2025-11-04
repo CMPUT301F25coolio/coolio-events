@@ -279,9 +279,7 @@ public class EventFragment extends Fragment {
                         // Change button state
                         updateButtonState();
 
-                        // TEMPORARY: Go back to My Events fragment
-//                        getParentFragmentManager().popBackStack();
-                        // TODO: Juliane - Show unregister button once user accepts invite
+                        // Hide Accept/Decline buttons and show Unregister button
                         acceptInviteButton.setVisibility(View.GONE);
                         declineInviteButton.setVisibility(View.GONE);
                         unregisterButton.setVisibility(View.VISIBLE);
