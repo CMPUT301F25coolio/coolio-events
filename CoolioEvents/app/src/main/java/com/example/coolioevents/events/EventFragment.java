@@ -280,8 +280,11 @@ public class EventFragment extends Fragment {
                         updateButtonState();
 
                         // TEMPORARY: Go back to My Events fragment
-                        getParentFragmentManager().popBackStack();
+//                        getParentFragmentManager().popBackStack();
                         // TODO: Juliane - Show unregister button once user accepts invite
+                        acceptInviteButton.setVisibility(View.GONE);
+                        declineInviteButton.setVisibility(View.GONE);
+                        unregisterButton.setVisibility(View.VISIBLE);
                     }
                     else {
                         Toast.makeText(getContext(), "You were not registered for this event.", Toast.LENGTH_SHORT).show();

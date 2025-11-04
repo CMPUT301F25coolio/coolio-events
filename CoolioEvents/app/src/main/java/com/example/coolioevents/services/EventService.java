@@ -32,12 +32,14 @@ public class EventService {
                                         String title,
                                         String description,
                                         String registrationPeriod,
-                                        int entrantLimit) {
+                                        int entrantLimit,
+                                        String time,
+                                        String location) {
         // generate an id upfront so we can use it both in Firestore and the qr content
         String eventId = db.collection("events").document().getId();
         // pack some basic info open is our initial status and date is createdAt
         EventDetails details = new EventDetails(
-                title, description, registrationPeriod, entrantLimit, "open", new Date()
+                title, description, registrationPeriod, entrantLimit, time, location, "open", new Date()
         );
         // build the event document (I keep arrays initialized so pooling can safely mutate them)
         Map<String, Object> eventDoc = new HashMap<>();
