@@ -27,8 +27,6 @@ public class EntrantActivity extends AppCompatActivity {
     private CollectionReference userCollection; // collection of users in firebase database
 
     private FirebaseUser user; //The current user
-
-
     private Fragment homeFragment; //Fragment for home screen
     private Fragment myEventsFragment; //Fragment for home screen
     private BottomNavigationView bottomNavView;
@@ -38,9 +36,6 @@ public class EntrantActivity extends AppCompatActivity {
     private Map<String, Entrant> entrantMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrant);
         homeFragment = new EntrantHomeFragment();
@@ -53,25 +48,21 @@ public class EntrantActivity extends AppCompatActivity {
         userCollection = db.collection("users");
         user = mAuth.getCurrentUser();
         bottomNavView = findViewById(R.id.bottomNavigationView);
-
-
+        bottomNavView.setItemIconTintList(null);
         SwitchFragment(homeFragment);
 
-        bottomNavView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                if (menuItem.getItemId() == R.id.home){
-                    // If home item is selected in nav bar switch to home fragment
-                    SwitchFragment(homeFragment);
-                } else if (menuItem.getItemId() == R.id.myevents) {
-                    // If myevents item is selected in nav bar switch to home fragment
-                    SwitchFragment(myEventsFragment);
-                }
-
-                return false;
+        bottomNavView.setOnItemSelectedListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.home){
+                // If home item is selected in nav bar switch to home fragment
+                SwitchFragment(homeFragment);
+            } else if (menuItem.getItemId() == R.id.myevents) {
+                // If myevents item is selected in nav bar switch to home fragment
+                SwitchFragment(myEventsFragment);
             }
+            return true;
         });
     }
+
 
     public void SwitchFragment(Fragment fragment){
         // Switches fragment to fragment in the fragment container

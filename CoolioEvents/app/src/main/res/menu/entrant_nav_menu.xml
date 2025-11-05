@@ -5,17 +5,17 @@
     <item
         android:id="@+id/home"
         android:title="Home"
-        android:icon="@drawable/common_full_open_on_phone"
+        android:icon="@drawable/home_selector"
         />
     <item
         android:id="@+id/search"
         android:title="Search"
-        android:icon="@drawable/common_full_open_on_phone"/>
+        android:icon="@drawable/search_selector"/>
     <item android:title="Profile"
-        android:icon="@drawable/common_full_open_on_phone"
+        android:icon="@drawable/profile_selector"
         android:id="@+id/profile"/>
 
     <item android:title="My Events"
-        android:icon="@drawable/common_full_open_on_phone"
+        android:icon="@drawable/myevents_selector"
         android:id="@+id/myevents"/>
 </menu>

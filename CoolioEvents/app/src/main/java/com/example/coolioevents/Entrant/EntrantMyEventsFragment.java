@@ -26,11 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EntrantMyEventsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class EntrantMyEventsFragment extends Fragment {
     EntrantViewModel viewModel; // View Model containing eventList, organizerList, entrantList
     FirebaseAuth mAuth;
@@ -44,8 +39,6 @@ public class EntrantMyEventsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-    // TODO: Rename and change types and number of parameters
     public static EntrantMyEventsFragment newInstance(String param1, String param2) {
         EntrantMyEventsFragment fragment = new EntrantMyEventsFragment();
         return fragment;
@@ -89,10 +82,10 @@ public class EntrantMyEventsFragment extends Fragment {
         eventAdapter = new EventArrayAdapter(getActivity(), eventsList);
         eventsListView.setAdapter(eventAdapter);
 
-        //Getting EventViewModel
+        // Getting EventViewModel
         eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
 
-        //Navigating to Event Fragment
+        // Navigating to Event Fragment
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

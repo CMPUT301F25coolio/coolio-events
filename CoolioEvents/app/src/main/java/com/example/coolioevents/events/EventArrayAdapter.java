@@ -45,7 +45,6 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
 
         EntrantViewModel viewModel = new EntrantViewModel();
         Event event = eventList.get(position);
-        event.getDetails().updateStatus();
         TextView eventName = view.findViewById(R.id.eventName);
         TextView eventOrganizer = view.findViewById(R.id.eventOrganizer);
         TextView eventDescription = view.findViewById(R.id.eventDescription);
@@ -63,6 +62,13 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         eventDescription.setText(String.format("Description: %s", event.getDetails().getEventDescription())); // Sets event description text
         eventRegPrd.setText(String.format("Registration Period: %s", event.getDetails().getRegistrationPeriod())); // Sets event registration period text
         eventMaxEntrees.setText(String.format("Entrant Limit: %s", String.valueOf(event.getDetails().getEntrantLimit()))); // Sets entrant limit organizer text
+
+        if (event.getDetails().getEventLocation() != null){
+            eventLocation.setText(String.format("Event Location: %s",event.getDetails().getEventLocation())); // Sets event location if not null
+        }
+        if (event.getDetails().getEventTime() != null){
+            eventTime.setText(String.format("Time: %s",event.getDetails().getEventTime())); // Sets event time if not null
+        }
 
         // Setting event status text
         if (event.getDetails().getStatus().equals("open")) {

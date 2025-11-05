@@ -14,7 +14,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * This class is a ViewModel which contains all events, organizers, and entrants as objects
+ * which are kept up to date with the database, db
+ */
 public class EntrantViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<Event>> eventList = new MutableLiveData<ArrayList<Event>>(); // List of all events in db
@@ -22,7 +25,6 @@ public class EntrantViewModel extends ViewModel {
     private MutableLiveData<Map<String, Entrant>> entrantMap = new MutableLiveData<Map<String, Entrant>>(); // List of all entrants in db
     private FirebaseAuth mAuth; //  authenticator to create user accounts
     private FirebaseFirestore db; // database
-
     private CollectionReference usersRef; // Reference to collection "users" in db
     private CollectionReference eventsRef; // Reference to collection "events" in db
 
@@ -80,15 +82,29 @@ public class EntrantViewModel extends ViewModel {
 
 
     }
-
+    /**
+     * Gets eventList in MutableLiveData
+     * @return
+     * eventList in type MutableLiveData
+     */
     public MutableLiveData<ArrayList<Event>> getEventList() {
         return eventList;
     }
 
+    /**
+     * Gets organizer in MutableLiveData
+     * @return
+     * organizer in type MutableLiveData
+     */
     public MutableLiveData<Map<String, Organizer>> getOrganizerMap() {
         return organizerMap;
     }
 
+    /**
+     * Gets entrant in MutableLiveData
+     * @return
+     * entrant in type MutableLiveData
+     */
     public MutableLiveData<Map<String, Entrant>> getEntrantMap() {
         return entrantMap;
     }

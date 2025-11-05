@@ -39,7 +39,7 @@ public class EventService {
         String eventId = db.collection("events").document().getId();
         // pack some basic info open is our initial status and date is createdAt
         EventDetails details = new EventDetails(
-                title, description, registrationPeriod, entrantLimit, time, location, "open", new Date()
+                title, description, registrationPeriod, entrantLimit, time, location, new Date()
         );
         // build the event document (I keep arrays initialized so pooling can safely mutate them)
         Map<String, Object> eventDoc = new HashMap<>();

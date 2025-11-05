@@ -13,12 +13,8 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
-
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-
-
-
         app:menu="@menu/entrant_nav_menu" />
 
     <FrameLayout

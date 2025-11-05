@@ -71,6 +71,7 @@
         android:layout_marginTop="24dp"
         android:text=""
         android:textColor="#BD0000"
+        android:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="92dp"
-            android:fontFamily="@font/clearsans_regular"
+            android:fontFamily="@font/clearsans_bold"
             android:gravity="center"
             android:text="Welcome Back!\n\n LOGIN"
 

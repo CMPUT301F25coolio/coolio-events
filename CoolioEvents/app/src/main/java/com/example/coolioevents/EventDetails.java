@@ -15,7 +15,7 @@ public class EventDetails {
     private String eventLocation;
     private String registrationPeriod; // string input, e.g. "2025/10/28 - 2025/11/11"
     private int entrantLimit;
-    private String status; // "open" or "closed"
+
     private Date postedDate;
     private Date startDate;
     private Date endDate;
@@ -26,19 +26,17 @@ public class EventDetails {
 
 
     public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, String eventTime, String eventLocation,
-                         String status, Date postedDate) {
+                         Date postedDate) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventTime = eventTime;
         this.eventLocation = eventLocation;
         this.registrationPeriod = registrationPeriod;
         this.entrantLimit = entrantLimit;
-        this.status = status;
+
         this.postedDate = postedDate;
 
         parseRegistrationPeriod();  // Convert to date objects
-        updateStatus();             // Update open/closed based on date
-
     }
 
     // Getters
@@ -90,7 +88,18 @@ public class EventDetails {
      * @return
      *      The status of the event
      */
-    public String getStatus() { return status; }
+    public String getStatus() {
+        if (startDate == null || endDate == null) {
+            return "unknown";
+        }
+
+        Date now = new Date();
+        if (now.after(startDate) && now.before(endDate)) {
+            return "open";
+        } else {
+            return "closed";
+        }
+        }
 
     /**
      * This method gets the date the the event was posted.
@@ -137,7 +146,6 @@ public class EventDetails {
     public void setRegistrationPeriod(String registrationPeriod) {
         this.registrationPeriod = registrationPeriod;
         parseRegistrationPeriod();
-        updateStatus();
     }
 
     /**
@@ -147,12 +155,6 @@ public class EventDetails {
      */
     public void setEntrantLimit(int entrantLimit) { this.entrantLimit = entrantLimit; }
 
-    /**
-     * This method sets the entrant limit of the event to status
-     * @param status
-     *      The status of the event
-     */
-    public void setStatus(String status) { this.status = status; }
 
     /**
      * Parses the registration period string (e.g., "2025/10/28 - 2025/11/11") into startDate and endDate.
@@ -178,22 +180,5 @@ public class EventDetails {
         }
     }
 
-    /**
-     * Updates the event's status based on the current date and registration period.
-     * - "open" if today's date is between start and end
-     * - "closed" otherwise
-     */
-    public void updateStatus() {
-        if (startDate == null || endDate == null) {
-            status = "unknown";
-            return;
-        }
 
-        Date now = new Date();
-        if (now.after(startDate) && now.before(endDate)) {
-            status = "open";
-        } else {
-            status = "closed";
-        }
-    }
 }

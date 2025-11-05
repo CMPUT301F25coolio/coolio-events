@@ -58,7 +58,6 @@ public class EntrantHomeFragment extends Fragment {
                 eventsList.clear();
                 System.out.println("CHANGED OMG");
                 for (Event event : events){
-                    event.getDetails().updateStatus();
                     if (event.getDetails().getStatus().equals("open")){
                         //Only add events that are currently open
                         eventsList.add(event);
