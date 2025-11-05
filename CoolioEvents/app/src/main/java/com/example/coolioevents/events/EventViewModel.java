@@ -26,10 +26,10 @@ public class EventViewModel extends ViewModel {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final MutableLiveData<ArrayList<Event>> eventList = new MutableLiveData<>(); // List of all events in db
 
-    private final MutableLiveData<Map<String, Organizer>> organizerMap = new MutableLiveData<Map<String, Organizer>>(); // List of all organizers in db
+    private final MutableLiveData<Map<String, Organizer>> organizerMap = new MutableLiveData<Map<String, Organizer>>(); // Map of all organizers in db (key: userid, value: Organizer object)
     public EventViewModel() {
         addOrganizerSL(); // Makes organizer snapshot listener to keep organizerMap consistent with db
-        addEventSL();
+        addEventSL(); // Makes event snapshot listener to keep eventList consistent with db
     }
 
     /**
@@ -188,7 +188,8 @@ public class EventViewModel extends ViewModel {
     }
     /**
      * Establishes an organizer snapshot listener which updates organizerMap to stay up to date
-     * with the organizers in the db under "users" collection
+     * with the organizers in the db under "users" collection. Makes organizers in db as a map of
+     * organizer objects
      */
     private void addOrganizerSL(){
         // Snapshot listener for users in db - updates organizerMap when updated in db
@@ -212,7 +213,8 @@ public class EventViewModel extends ViewModel {
     }
     /**
      * Establishes an event snapshot listener which updates eventList to stay up to date
-     * with the events in the db under the "events" collection
+     * with the events in the db under the "events" collection. Make events in db as a list of
+     * event objects.
      */
     private void addEventSL(){
         // Snapshot listener for events in db - updates eventList when events collection  updated
