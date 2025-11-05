@@ -6,19 +6,30 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.Event;
+import com.example.coolioevents.Profile;
+import com.example.coolioevents.organizer.Organizer;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EventViewModel extends ViewModel {
 
     //ViewModel needs to hold reference to firebase
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final MutableLiveData<List<Event>> eventList = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Event>> eventList = new MutableLiveData<>(); // List of all events in db
 
+    private final MutableLiveData<Map<String, Organizer>> organizerMap = new MutableLiveData<Map<String, Organizer>>(); // List of all organizers in db
     public EventViewModel() {
+        addOrganizerSL(); // Makes organizer snapshot listener to keep organizerMap consistent with db
+        addEventSL();
     }
 
     /**
@@ -175,5 +186,55 @@ public class EventViewModel extends ViewModel {
                     Log.e("ViewModel", "FAILURE: Could not update acceptedEntrants for event " + eventId, e);
                 });
     }
-
+    /**
+     * Establishes an organizer snapshot listener which updates organizerMap to stay up to date
+     * with the organizers in the db under "users" collection
+     */
+    private void addOrganizerSL(){
+        // Snapshot listener for users in db - updates organizerMap when updated in db
+        db.collection("users").addSnapshotListener((value, error) ->{
+            if (value !=null && !value.isEmpty()){
+                organizerMap.setValue(new HashMap<>()); // Make organizerMap empty
+                Map<String, Organizer> newOrganizerMap = organizerMap.getValue(); // Placeholder organizerMap which will be assigned to organizerMap later
+                for (QueryDocumentSnapshot snapshot : value){
+                    String userID = snapshot.getId();
+                    String username = snapshot.getString("username");
+                    String name = snapshot.getString("name");
+                    String email = snapshot.getString("email");
+                    if (snapshot.getString("role").equals("Organizer")) {
+                        // If current user doc's role is organizer, add to organizerMap
+                        newOrganizerMap.put(userID, new Organizer(new Profile(userID,username,name,email)));
+                    }
+                }
+                organizerMap.setValue(newOrganizerMap); // Sets organizerMap to updated organizerMap
+            }
+        });
+    }
+    /**
+     * Establishes an event snapshot listener which updates eventList to stay up to date
+     * with the events in the db under the "events" collection
+     */
+    private void addEventSL(){
+        // Snapshot listener for events in db - updates eventList when events collection  updated
+        db.collection("events").addSnapshotListener(((value, error) -> {
+            if (value !=null && !value.isEmpty()){
+                eventList.setValue(new ArrayList<Event>()); // Make eventList Empty
+                ArrayList<Event> newlist = eventList.getValue(); // Placeholder eventList which will be assigned to eventList later
+                for (QueryDocumentSnapshot snapshot : value){
+                    Event newEvent = snapshot.toObject(Event.class);
+                    newEvent.setOrganizer(organizerMap.getValue().get(newEvent.getOrganizerId()));
+                    newlist.add(newEvent);
+                }
+                eventList.setValue(newlist); // Sets eventList to updated eventList
+            }
+        }));
+    }
+    /**
+     * Gets eventList as a MutableLiveData type containing an ArrayList of events.
+     * @return
+     * eventList as a MutableLiveData type
+     */
+    public MutableLiveData<ArrayList<Event>> getEventList() {
+        return eventList;
+    }
 }

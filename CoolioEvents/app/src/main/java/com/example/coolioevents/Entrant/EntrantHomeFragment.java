@@ -23,17 +23,13 @@ import com.example.coolioevents.events.EventViewModel;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EntrantHomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class EntrantHomeFragment extends Fragment {
-    EntrantViewModel viewModel; // View Model containing eventList, organizerList, entrantList
+    EventViewModel eventViewModel; // View Model eventList up to date with database
     ArrayList<Event> eventsList; // Home specific arraylist for array adapter ()
     EventArrayAdapter eventAdapter; // Array adapter for events
     ListView eventsListView; // ListView on home fragment screen
-    EventViewModel eventViewModel; //EventViewModel for clicking events
+
 
     public EntrantHomeFragment() {
         // Required empty public constructor
@@ -48,10 +44,10 @@ public class EntrantHomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
+        eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
         eventsList = new ArrayList<>();
 
-        viewModel.getEventList().observe(this, new Observer<ArrayList<Event>>() {
+        eventViewModel.getEventList().observe(this, new Observer<ArrayList<Event>>() {
             // When eventlist in viewmodel is updated, update eventList too (aswell as notify array adapter)
             @Override
             public void onChanged(ArrayList<Event> events) {
@@ -78,12 +74,9 @@ public class EntrantHomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        eventsListView = view.findViewById(R.id.eventList);
-        eventAdapter = new EventArrayAdapter(getActivity(), eventsList);
-        eventsListView.setAdapter(eventAdapter);
-
-        //Getting EventViewModel
-        eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+        eventsListView = view.findViewById(R.id.eventList); // Listview in home
+        eventAdapter = new EventArrayAdapter(getActivity(), eventsList); // Make new event adapter linked to eventList
+        eventsListView.setAdapter(eventAdapter); // Make listview have adapter connected to eventList
 
         //Navigating to Event Fragment
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

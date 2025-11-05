@@ -27,12 +27,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class EntrantMyEventsFragment extends Fragment {
-    EntrantViewModel viewModel; // View Model containing eventList, organizerList, entrantList
+    EventViewModel eventViewModel; // View Model eventList up to date with database
     FirebaseAuth mAuth;
     ArrayList<Event> eventsList; // My Event specific arraylist for array adapter ()
     EventArrayAdapter eventAdapter; // Array adapter for events
-    ListView eventsListView; // ListView on myevents fragment screen
-    EventViewModel eventViewModel; //EventViewModel for clicking events
+    ListView eventsListView; // ListView on myEvents fragment screen
+
     FirebaseUser user;
 
     public EntrantMyEventsFragment() {
@@ -47,14 +47,14 @@ public class EntrantMyEventsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(EntrantViewModel.class);
+        eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
         eventsList = new ArrayList<>();
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
-        viewModel.getEventList().observe(this, new Observer<ArrayList<Event>>() {
-            // When eventlist in viewmodel is updated, update eventList too (aswell as notify array adapter)
+        eventViewModel.getEventList().observe(this, new Observer<ArrayList<Event>>() {
+            // When eventList in viewmodel is updated, update eventList too (aswell as notify array adapter)
             @Override
             public void onChanged(ArrayList<Event> events) {
                 eventsList.clear();
@@ -78,12 +78,9 @@ public class EntrantMyEventsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        eventsListView = view.findViewById(R.id.eventList);
-        eventAdapter = new EventArrayAdapter(getActivity(), eventsList);
-        eventsListView.setAdapter(eventAdapter);
-
-        // Getting EventViewModel
-        eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+        eventsListView = view.findViewById(R.id.eventList); // My Events Listview
+        eventAdapter = new EventArrayAdapter(getActivity(), eventsList); // Makes a new array adapter linked to eventsList
+        eventsListView.setAdapter(eventAdapter); // Links eventsListview to eventAdapter
 
         // Navigating to Event Fragment
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

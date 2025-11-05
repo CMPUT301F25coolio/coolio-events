@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.example.coolioevents.Entrant.EntrantViewModel;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,13 +18,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class EventArrayAdapter extends ArrayAdapter<Event> {
     private ArrayList<Event> eventList;
     private Context context;
-
-
     private FirebaseUser currentUser;
     public EventArrayAdapter(Context context, ArrayList<Event> eventList){
         super(context,0, eventList);
@@ -43,7 +39,6 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         }
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        EntrantViewModel viewModel = new EntrantViewModel();
         Event event = eventList.get(position);
         TextView eventName = view.findViewById(R.id.eventName);
         TextView eventOrganizer = view.findViewById(R.id.eventOrganizer);
@@ -131,7 +126,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
 
         // Set waiting list count text
         if (event.getWaitlistEntrants().size() == 1){
-            // If
+
             eventWaitingCount.setText("1 PERSON IN WAITING LIST"); //Set waiting list count
         }
         else {
