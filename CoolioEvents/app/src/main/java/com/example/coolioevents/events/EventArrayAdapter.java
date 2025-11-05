@@ -45,6 +45,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
 
         EntrantViewModel viewModel = new EntrantViewModel();
         Event event = eventList.get(position);
+        event.getDetails().updateStatus();
         TextView eventName = view.findViewById(R.id.eventName);
         TextView eventOrganizer = view.findViewById(R.id.eventOrganizer);
         TextView eventDescription = view.findViewById(R.id.eventDescription);

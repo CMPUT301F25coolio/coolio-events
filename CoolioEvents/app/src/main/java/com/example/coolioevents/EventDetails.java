@@ -183,7 +183,7 @@ public class EventDetails {
      * - "open" if today's date is between start and end
      * - "closed" otherwise
      */
-    private void updateStatus() {
+    public void updateStatus() {
         if (startDate == null || endDate == null) {
             status = "unknown";
             return;
