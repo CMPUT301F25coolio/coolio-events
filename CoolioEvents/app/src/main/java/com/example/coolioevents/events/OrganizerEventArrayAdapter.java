@@ -19,11 +19,11 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventArrayAdapter extends ArrayAdapter<Event> {
+public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
     private ArrayList<Event> eventList;
     private Context context;
     private FirebaseUser currentUser;
-    public EventArrayAdapter(Context context, ArrayList<Event> eventList){
+    public OrganizerEventArrayAdapter(Context context, ArrayList<Event> eventList){
         super(context,0, eventList);
         this.eventList = eventList;
         this.context = context;
@@ -35,7 +35,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         View view = convertView;
 
         if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.event_content, parent,false);
+            view = LayoutInflater.from(context).inflate(R.layout.organizerevent_content, parent,false);
         }
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -48,8 +48,8 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         TextView eventRegPrd = view.findViewById(R.id.eventRegPeriod);
         TextView eventMaxEntrees = view.findViewById(R.id.eventmaxEntrees);
         TextView eventStatus = view.findViewById(R.id.eventStatus);
-        TextView eventUserStatus = view.findViewById(R.id.eventuserStatus);
-        TextView eventUserStatusRegistration = view.findViewById(R.id.eventUserStatusRegistration);
+
+
         TextView eventWaitingCount = view.findViewById(R.id.eventWaitingCount);
 
         eventName.setText(event.getDetails().getEventName());
@@ -77,52 +77,8 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
             eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
         }
 
-        List<String> waitlist = event.getWaitlistEntrants();
-        List<String> chosenEntrants = event.getChosenEntrants();
-        List<String> acceptedEntrants = event.getAcceptedEntrants();
-        String userId = currentUser.getUid();
 
-        boolean isUserOnWaitList = waitlist.contains(userId);
-        boolean isUserChosen = chosenEntrants.contains(userId);
-        boolean isUserAccepted = acceptedEntrants.contains(userId);
 
-        System.out.println(isUserOnWaitList);
-        // Setting user status text
-        if (isUserOnWaitList) {
-            //Set Visibility of registration status
-            eventUserStatusRegistration.setVisibility(View.GONE);
-
-            // If the current user is in the waitlist, display an indicator that user is in the waiting list
-            eventUserStatus.setText("In Waiting List");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
-        }
-        if (!isUserOnWaitList && !isUserChosen && !isUserAccepted) {
-            //Set Visibility of registration status
-            eventUserStatusRegistration.setVisibility(View.GONE);
-
-            // If the current user is not in the waitlist, display an indicator that user is  not in the waiting list
-            eventUserStatus.setText("Not In Waiting List");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greybuttonbackground));
-        }
-        if (isUserChosen) {
-            //Set Visibility of registration status
-            eventUserStatusRegistration.setVisibility(View.VISIBLE);
-
-            // If the current user is chosen, display an indicator that user is chosen
-            eventUserStatus.setText("Chosen");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
-        }
-        if (isUserAccepted) {
-            // Set visibility of registration status
-            eventUserStatusRegistration.setVisibility(View.VISIBLE);
-
-            // Set text and colour of user status
-            eventUserStatus.setText("Chosen");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
-
-            eventUserStatusRegistration.setText("Registered");
-            eventUserStatusRegistration.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
-        }
 
         // Set waiting list count text
         if (event.getWaitlistEntrants().size() == 1){
@@ -135,5 +91,4 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
 
         return view;
     }
-
 }
