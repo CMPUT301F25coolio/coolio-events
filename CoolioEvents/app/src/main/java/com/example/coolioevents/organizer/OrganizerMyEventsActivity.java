@@ -54,7 +54,7 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
         eventsListView.setAdapter(eventAdapter); // Links eventsListview to eventAdapter
         btnBack = findViewById(R.id.btnBack);
 
-        //Back button sends user back to Organizer Home
+        // Back button sends user back to Organizer Home
         btnBack.setOnClickListener(v -> finish());
 
 
