@@ -17,8 +17,10 @@ import com.example.coolioevents.Event;
 import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
 import com.example.coolioevents.events.EventViewModel;
+import com.example.coolioevents.events.EventViewModelFactory;
 import com.example.coolioevents.services.PoolingService;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class OrganizerEventActivity extends AppCompatActivity {
     private EventViewModel eventViewModel;
@@ -27,6 +29,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
     private int numberOfChosenEntrants;
     private int maxEntrants;
     private Event currentEvent;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // Attributes for displaying details
     private TextView eventNameTextView;
@@ -104,7 +107,15 @@ public class OrganizerEventActivity extends AppCompatActivity {
         eventUserStatusRegistrationView = findViewById(R.id.eventViewUserStatusRegistration);
 
         // Establish ViewModel
-        eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        // eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+
+        // Source - https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
+        // Posted by mlykotom
+        // Retrieved by Juliane Phan on 2025-11-06, License - CC BY-SA 4.0
+        // Used to instantiate the EventViewModel which uses the EventViewModel Factory class
+        // Modifications made: Used our own class and parameter names
+        eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
+
 
         eventViewModel.getEventById(currentEventId).observe(this, event -> {
             if (event != null) {

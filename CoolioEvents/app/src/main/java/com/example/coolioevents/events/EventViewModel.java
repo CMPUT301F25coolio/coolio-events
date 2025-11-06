@@ -22,13 +22,14 @@ import java.util.Map;
 public class EventViewModel extends ViewModel {
 
     // ViewModel needs to hold reference to firebase
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db;
     private final MutableLiveData<ArrayList<Event>> eventList = new MutableLiveData<>(); // List of all events in db
     private final MutableLiveData<Map<String, Organizer>> organizerMap = new MutableLiveData<Map<String, Organizer>>(); // Map of all organizers in db (key: userid, value: Organizer object)
 
     // Make a LotteryService Object
     private final LotteryService lotteryService = new LotteryService();
-    public EventViewModel() {
+    public EventViewModel(FirebaseFirestore db) {
+        this.db = db;
         addOrganizerSL(); // Makes organizer snapshot listener to keep organizerMap consistent with db
         addEventSL(); // Makes event snapshot listener to keep eventList consistent with db
     }

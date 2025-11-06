@@ -21,6 +21,7 @@ import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class EventFragment extends Fragment {
     private boolean isUserOnWaitList = false;
     private boolean isUserChosen = false;
     private boolean isUserAccepted = false;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // Attributes for displaying details
     private TextView eventNameTextView;
@@ -165,7 +167,14 @@ public class EventFragment extends Fragment {
         eventUserStatusRegistrationView = view.findViewById(R.id.eventViewUserStatusRegistration);
 
         // Getting ViewModel and displaying event details
-        eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+        // eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+
+        // Source - https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
+        // Posted by mlykotom
+        // Retrieved by Juliane Phan on 2025-11-06, License - CC BY-SA 4.0
+        // Used to instantiate the EventViewModel which uses the EventViewModel Factory class
+        // Modifications made: Used our own class and parameter names
+        eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
 
 
         //TODO: Implement a check to make sure the event ID exists

@@ -19,8 +19,10 @@ import com.example.coolioevents.R;
 import com.example.coolioevents.events.EntrantEventArrayAdapter;
 import com.example.coolioevents.events.EventFragment;
 import com.example.coolioevents.events.EventViewModel;
+import com.example.coolioevents.events.EventViewModelFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +36,7 @@ public class EntrantMyEventsFragment extends Fragment {
     ListView eventsListView; // ListView on myEvents fragment screen
 
     FirebaseUser user;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public EntrantMyEventsFragment() {
         // Required empty public constructor
@@ -47,7 +50,16 @@ public class EntrantMyEventsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+
+        // eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+
+        // Source - https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
+        // Posted by mlykotom
+        // Retrieved by Juliane Phan on 2025-11-06, License - CC BY-SA 4.0
+        // Used to instantiate the EventViewModel which uses the EventViewModel Factory class
+        // Modifications made: Used our own class and parameter names
+        eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
+
         eventsList = new ArrayList<>();
 
         mAuth = FirebaseAuth.getInstance();

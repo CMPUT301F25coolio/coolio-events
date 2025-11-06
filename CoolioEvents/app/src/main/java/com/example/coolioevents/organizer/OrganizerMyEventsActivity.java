@@ -21,9 +21,11 @@ import com.example.coolioevents.MainActivity;
 import com.example.coolioevents.R;
 import com.example.coolioevents.events.EntrantEventArrayAdapter;
 import com.example.coolioevents.events.EventViewModel;
+import com.example.coolioevents.events.EventViewModelFactory;
 import com.example.coolioevents.events.OrganizerEventArrayAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +33,7 @@ import java.util.Collections;
 public class OrganizerMyEventsActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser user; // Current organizer user
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     EventViewModel eventViewModel; // View Model eventList up to date with database
     ArrayList<Event> eventsList; // My events-specific arraylist for array adapter
     OrganizerEventArrayAdapter eventAdapter; // Array adapter for events
@@ -44,7 +47,15 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_organizer_my_events);
 
 
-        eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        // eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+
+        // Source - https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
+        // Posted by mlykotom
+        // Retrieved by Juliane Phan on 2025-11-06, License - CC BY-SA 4.0
+        // Used to instantiate the EventViewModel which uses the EventViewModel Factory class
+        // Modifications made: Used our own class and parameter names
+        eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
+
         eventsList = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
