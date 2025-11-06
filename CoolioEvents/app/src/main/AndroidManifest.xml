@@ -4,6 +4,7 @@
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,61 +15,56 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CoolioEvents"
         tools:targetApi="31">
-
+        <activity
+            android:name=".organizer.OrganizerMyEventsActivity"
+            android:exported="false" />
         <activity
             android:name=".organizer.OrganizerEntrantsActivity"
             android:exported="true" />
-
         <activity
             android:name=".organizer.MyEventsActivity"
-            android:exported="true" />
-
-        <!-- Organizer side -->
+            android:exported="true" /> <!-- Organizer side -->
         <activity
             android:name=".organizer.OrganizerActivity"
             android:exported="false" />
         <activity
             android:name=".organizer.CreateEventActivity"
-            android:exported="false" />
-
-        <!-- Entrant side -->
+            android:exported="false" /> <!-- Entrant side -->
         <activity
             android:name=".Entrant.EntrantActivity"
-            android:exported="false" />
-
-        <!-- Deep link handler for events -->
+            android:exported="false" /> <!-- Deep link handler for events -->
         <activity
             android:name=".events.EventDeepLinkActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="coolioevents" android:host="event" />
-            </intent-filter>
-        </activity>
 
-        <!-- Authentication screens -->
+                <data
+                    android:host="event"
+                    android:scheme="coolioevents" />
+            </intent-filter>
+        </activity> <!-- Authentication screens -->
         <activity
             android:name=".authentication.SignupActivity"
             android:exported="false" />
         <activity
             android:name=".authentication.LoginActivity"
-            android:exported="false" />
-
-        <!-- Launcher -->
+            android:exported="false" /> <!-- Launcher -->
         <activity
             android:name=".authentication.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Miscellaneous -->
+        </activity> <!-- Miscellaneous -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
     </application>
+
 </manifest>
