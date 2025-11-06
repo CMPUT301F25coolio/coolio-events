@@ -21,8 +21,6 @@
  * RATIONALE:
  * This class was designed to support instantiation of EventViewModel (which takes in a parameter).
  *
- * OUTSTANDING ISSUES:
- *
  * @author Juliane Phan
  * @version 1.0
  * @since 2025-11-06
