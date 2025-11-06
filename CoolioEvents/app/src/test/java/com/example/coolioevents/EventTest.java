@@ -21,10 +21,9 @@ public class EventTest {
         String eventLocation = "Edmonton";
         String registrationPeriod = "2025/10/25-2099/12/25"; // In registration period
         int entrantLimit = 50;
-        String status = "opened"; // Event updateStatus() method should keep to open when constructed
         Date postedDate = new Date();
 
-        EventDetails testDetails = new EventDetails(eventName, eventDescription, registrationPeriod, entrantLimit, eventTime, eventLocation, status, postedDate);
+        EventDetails testDetails = new EventDetails(eventName, eventDescription, registrationPeriod, entrantLimit, eventTime, eventLocation, postedDate);
 
         return new Event(eventID, organizer.getProfile().getUser_id(), testDetails);
     }
@@ -37,10 +36,9 @@ public class EventTest {
         String eventLocation = "Edmonton";
         String registrationPeriod = "2010/10/25-2010/12/20"; // Out of registration period
         int entrantLimit = 50;
-        String status = "closed"; // Event updateStatus() method should convert to closed when constructed
         Date postedDate = new Date();
 
-        EventDetails testDetails = new EventDetails(eventName, eventDescription, registrationPeriod, entrantLimit, eventTime, eventLocation, status, postedDate);
+        EventDetails testDetails = new EventDetails(eventName, eventDescription, registrationPeriod, entrantLimit, eventTime, eventLocation, postedDate);
 
         return new Event(eventID, organizer.getProfile().getUser_id(), testDetails);
     }
@@ -84,10 +82,9 @@ public class EventTest {
         String eventID = UUID.randomUUID().toString(); // Generate random Organizer ID
         Organizer organizer = makeMockOrganizer(); // Make Mock Organizer
         Event openEvent = makeOpenMockEvent(eventID, makeMockOrganizer()); // Make Mock Event
-        Event closedEvent = makeOpenMockEvent(eventID, makeMockOrganizer()); // Make Mock Event
-
-        assert(openEvent.getDetails().getStatus().equals("opened")); //Closed event should be closed
-        assert(openEvent.getDetails().getStatus().equals("closed")); //Open event should be open
+        Event closedEvent = makeClosedMockEvent(eventID, makeMockOrganizer()); // Make Mock Event
+        assert(openEvent.getDetails().getStatus().equals("open")); //Closed event should be closed
+        assert(closedEvent.getDetails().getStatus().equals("closed")); //Open event should be open
     }
 
     @Test
@@ -110,7 +107,7 @@ public class EventTest {
 
         //Tests to see if status of each event are correct
         assert(openEvent.getDetails().getStatus().equals("closed")); //openEvent should be closed
-        assert(closedEvent.getDetails().getStatus().equals("closed")); //openEvent should be open
+        assert(closedEvent.getDetails().getStatus().equals("open")); //closedEvent should be open
 
         //Tests to see if new startDate and endDate in events are parsed correctly
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
