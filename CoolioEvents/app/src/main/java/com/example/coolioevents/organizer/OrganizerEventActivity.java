@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -20,8 +19,6 @@ import com.example.coolioevents.R;
 import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.services.PoolingService;
 import com.google.android.material.button.MaterialButton;
-
-import java.util.List;
 
 public class OrganizerEventActivity extends AppCompatActivity {
     private EventViewModel eventViewModel;
@@ -114,7 +111,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
                 EventDetails details = event.getDetails();
                 if (details != null) {
                     // Get Details from event
-                    lotteryDone = event.isLotteryDone();
+                    lotteryDone = event.getLotteryDone();
                     System.out.println("the Lottery is Done:" + lotteryDone);
                     eventStatus = event.getDetails().getStatus();
                     numberOfChosenEntrants = event.getChosenEntrants().size();

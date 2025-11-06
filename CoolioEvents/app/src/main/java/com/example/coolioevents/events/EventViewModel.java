@@ -2,17 +2,14 @@ package com.example.coolioevents.events;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.Profile;
 import com.example.coolioevents.organizer.Organizer;
 import com.example.coolioevents.services.LotteryResult;
 import com.example.coolioevents.services.LotteryService;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -248,7 +245,7 @@ public class EventViewModel extends ViewModel {
      */
     public void runLottery(Event event) {
         // If event does not exist or if the lottery for an event has already been run
-        if (event == null || event.isLotteryDone()) {
+        if (event == null || event.getLotteryDone()) {
             Log.d("ViewModel", "Lottery can not be run; event is either null, or lottery has already been run.");
             return;
         }
@@ -266,7 +263,7 @@ public class EventViewModel extends ViewModel {
         db.collection("events").document(eventId)
                 .update("chosenEntrants", result.getSelectedEntrants(),
                         "waitlistEntrants", result.getRemainingWaitlist(),
-                        "isLotteryDone", true)
+                        "lotteryDone", true)
                 .addOnSuccessListener(aVoid -> {
                     Log.d("ViewModel", "SUCCESS: lottery run and database updated for event:" + eventId);
                 })

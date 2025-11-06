@@ -1,11 +1,8 @@
 package com.example.coolioevents;
 
-import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.organizer.Organizer;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 /**
  * This is a class the defines an Event
@@ -20,7 +17,7 @@ public class Event implements Comparable<Event> {
     private List<String> chosenEntrants;  // Entrants who were chosen from the waitlist
     private List<String> cancelledEntrants;  // Entrants who cancelled their invite
     private List<String> acceptedEntrants;  // Entrants who accepted their invite
-    private boolean isLotteryDone;
+    private boolean lotteryDone;
 
     public Event() {
         // Empty constructor for Firebase
@@ -34,7 +31,7 @@ public class Event implements Comparable<Event> {
         this.waitlistEntrants = new ArrayList<>();
         this.chosenEntrants = new ArrayList<>();
         this.cancelledEntrants = new ArrayList<>();
-        this.isLotteryDone = true;
+        this.lotteryDone = true;
     }
 
 
@@ -123,8 +120,8 @@ public class Event implements Comparable<Event> {
      * This method returns if the lottery has been done or not
      * @return isLotteryDone
      */
-    public boolean isLotteryDone() {
-        return isLotteryDone;
+    public boolean getLotteryDone() {
+        return lotteryDone;
     }
 
     /**
@@ -132,7 +129,7 @@ public class Event implements Comparable<Event> {
      * @param lotteryDone a boolean representing if the lottery has been done or not
      */
     public void setLotteryDone(boolean lotteryDone) {
-        isLotteryDone = lotteryDone;
+        this.lotteryDone = lotteryDone;
     }
 
     /**
