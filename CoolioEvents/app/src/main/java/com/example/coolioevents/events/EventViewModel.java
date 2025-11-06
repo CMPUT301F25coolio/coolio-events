@@ -10,6 +10,8 @@ import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.Profile;
 import com.example.coolioevents.organizer.Organizer;
+import com.example.coolioevents.services.LotteryResult;
+import com.example.coolioevents.services.LotteryService;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,11 +24,13 @@ import java.util.Map;
 
 public class EventViewModel extends ViewModel {
 
-    //ViewModel needs to hold reference to firebase
+    // ViewModel needs to hold reference to firebase
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final MutableLiveData<ArrayList<Event>> eventList = new MutableLiveData<>(); // List of all events in db
-
     private final MutableLiveData<Map<String, Organizer>> organizerMap = new MutableLiveData<Map<String, Organizer>>(); // Map of all organizers in db (key: userid, value: Organizer object)
+
+    // Make a LotteryService Object
+    private final LotteryService lotteryService = new LotteryService();
     public EventViewModel() {
         addOrganizerSL(); // Makes organizer snapshot listener to keep organizerMap consistent with db
         addEventSL(); // Makes event snapshot listener to keep eventList consistent with db
@@ -239,4 +243,38 @@ public class EventViewModel extends ViewModel {
     public MutableLiveData<ArrayList<Event>> getEventList() {
         return eventList;
     }
+
+    /**
+     * This function runs a lottery for a given event and updates firebase
+     * @param event event to run the lottery for
+     */
+    private void runLottery(Event event) {
+        // If event does not exist or if the lottery for an event has already been run
+        if (event == null || event.isLotteryDone()) {
+            Log.d("ViewModel", "Lottery can not be run; event is either null, or lottery has already been run.");
+            return;
+        }
+
+        // Get lottery results using the lottery service
+        List<String> waitlist = event.getWaitlistEntrants();
+        int entrantLimit = event.getDetails().getEntrantLimit();
+
+        LotteryResult result = lotteryService.selectEntrants(waitlist, entrantLimit);
+
+        // Get event ID
+        String eventId = event.getEventId();
+
+        // Update firebase
+        db.collection("events").document(eventId)
+                .update("chosenEntrants", result.getSelectedEntrants(),
+                        "waitlistEntrants", result.getRemainingWaitlist(),
+                        "isLotteryDone", true)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("ViewModel", "SUCCESS: lottery run and database updated for event:" + eventId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "FAILURE: Could not update acceptedEntrants for event " + eventId, e);
+                });
+    }
+    //TODO: maybe have the function directly change isLotteryDone directly in the event and not on the database?
 }

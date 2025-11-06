@@ -20,6 +20,7 @@ public class Event implements Comparable<Event> {
     private List<String> chosenEntrants;  // Entrants who were chosen from the waitlist
     private List<String> cancelledEntrants;  // Entrants who cancelled their invite
     private List<String> acceptedEntrants;  // Entrants who accepted their invite
+    private boolean isLotteryDone = false;
 
     public Event() {
         // Empty constructor for Firebase
@@ -118,6 +119,22 @@ public class Event implements Comparable<Event> {
     public void setDetails(EventDetails details) { this.details = details; }
 
     /**
+     * This method returns if the lottery has been done or not
+     * @return isLotteryDone
+     */
+    public boolean isLotteryDone() {
+        return isLotteryDone;
+    }
+
+    /**
+     * This method sets the parameter isLotteryDone
+     * @param lotteryDone a boolean representing if the lottery has been done or not
+     */
+    public void setLotteryDone(boolean lotteryDone) {
+        isLotteryDone = lotteryDone;
+    }
+
+    /**
      * This is the comparison method for Events
      * Events that are posted more recently are deemed higher.
      *
@@ -137,5 +154,6 @@ public class Event implements Comparable<Event> {
         }
         return -1;
     }
+
 
 }
