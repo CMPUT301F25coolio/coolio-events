@@ -19,6 +19,7 @@ public class EventDetails {
     private Date postedDate;
     private Date startDate;
     private Date endDate;
+    private String posterUrl;
 
     public EventDetails() {
         // Empty constructor needed for Firebase
@@ -122,6 +123,13 @@ public class EventDetails {
      */
     public Date getEndDate() { return endDate; }
 
+    /**
+     * This method gets the posterUrl of the event's poster
+     * @return
+     *      The Url of the event's poster
+     */
+    public String getPosterUrl() { return posterUrl; }
+
     // Setters
 
     /**
@@ -154,6 +162,13 @@ public class EventDetails {
      *      The limit of entrants in the event
      */
     public void setEntrantLimit(int entrantLimit) { this.entrantLimit = entrantLimit; }
+
+    /**
+     * This method sets the poster's Url of the event to posterUrl
+     * @param posterUrl
+     *      The Url of the poster
+     */
+    public void setPosterUrl(String posterUrl) { this.posterUrl = posterUrl; }
 
 
     /**

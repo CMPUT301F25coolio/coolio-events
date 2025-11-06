@@ -1,5 +1,6 @@
 package com.example.coolioevents.organizer;
 
+import com.example.coolioevents.organizer.Camera;
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
 import android.content.Intent;
@@ -30,6 +31,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,10 +39,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Activity for organizers to create events, including picking or capturing poster images.
+ */
 public class CreateEventActivity extends AppCompatActivity {
 
     private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventTime, etEventLocation;
-    private Button btnCreate, btnPickPoster;
+    private Button btnCreate, btnPickPoster, btnTakePhoto;
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
 
@@ -49,6 +54,8 @@ public class CreateEventActivity extends AppCompatActivity {
     private FirebaseStorage storage;
 
     private Uri posterUri = null;
+    private Camera camera;
+    private String eventPosterPath;
 
     private final ActivityResultLauncher<String> pickPosterLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
@@ -67,6 +74,8 @@ public class CreateEventActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        camera = new Camera(this);
+
         etTitle = findViewById(R.id.etEventTitle);
         etDescription = findViewById(R.id.etEventDescription);
         etRegistrationPeriod = findViewById(R.id.etRegistrationPeriod);
@@ -77,10 +86,42 @@ public class CreateEventActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
         btnPickPoster = findViewById(R.id.btnPickPoster);
+        btnTakePhoto = findViewById(R.id.btnTakePhoto);
 
         btnBack.setOnClickListener(v -> finish());
         btnPickPoster.setOnClickListener(v -> pickPosterLauncher.launch("image/*"));
+        btnTakePhoto.setOnClickListener(v -> camera.takePicture(this));
         btnCreate.setOnClickListener(v -> createEvent());
+    }
+
+    /**
+     * Handles camera and gallery results for poster images.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Camera.REQUEST_IMAGE_CAPTURE) {
+                // Picture taken with camera
+                eventPosterPath = camera.getCurrentPhotoPath();
+                if (eventPosterPath != null) {
+                    File file = new File(eventPosterPath);
+                    posterUri = Uri.fromFile(file);
+                    Bitmap bitmap = BitmapFactory.decodeFile(eventPosterPath);
+                    imgPosterPreview.setImageBitmap(bitmap);
+                }
+            }
+            else if (requestCode == Camera.REQUEST_IMAGE_PICK && data != null) {
+                // Image picked from gallery
+                Uri selectedImageUri = data.getData();
+                if (selectedImageUri != null) {
+                    posterUri = selectedImageUri;
+                    imgPosterPreview.setImageURI(posterUri);
+                }
+            }
+            Toast.makeText(this, "Poster photo added successfully", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void createEvent() {
@@ -109,7 +150,8 @@ public class CreateEventActivity extends AppCompatActivity {
         String eventId = UUID.randomUUID().toString();
         String deepLink = "coolioevents://event/" + eventId;
 
-        EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, eventLocation, eventTime,  new Date());
+        EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, eventTime, eventLocation,  new Date());
+        details.setPosterUrl(eventPosterPath);
         Event event = new Event(eventId, organizerId, details);
 
         Map<String, Object> map = new HashMap<>();
