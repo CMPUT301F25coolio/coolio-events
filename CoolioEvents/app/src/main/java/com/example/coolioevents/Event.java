@@ -20,7 +20,7 @@ public class Event implements Comparable<Event> {
     private List<String> chosenEntrants;  // Entrants who were chosen from the waitlist
     private List<String> cancelledEntrants;  // Entrants who cancelled their invite
     private List<String> acceptedEntrants;  // Entrants who accepted their invite
-    private boolean isLotteryDone = false;
+    private boolean isLotteryDone;
 
     public Event() {
         // Empty constructor for Firebase
@@ -34,6 +34,7 @@ public class Event implements Comparable<Event> {
         this.waitlistEntrants = new ArrayList<>();
         this.chosenEntrants = new ArrayList<>();
         this.cancelledEntrants = new ArrayList<>();
+        this.isLotteryDone = true;
     }
 
 

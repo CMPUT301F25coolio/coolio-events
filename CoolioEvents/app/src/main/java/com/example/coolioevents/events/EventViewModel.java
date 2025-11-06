@@ -46,7 +46,6 @@ public class EventViewModel extends ViewModel {
      * @return
      *      returns a single event of the type MutableLiveData
      */
-    //Getting an event by its ID
     public MutableLiveData<Event> getEventById(String eventId) {
         MutableLiveData<Event> singleEventData = new MutableLiveData<>();
 
@@ -72,7 +71,6 @@ public class EventViewModel extends ViewModel {
      * @param userId
      *      the user that will be added to the event waitlist
      */
-    //Joining Waitlist
     public void joinWaitlist(String eventId, String userId) {
         if (eventId == null || userId == null) {
             return;
@@ -248,7 +246,7 @@ public class EventViewModel extends ViewModel {
      * This function runs a lottery for a given event and updates firebase
      * @param event event to run the lottery for
      */
-    private void runLottery(Event event) {
+    public void runLottery(Event event) {
         // If event does not exist or if the lottery for an event has already been run
         if (event == null || event.isLotteryDone()) {
             Log.d("ViewModel", "Lottery can not be run; event is either null, or lottery has already been run.");

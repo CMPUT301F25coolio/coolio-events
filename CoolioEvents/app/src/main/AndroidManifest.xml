@@ -16,6 +16,9 @@
         android:theme="@style/Theme.CoolioEvents"
         tools:targetApi="31">
         <activity
+            android:name=".organizer.OrganizerEventActivity"
+            android:exported="false"/>
+        <activity
             android:name=".organizer.OrganizerMyEventsActivity"
             android:exported="false" />
         <activity

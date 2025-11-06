@@ -9,4 +9,7 @@
     <color name="declineInvite">#D22B2B</color>
     <color name="unregister">#D22B2B</color>
     <color name="back">#0047AB</color>
+    <color name="drawfromlottery">#4CBB17</color>
+    <color name="grey">#A9A9A9</color>
+
 </resources>

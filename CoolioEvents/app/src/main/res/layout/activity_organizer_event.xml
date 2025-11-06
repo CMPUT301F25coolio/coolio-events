@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2962FF"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/organizer_event_back_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="#FFFFFF" />
+
+        <TextView
+            android:layout_width="203dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:text="Event"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/organizer_event_edit_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:src="@drawable/ic_settings_icon"
+            app:tint="#FFFFFF"/>
+
+    </LinearLayout>
+
+    <!-- Poster -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/eventViewPoster"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:shapeAppearance="@style/roundedcornerimageview"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/eventViewName"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:autoSizeTextType="uniform"
+        android:text="Event Title"
+        app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <!-- Organizer (poster) -->
+    <TextView
+        android:id="@+id/eventViewOrganizer"
+        android:layout_width="280dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="5dp"
+        android:autoSizeTextType="uniform"
+        android:text="Posted By: Organizer"
+        app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewName" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/eventViewDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="20dp"
+        android:text="This is the event discription. This describes what the events is about, isn't that crazy? Pretty amazing event description right here if you ask me. Wow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewPoster" />
+
+    <!-- Time -->
+    <TextView
+        android:id="@+id/eventViewTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Time: Month Day Year | Time"
+        android:textSize="17dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewDescription" />
+
+    <!-- Location -->
+    <TextView
+        android:id="@+id/eventViewLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Location: 123 Address, 567 231"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewTime" />
+
+    <!-- Registration Period -->
+    <TextView
+        android:id="@+id/eventViewRegistrationPeriod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Registration Period: Month/Day/Year - Month/Day/Year"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewLocation" />
+
+    <!-- Entrant Limit -->
+    <TextView
+        android:id="@+id/eventViewLimit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Max Entrees: 0"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewRegistrationPeriod" />
+
+    <!-- Event Status -->
+    <TextView
+        android:id="@+id/eventViewEventStatusLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Event Status: "
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
+
+    <TextView
+        android:id="@+id/eventViewEventStatus"
+        android:layout_width="100dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/greenshapebackground"
+        android:gravity="center"
+        android:text="Open"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        app:layout_constraintStart_toEndOf="@+id/eventViewEventStatusLabel"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
+
+    <!-- User Status -->
+
+    <TextView
+        android:id="@+id/eventViewUserStatusRegistration"
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:background="@drawable/greybuttonbackground"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingEnd="10dp"
+        android:text="Not Registered"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:visibility="gone" />
+
+    <!-- Back Button -->
+
+    <!-- Join/Leave Waitlist Button -->
+    <Button
+        android:id="@+id/eventViewJoinWaitListButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join Waiting List"
+        android:visibility="gone"
+        app:backgroundTint="@color/joinwaitinglist"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="674dp" />
+
+    <!-- Accept Event Invite Button -->
+    <Button
+        android:id="@+id/eventAcceptInviteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accept"
+        android:visibility="gone"
+        app:backgroundTint="@color/acceptInvite"
+        app:layout_constraintEnd_toEndOf="@+id/eventDeclineInviteButton"
+
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="674dp" />
+
+    <!-- Decline Event Invite Button -->
+    <Button
+        android:id="@+id/eventDeclineInviteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Decline"
+        android:visibility="gone"
+        app:backgroundTint="@color/declineInvite"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="@+id/eventAcceptInviteButton"
+        tools:layout_editor_absoluteY="674dp" />
+
+    <!-- Unregister from Event Button -->
+    <Button
+        android:id="@+id/eventUnregisterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unregister"
+        android:visibility="gone"
+        app:backgroundTint="@color/unregister"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Number of people in waitlist -->
+    <TextView
+        android:id="@+id/eventWaitlistEntrantCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:autoSizeTextType="uniform"
+        android:background="@drawable/purplecircularbackground"
+        android:gravity="center"
+        android:text="0 PEOPLE WAITING IN WAITLIST"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/eventViewJoinWaitListButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:visibility="gone"
+        />
+
+    <Button
+        android:id="@+id/view_lists_button"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#2962FF"
+        android:text="View Event Lists"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/draw_lottery_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/draw_lottery_button"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:enabled="false"
+        android:text="Draw From Lottery"
+        android:textAllCaps="false"
+        android:textColor="#A9A9A9"
+        android:textSize="20dp"
+
+        android:textStyle="bold"
+        app:backgroundTint="#FFFFFF"
+        app:cornerRadius="1000dp"
+        app:layout_constraintBottom_toTopOf="@+id/draw_new_user_button"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="#A9A9A9"
+        app:strokeWidth="3dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/draw_new_user_button"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:enabled="false"
+        android:text="Draw New User"
+        android:textAllCaps="false"
+        android:textColor="#A9A9A9"
+        android:textSize="20dp"
+
+        android:textStyle="bold"
+        app:backgroundTint="#FFFFFF"
+        app:cornerRadius="1000dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="#A9A9A9"
+        app:strokeWidth="3dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

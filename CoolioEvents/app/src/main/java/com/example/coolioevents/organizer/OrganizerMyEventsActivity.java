@@ -1,5 +1,6 @@
 package com.example.coolioevents.organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +17,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.coolioevents.Event;
+import com.example.coolioevents.MainActivity;
 import com.example.coolioevents.R;
 import com.example.coolioevents.events.EntrantEventArrayAdapter;
 import com.example.coolioevents.events.EventViewModel;
@@ -62,7 +64,14 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Event event = eventsList.get(position);
+                // Create Intent to start OrganizerEventActivity
+                Intent intent = new Intent(OrganizerMyEventsActivity.this, OrganizerEventActivity.class);
+                // Put event ID into the intent
+                System.out.println(event.getEventId());
+                intent.putExtra("EVENT_ID", event.getEventId());
+                // Start the OrganizerEventActivity
+                startActivity(intent);
             }
         });
     }

@@ -84,11 +84,10 @@ public class LotteryService {
                 entrantsToChoose.remove(randomIndex);
             }
         }
-        List<String> leftOnWaitlist = entrantsToChoose;
 
 
         // Return LotteryResult object with selected entrants and updated
-        return new LotteryResult(selectedEntrants, leftOnWaitlist);
+        return new LotteryResult(selectedEntrants, entrantsToChoose);
     }
 }
 
