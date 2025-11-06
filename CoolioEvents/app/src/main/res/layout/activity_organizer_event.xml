@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -15,6 +16,7 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
+
         <ImageButton
             android:id="@+id/organizer_event_back_button"
             android:layout_width="32dp"
@@ -23,6 +25,7 @@
             android:contentDescription="Back"
             android:src="@drawable/ic_arrow_back"
             app:tint="#FFFFFF" />
+
 
         <TextView
             android:layout_width="203dp"
@@ -34,6 +37,7 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+
         <ImageButton
             android:id="@+id/organizer_event_edit_button"
             android:layout_width="32dp"
@@ -43,7 +47,9 @@
             android:src="@drawable/ic_settings_icon"
             app:tint="#FFFFFF"/>
 
+
     </LinearLayout>
+
 
     <!-- Poster -->
     <com.google.android.material.imageview.ShapeableImageView
@@ -57,6 +63,7 @@
         app:shapeAppearance="@style/roundedcornerimageview"
         tools:srcCompat="@tools:sample/avatars" />
 
+
     <!-- Title -->
     <TextView
         android:id="@+id/eventViewName"
@@ -69,6 +76,7 @@
         app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
+
     <!-- Organizer (poster) -->
     <TextView
         android:id="@+id/eventViewOrganizer"
@@ -80,19 +88,20 @@
         app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
         app:layout_constraintTop_toBottomOf="@+id/eventViewName" />
 
+
     <!-- Description -->
     <TextView
         android:id="@+id/eventViewDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
-        android:textSize="20dp"
+        android:gravity="top|left"
         android:text="This is the event discription. This describes what the events is about, isn't that crazy? Pretty amazing event description right here if you ask me. Wow"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewPoster" />
+
 
     <!-- Time -->
     <TextView
@@ -105,6 +114,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewDescription" />
 
+
     <!-- Location -->
     <TextView
         android:id="@+id/eventViewLocation"
@@ -115,6 +125,7 @@
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewTime" />
+
 
     <!-- Registration Period -->
     <TextView
@@ -127,6 +138,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewLocation" />
 
+
     <!-- Entrant Limit -->
     <TextView
         android:id="@+id/eventViewLimit"
@@ -138,6 +150,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewRegistrationPeriod" />
 
+
     <!-- Event Status -->
     <TextView
         android:id="@+id/eventViewEventStatusLabel"
@@ -148,6 +161,7 @@
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
+
 
     <TextView
         android:id="@+id/eventViewEventStatus"
@@ -162,7 +176,9 @@
         app:layout_constraintStart_toEndOf="@+id/eventViewEventStatusLabel"
         app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
 
+
     <!-- User Status -->
+
 
     <TextView
         android:id="@+id/eventViewUserStatusRegistration"
@@ -177,7 +193,9 @@
         android:textSize="17sp"
         android:visibility="gone" />
 
+
     <!-- Back Button -->
+
 
     <!-- Join/Leave Waitlist Button -->
     <Button
@@ -189,8 +207,10 @@
         app:backgroundTint="@color/joinwaitinglist"
         app:layout_constraintEnd_toEndOf="parent"
 
+
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="674dp" />
+
 
     <!-- Accept Event Invite Button -->
     <Button
@@ -202,8 +222,10 @@
         app:backgroundTint="@color/acceptInvite"
         app:layout_constraintEnd_toEndOf="@+id/eventDeclineInviteButton"
 
+
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="674dp" />
+
 
     <!-- Decline Event Invite Button -->
     <Button
@@ -215,8 +237,10 @@
         app:backgroundTint="@color/declineInvite"
         app:layout_constraintEnd_toEndOf="parent"
 
+
         app:layout_constraintStart_toStartOf="@+id/eventAcceptInviteButton"
         tools:layout_editor_absoluteY="674dp" />
+
 
     <!-- Unregister from Event Button -->
     <Button
@@ -228,7 +252,9 @@
         app:backgroundTint="@color/unregister"
         app:layout_constraintEnd_toEndOf="parent"
 
+
         app:layout_constraintStart_toStartOf="parent" />
+
 
     <!-- Number of people in waitlist -->
     <TextView
@@ -245,8 +271,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
+
         android:visibility="gone"
         />
+
 
     <Button
         android:id="@+id/view_lists_button"
@@ -261,6 +289,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/draw_lottery_button"
         android:layout_width="300dp"
@@ -272,15 +301,18 @@
         android:textColor="#A9A9A9"
         android:textSize="20dp"
 
+
         android:textStyle="bold"
         app:backgroundTint="#FFFFFF"
         app:cornerRadius="1000dp"
         app:layout_constraintBottom_toTopOf="@+id/draw_new_user_button"
 
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:strokeColor="#A9A9A9"
         app:strokeWidth="3dp" />
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/draw_new_user_button"
@@ -293,14 +325,17 @@
         android:textColor="#A9A9A9"
         android:textSize="20dp"
 
+
         android:textStyle="bold"
         app:backgroundTint="#FFFFFF"
         app:cornerRadius="1000dp"
         app:layout_constraintBottom_toBottomOf="parent"
 
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:strokeColor="#A9A9A9"
         app:strokeWidth="3dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

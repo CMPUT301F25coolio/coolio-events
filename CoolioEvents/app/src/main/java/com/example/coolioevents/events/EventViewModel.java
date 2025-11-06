@@ -39,7 +39,7 @@ public class EventViewModel extends ViewModel {
      * If an event is found it converts the event into an event object and returns it.
      *
      * @param eventId
-     *      The event that will be gotten from the firebase and converted into an object
+     *      The event that will be retrieved from the firebase and converted into an object
      *      to be returned
      * @return
      *      returns a single event of the type MutableLiveData
@@ -58,6 +58,48 @@ public class EventViewModel extends ViewModel {
                     singleEventData.postValue(event);
                 });
         return singleEventData;
+    }
+
+    /**
+     * This function looks for a specified organizer in the users documents on firebase.
+     * If an organizer is found it converts the event into an event object and returns it,
+     * with its matching profile.
+     * @param organizerId
+     *      The Organizer that will be retrieved from the firebase and converted into an object
+     *      to be returned
+     * @return
+     *      returns a single organizer of the type MutableLiveData
+     */
+    public MutableLiveData<Organizer> getOrganizerById(String organizerId) {
+        MutableLiveData<Organizer> singleOrganizerData = new MutableLiveData<>();
+
+
+        db.collection("users").document(organizerId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Organizer organizer = documentSnapshot.toObject(Organizer.class);
+                    if (organizer != null) {
+                        Profile profile = new Profile();
+                        // Set all profile aspects
+                        profile.setUserId(documentSnapshot.getId());
+
+                        String username = documentSnapshot.getString("username");
+                        profile.setUsername(username);
+
+                        String name = documentSnapshot.getString("name");
+                        profile.setName(name);
+
+                        String email = documentSnapshot.getString("email");
+                        profile.setEmail(email);
+
+                        organizer.setProfile(profile);
+                    }
+                    singleOrganizerData.setValue(organizer);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "Error getting the organizer", e);
+                    singleOrganizerData.setValue(null);
+                });
+        return singleOrganizerData;
     }
 
     //Gemini - How do i update a list on firestore oct29
