@@ -16,7 +16,7 @@ import android.widget.ListView;
 
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
-import com.example.coolioevents.events.EventArrayAdapter;
+import com.example.coolioevents.events.EntrantEventArrayAdapter;
 import com.example.coolioevents.events.EventFragment;
 import com.example.coolioevents.events.EventViewModel;
 
@@ -25,9 +25,9 @@ import java.util.Collections;
 
 
 public class EntrantHomeFragment extends Fragment {
-    EventViewModel eventViewModel; // View Model eventList up to date with database
+    EventViewModel eventViewModel; // View Model with eventList up to date with database
     ArrayList<Event> eventsList; // Home specific arraylist for array adapter ()
-    EventArrayAdapter eventAdapter; // Array adapter for events
+    EntrantEventArrayAdapter eventAdapter; // Array adapter for events
     ListView eventsListView; // ListView on home fragment screen
 
 
@@ -75,7 +75,7 @@ public class EntrantHomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         eventsListView = view.findViewById(R.id.eventList); // Listview in home
-        eventAdapter = new EventArrayAdapter(getActivity(), eventsList); // Make new event adapter linked to eventList
+        eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList); // Make new event adapter linked to eventList
         eventsListView.setAdapter(eventAdapter); // Make listview have adapter connected to eventList
 
         //Navigating to Event Fragment
