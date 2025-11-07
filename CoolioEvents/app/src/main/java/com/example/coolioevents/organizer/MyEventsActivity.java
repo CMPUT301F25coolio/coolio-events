@@ -7,6 +7,41 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.coolioevents.R;
 import com.example.coolioevents.services.PoolingService;
+/**
+ * Copyright 2025 Parth Mittal
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This activity provides a simple interface for organizers to draw a replacement
+ * entrant from the event’s waitlist. It allows the user to input an event ID and
+ * execute a Firestore transaction that moves the first person from the waitlist
+ * to the chosen list using the PoolingService.
+ *
+ * RATIONALE:
+ * This class was designed as a standalone utility screen to test and verify
+ * the pooling (replacement draw) feature independently from other organizer flows.
+ * Keeping it separate helps avoid interference with teammate screens and simplifies debugging.
+ *
+ * OUTSTANDING ISSUES:
+ * Currently, there is no validation for invalid event IDs that do not exist in Firestore.
+ * The UI also does not display detailed error messages for transaction failures.
+ * Future updates could include automatic event ID fetching or user-friendly dialogs.
+ *
+ * @author Parth Mittal
+ * @version 1.0
+ * @since 2025-11-07
+ */
 /*
   Screen super small utility page for organizers to pull a replacement entrant
    1 User pastes an event document ID
