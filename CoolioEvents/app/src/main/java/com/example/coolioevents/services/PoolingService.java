@@ -23,20 +23,17 @@ import java.util.Map;
  * limitations under the License.
  *
  * PURPOSE:
- * This service encapsulates waitlist pooling logic for organizers. It provides
- * a transaction that pops the first UID from waitlistEntrants and appends it to
- * chosenEntrants, plus a non-transactional helper to move a specific UID.
+ * Handles the organizer’s pooling logic. It moves the first user from
+ * the waitlist into the chosen list using a Firestore transaction.
  *
  * RATIONALE:
- * Keeping the mutation logic in one place avoids duplication and ensures that
- * concurrent updates are handled safely through a Firestore transaction.
- * Lists are copied to mutable instances before modification.
+ * Doing this inside a transaction keeps data safe if multiple organizers
+ * try to promote entrants at the same time. A helper method is also added
+ * for simpler one-off UID transfers.
  *
  * OUTSTANDING ISSUES:
- * No guard exists for duplicate entries across lists. If data is inconsistent,
- * the transaction will still append the UID to chosenEntrants.
- * Errors are surfaced as generic IllegalStateException messages.
- * There is no retry/backoff strategy if the transaction fails due to contention.
+ * Currently there’s no check for duplicate UIDs between lists.
+ * Also, it doesn’t show progress or messages in the UI.
  *
  * @author Parth Mittal
  * @version 1.0
