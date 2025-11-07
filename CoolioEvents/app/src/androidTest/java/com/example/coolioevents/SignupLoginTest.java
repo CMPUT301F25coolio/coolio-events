@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 /**
@@ -392,6 +394,56 @@ public class SignupLoginTest {
     }
 
     @Test
+    public void testOrganizerMakeEventWithNoFields() {
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "test@testy.com";
+        String password = "testpassword";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Go to Make Events
+        onView(withId(R.id.optMakeEvent)).perform(click());
+
+        // Click on Create Event, with no fields filled
+        onView(withId(R.id.btnCreate)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Check that still on Make event Screen (Shouldn't make event)
+        onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testMakeEventBack(){
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "test@testy.com";
+        String password = "testpassword";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Go to Make Events
+        onView(withId(R.id.optMakeEvent)).perform(click());
+
+        // Click Back Button
+        onView(withId(R.id.btnBack)).perform(click());
+
+        // Check that screen is back to Organizer home
+        onView(withId(R.id.optMakeEvent)).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testOrganizerGoesToMyEvents() {
         onView(withId(R.id.loginButton)).perform(click());
 
@@ -410,6 +462,31 @@ public class SignupLoginTest {
 
         onView(withId(R.id.eventList)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void testMyEventsBack() {
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "test@testy.com";
+        String password = "testpassword";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Go to My Events
+        onView(withId(R.id.optMyEvents)).perform(click());
+
+        // Click Back Button
+        onView(withId(R.id.btnBack)).perform(click());
+
+        // Check that screen is back to Organizer home
+        onView(withId(R.id.optMakeEvent)).check(matches(isDisplayed()));
+    }
+
 
 //    @Test
 //    public void testOrganizerClickedEventDisplay() {
