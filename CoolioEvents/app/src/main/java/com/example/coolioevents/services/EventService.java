@@ -30,21 +30,18 @@ import java.util.Map;
  * limitations under the License.
  *
  * PURPOSE:
- * This service creates a new event document in Firestore and generates a
- * deep-link QR code for it. The QR image is written to MediaStore under
- * Pictures/CoolioEvents. It also initializes entrant arrays required by
- * pooling logic.
+ * Creates a new event in Firestore and generates a deep-link QR code for it.
+ * The QR image is saved to MediaStore (Pictures/CoolioEvents). Also initializes
+ * basic entrant arrays so pooling can work safely later.
  *
  * RATIONALE:
- * Centralizing event creation and QR generation keeps Firestore writes and
- * bitmap I/O in one place, reducing duplication across activities and
- * making the create-and-share flow easier to maintain.
+ * Keeping event creation and QR generation in one service keeps the flow simple,
+* avoids duplicate code in activities, and makes it easier to test the full path
+ * (Firestore write + QR save) in one place.
  *
- * OUTSTANDING ISSUES:
- * Input parameters are not validated (e.g., empty title/description).
- * Error feedback is coarse; the caller only receives Task failures without
- * distinguishing Firestore vs. MediaStore errors.
- * No progress indication is exposed to the UI during QR rendering/saving.
+ * OUTSTANDING ISSUES (to tackle next part):
+ * 1) Add basic input validation for required fields (e.g., title/description not empty).
+ * 2) Surface clearer error messages to the UI (distinguish Firestore vs. MediaStore failure).
  *
  * @author Parth Mittal
  * @version 1.0
