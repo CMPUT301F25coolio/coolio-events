@@ -39,8 +39,10 @@ public class LotteryService {
      * This function selects random users from waitList, removes
      * them from the waitList and adds them to chosenList in the database.
      *
-     * @param originalWaitlist entrants in waitlist before we select
-     * @param entrantLimit the number of entrants to select
+     * @param originalWaitlist
+     *      entrants in waitlist before we select
+     * @param entrantLimit
+     *      the number of entrants to select
      */
     public LotteryResult selectEntrants(List<String> originalWaitlist, int entrantLimit) {
         List<String> entrantsToChoose = new ArrayList<>(originalWaitlist);

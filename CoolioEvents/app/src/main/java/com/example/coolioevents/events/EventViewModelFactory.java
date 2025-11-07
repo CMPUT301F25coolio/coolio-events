@@ -42,10 +42,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class EventViewModelFactory implements ViewModelProvider.Factory {
     private final FirebaseFirestore db;
 
+    /**
+     * Constructor that initiates the database for the EventViewModel
+     * @param db
+     *      the database that is initiated
+     */
     public EventViewModelFactory(FirebaseFirestore db) {
         this.db = db;
     }
 
+    /**
+     * Creates an instance of Viewmodel that takes in a database as the parameter
+     * @param modelClass
+     * @return
+     * @param <T>
+     */
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         return (T) new EventViewModel(db);

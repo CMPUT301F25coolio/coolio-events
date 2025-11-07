@@ -40,8 +40,10 @@ public class LotteryResult {
      * holds the selected entrants and remaining waitlist entrants for
      * an event lottery.
      *
-     * @param selectedEntrants entrants who were selected from the lottery
-     * @param remainingWaitlist entrants still left in the waitlist after the lottery
+     * @param selectedEntrants
+     *      entrants who were selected from the lottery
+     * @param remainingWaitlist
+     *      entrants still left in the waitlist after the lottery
      */
     public LotteryResult(List<String> selectedEntrants, List<String> remainingWaitlist) {
         this.selectedEntrants = selectedEntrants;
@@ -51,7 +53,8 @@ public class LotteryResult {
 
     /**
      * This function returns the selectedEntrants
-     * @return selectedEntrants
+     * @return
+     *      selectedEntrants
      */
     public List<String> getSelectedEntrants() {
         return selectedEntrants;
@@ -60,7 +63,8 @@ public class LotteryResult {
 
     /**
      * This function returns the remainingWaitlist
-     * @return remainingWaitlist
+     * @return
+     *      remainingWaitlist
      */
     public List<String> getRemainingWaitlist() {
         return remainingWaitlist;

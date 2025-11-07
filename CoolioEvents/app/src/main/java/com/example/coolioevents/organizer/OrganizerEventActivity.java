@@ -99,6 +99,13 @@ public class OrganizerEventActivity extends AppCompatActivity {
                 drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.white));
                 drawNewEntrant.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
             }
+            if (numberInWaitlist == 0) {
+                drawNewEntrant.setEnabled(false);
+                // Set UI
+                drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
+                drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.grey));
+                drawNewEntrant.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey)));
+            }
             // The chosen list is full
             if (numberOfChosenEntrants == maxEntrants) {
                 drawNewEntrant.setEnabled(false);
@@ -250,13 +257,9 @@ public class OrganizerEventActivity extends AppCompatActivity {
         drawNewEntrant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //NOTE: this is temporary
-                //If data base does not update the chosen list fast enough
-                //I might just do a call in here to make sure chosenList.size()
-                //is less than the maxEntrants
-                //If not we wont let this function do anything
                 PoolingService poolingService = new PoolingService();
                 poolingService.drawReplacement(currentEventId);
+                numberInWaitlist--; // Update this local value
                 updateButtonState();
             }
         });

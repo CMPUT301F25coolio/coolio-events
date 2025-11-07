@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright 2025 Ethan Diep, Avery Dancocks, Juliane Phan
+ * Copyright 2025 Ethan Diep & Avery Dancocks & Juliane Phan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,14 +35,14 @@ import java.util.List;
  * limitations under the License.
  *
  * PURPOSE:
- * This class represents an array adapter for a single event.
+ * This class represents an array adapter for a single event for organizer.
  * Displays the details of an event in a list view.
  *
  * RATIONALE:
  * Used to ensure the List View has a proper representation of
  * all the events in the ArrayList.
  *
- * @author Ethan Diep, Avery Dancocks, Juliane Phan
+ * @author Ethan Diep & Avery Dancocks & Juliane Phan
  * @version 1.0
  * @since 2025-11-05
  */
@@ -103,9 +103,6 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
             eventStatus.setText(event.getDetails().getStatus());
             eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
         }
-
-
-
 
         // Set waiting list count text
         if (event.getWaitlistEntrants().size() == 1){

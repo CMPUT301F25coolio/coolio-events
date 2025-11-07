@@ -1,6 +1,27 @@
 package com.example.coolioevents;
 /**
- * This is a class that defines an a user's profile.
+ * Copyright 2025 Aasta Tsai
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class defines a profile.
+ * It contains all the attributes of a profile.
+ * Profiles are had by Entrants and Organizers.
+ *
+ * @author Aasta Tsai
+ * @version 1.0
+ * @since 2025-11-05
  */
 public class Profile {
     private String user_id;
@@ -11,10 +32,14 @@ public class Profile {
 
     /**
      * This is a constructor to make a profile with parameters
-     * @param user_id user ID
-     * @param username Username
-     * @param name Name of user
-     * @param email email of user
+     * @param user_id
+     *      user ID
+     * @param username
+     *      Username
+     * @param name
+     *      Name of user
+     * @param email
+     *      email of user
      */
     public Profile(String user_id, String username, String name, String email) {
         this.user_id = user_id;
@@ -75,7 +100,8 @@ public class Profile {
 
     /**
      * This sets a users' id
-     * @param user_id the user id to set
+     * @param user_id
+     *      the user id to set
      */
     public void setUserId(String user_id) {
         this.user_id = user_id;
@@ -84,7 +110,8 @@ public class Profile {
 
     /**
      * This sets a users' username
-     * @param username the username to set
+     * @param username
+     *      the username to set
      */
     public void setUsername(String username) {
         this.username = username;
@@ -93,7 +120,8 @@ public class Profile {
 
     /**
      * This sets a users' name
-     * @param name the name to set
+     * @param name
+     *      the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -102,7 +130,8 @@ public class Profile {
 
     /**
      * This sets a users' email
-     * @param email the email to set
+     * @param email
+     *      the email to set
      */
     public void setEmail(String email) {
         this.email = email;

@@ -87,7 +87,8 @@ public class EventFragment extends Fragment {
     /**
      * This is a constructor for the Event Fragment
      *
-     * @param eventId the event we want the fragment to display
+     * @param eventId
+     *      the event we want the fragment to display
      * @return the fragment
      */
     public static EventFragment newInstance(String eventId) {

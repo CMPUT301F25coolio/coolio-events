@@ -7,6 +7,36 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.coolioevents.R;
 
+/**
+ * Copyright 2025 Aasta Tsai
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * Displays the home activity for organizers.
+ * Provides different button functionalities that allows
+ * the Organizer to navigate the app.
+ *
+ * OUTSTANDING ISSUES:
+ * Some functionalities are not completed during this iteration,
+ * but will be completed in future iterations; My Profile and
+ * Send Notifications Button.
+ *
+ * @author Aasta Tsai
+ * @version 1.0
+ * @since 2025-11-05
+ */
+
 public class OrganizerActivity extends AppCompatActivity {
 
     @Override

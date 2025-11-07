@@ -134,7 +134,4 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
             }});
     }
 
-
-
-
 }
