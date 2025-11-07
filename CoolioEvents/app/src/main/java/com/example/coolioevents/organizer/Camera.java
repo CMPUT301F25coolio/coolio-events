@@ -1,5 +1,4 @@
 package com.example.coolioevents.organizer;
-import com.example.coolioevents.EventDetails;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +18,15 @@ import java.util.Locale;
 
 /**
  * Camera class handles camera operations for taking pictures and save them as event posters
+ *
+ * PURPOSE:
+ * Launch camera to take pictures
+ * Save captured images to device storage
+ * Compress and optimize images
+ * Return image path/URI for event details
+ *
+ * OUTSTANDING ISSUES:
+ * This class is not fully complete, still need to testing and debugging, which  will be complete in project part 4
  */
 public class Camera {
     public static final int REQUEST_IMAGE_CAPTURE = 1001;
@@ -29,13 +37,22 @@ public class Camera {
     private Uri photoUri;
 
     /**
-     * Constructor for Camera
-     * @param context The context of the calling activity
+     * This method is the constructor for Camera
+     * @param context
+     *      The context of the calling activity
      */
     public Camera(Context context) {
         this.context = context;
     }
 
+    /**
+     * This method is to launch the camera to take a picture
+     *
+     * @param activity
+     *      The activity to receive the result
+     * @return
+     *      true if camera launched successfully, false otherwise
+     */
     public boolean takePicture(Activity activity) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -65,6 +82,14 @@ public class Camera {
         return false;
     }
 
+    /**
+     * This method is to create an image file for storing the photo
+     *
+     * @return
+     *      The created file
+     * @throws IOException
+     *      if file creation fails
+     */
     private File createImageFile() throws IOException {
         // Create an image file name with timestamp
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
@@ -82,38 +107,12 @@ public class Camera {
         return image;
     }
 
-    public String processImage(Uri imageUri) {
-        try {
-            if (imageUri != null) {
-                // Image was picked from gallery
-                return saveImageFromUri(imageUri);
-            } else if (currentPhotoPath != null) {
-                // Image was captured from camera
-                compressImage(currentPhotoPath);
-                return currentPhotoPath;
-            }
-        } catch (Exception e) {
-            Toast.makeText(context, "Error processing image", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private String saveImageFromUri(Uri uri) throws IOException {
-        Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-
-        // Create a new file to save the image
-        File imageFile = createImageFile();
-
-        // Compress and save
-        FileOutputStream out = new FileOutputStream(imageFile);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
-        out.flush();
-        out.close();
-
-        return imageFile.getAbsolutePath();
-    }
-
+    /**
+     * This method compress an image file to reduce size
+     *
+     * @param imagePath
+     *      Path to the image file
+     */
     private void compressImage(String imagePath) {
         try {
             // Load the image
@@ -160,6 +159,12 @@ public class Camera {
 
     }
 
+    /**
+     * This method gets a bitmap from the saved photo path
+     *
+     * @return
+     *      Bitmap of the saved photo
+     */
     public Bitmap getSavedPhotoBitmap() {
         if (currentPhotoPath != null) {
             return BitmapFactory.decodeFile(currentPhotoPath);
@@ -167,14 +172,29 @@ public class Camera {
         return null;
     }
 
+
+    /**
+     * This method gets the current photo path
+     *
+     * @return currentPhotoPath
+     *      Path to the current photo
+     */
     public String getCurrentPhotoPath() {
         return currentPhotoPath;
     }
 
+    /**
+     * This method gets the photo uri
+     * @return photoUri
+     *      uri of the photo
+     */
     public Uri getPhotoUri() {
         return photoUri;
     }
 
+    /**
+     * This method deletes the current photo file
+     */
     public void deleteCurrentPhoto() {
         if (currentPhotoPath != null) {
             File file = new File(currentPhotoPath);
@@ -186,14 +206,18 @@ public class Camera {
         }
     }
 
-    /*
-    public static void updateEventPoster(EventDetails eventDetails, String imagePath) {
-        if (eventDetails != null && imagePath != null) {
-            eventDetails.setPosterUrl(imagePath);
-        }
-    }
-    */
-
+    /**
+     * This method load a bitmap from a file path with proper scaling
+     *
+     * @param imagePath
+     *      Path to the image
+     * @param reqWidth
+     *      Required width
+     * @param reqHeight
+     *      Required height
+     * @return
+     *      Scaled bitmap
+     */
     public static Bitmap loadScaledBitmap(String imagePath, int reqWidth, int reqHeight) {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -208,6 +232,18 @@ public class Camera {
         return BitmapFactory.decodeFile(imagePath, options);
     }
 
+    /**
+     * This method calculate sample size for bitmap loading
+     *
+     * @param options
+     *      BitmapFactory options
+     * @param reqWidth
+     *      Required width
+     * @param reqHeight
+     *      Required height
+     * @return
+     *      Sample size
+     */
     private static int calculateInSampleSize(BitmapFactory.Options options,
                                              int reqWidth, int reqHeight) {
         final int height = options.outHeight;
