@@ -14,6 +14,42 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+/**
+ * Copyright 2025 Parth Mittal
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This service creates a new event document in Firestore and generates a
+ * deep-link QR code for it. The QR image is written to MediaStore under
+ * Pictures/CoolioEvents. It also initializes entrant arrays required by
+ * pooling logic.
+ *
+ * RATIONALE:
+ * Centralizing event creation and QR generation keeps Firestore writes and
+ * bitmap I/O in one place, reducing duplication across activities and
+ * making the create-and-share flow easier to maintain.
+ *
+ * OUTSTANDING ISSUES:
+ * Input parameters are not validated (e.g., empty title/description).
+ * Error feedback is coarse; the caller only receives Task failures without
+ * distinguishing Firestore vs. MediaStore errors.
+ * No progress indication is exposed to the UI during QR rendering/saving.
+ *
+ * @author Parth Mittal
+ * @version 1.0
+ * @since 2025-11-07
+ */
 /*
   Tiny service for event creation.
   Flow I used:
