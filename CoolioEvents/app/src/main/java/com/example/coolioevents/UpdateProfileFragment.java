@@ -43,16 +43,16 @@ import android.widget.Toast;
  */
 public class UpdateProfileFragment extends Fragment {
 
-    /** Input field for editing the user's username */
+//    Input field for editing the user's username
     private EditText editUsername;
 
-    /** Input field for editing the user's full name */
+//    Input field for editing the user's full name
     private EditText editName;
 
-    /** Input field for editing the user's email address */
+//    Input field for editing the user's email address
     private EditText editEmail;
 
-    /** Button to save the updated profile information */
+//    Button to save the updated profile information
     private Button btnSave;
 
     /**

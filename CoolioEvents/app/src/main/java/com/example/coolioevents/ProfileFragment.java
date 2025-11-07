@@ -51,22 +51,22 @@ import com.google.firebase.firestore.FirebaseFirestore;
  */
 public class ProfileFragment extends Fragment {
 
-    /** TextView displaying the user's username */
+//    TextView displaying the user's username
     private TextView textUsername;
 
-    /** TextView displaying the user's full name */
+//    TextView displaying the user's full name
     private TextView textName;
 
-    /** TextView displaying the user's email address */
+//    TextView displaying the user's email address
     private TextView textEmail;
 
-    /** Button allowing the user to navigate to the UpdateProfileFragment */
+//    Button allowing the user to navigate to the UpdateProfileFragment
     private Button btnEditProfile;
 
-    /** Firebase Authentication instance used to identify the logged-in user */
+//    Firebase Authentication instance used to identify the logged-in user
     private FirebaseAuth auth;
 
-    /** Firebase Firestore instance used to fetch user profile data */
+//    Firebase Firestore instance used to fetch user profile data
     private FirebaseFirestore db;
 
     /**
