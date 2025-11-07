@@ -25,7 +25,36 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
+/**
+ * Copyright 2025 Ethan Diep
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class represents the Entrant's Home Fragment
+ * It shows a entrant's home page consisting of a list of events
+ * sorted by most recently posted. Each event has some details shown
+ * about it including its title, organizer, time, registration period,etc.
+ * The user can click on an event to view more details of the event and join the event.
+ *
+ * RATIONALE:
+ * This class was designed to allow users to browse events they may be
+ * interested in.
+ *
+ * @author Ethan Diep
+ * @version 1.0
+ * @since 2025-11-06
+ */
 public class EntrantHomeFragment extends Fragment {
     EventViewModel eventViewModel; // View Model with eventList up to date with database
     ArrayList<Event> eventsList; // Home specific arraylist for array adapter ()

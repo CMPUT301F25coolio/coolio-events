@@ -33,22 +33,50 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Copyright 2025 Ethan Diep
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class represents the Signup Activity
+ * It displays field a user needs to sign up for an account
+ * including name, username, email, password, and role (organizer or entrant)
+ * When done, the user can press create account and the account is made on Firestore
+ * Authenticator and Firestore Firebase.
+ *
+ * RATIONALE:
+ * This class was designed to provide users with a way to create an account
+ *
+ *
+ * @author Ethan Diep
+ * @version 1.0
+ * @since 2025-11-06
+ */
 public class SignupActivity extends AppCompatActivity {
 
 
-    EditText nameEditText; // edittext where user inputs full name
-    EditText usernameEditText; // edittext where user inputs username
-    EditText emailEditText; // edittext where user inputs email
-    EditText passwordEditText; // edittext where user inputs password
+    EditText nameEditText; // Edittext where user inputs full name
+    EditText usernameEditText; // Edittext where user inputs username
+    EditText emailEditText; // Edittext where user inputs email
+    EditText passwordEditText; // Edittext where user inputs password
 
-    Button backButton; //button to go back to welcome screen
-    Button organizerButton; //choose organizer button
-    Button entrantButton; //choose entrant button
-    TextView warnText; // textview used for warnings (eg. invalid password, email, etc.)
-
-    Button createAccountButton; // button which creates account
-    Boolean usernameExists; // textview used for warnings (eg. invalid password, email, etc.)
+    Button backButton; // Button to go back to welcome screen
+    Button organizerButton; // Choose organizer button
+    Button entrantButton; // Choose entrant button
+    TextView warnText; // Textview used for warnings (eg. invalid password, email, etc.)
+    Button createAccountButton; // Button which creates account
+    Boolean usernameExists; // Textview used for warnings (eg. invalid password, email, etc.)
     ArrayList<String> usernamelist; // Contains all usernames in firestore database
     int accountType; // -1 is not selected, 0 is organizer, 1 is entrant
 
@@ -56,9 +84,9 @@ public class SignupActivity extends AppCompatActivity {
         this.usernameExists = usernameExists;
     }
 
-    private FirebaseAuth mAuth; //  authenticator to create user accounts
-    private FirebaseFirestore db; // database
-    private CollectionReference userCollection; // collection of users in firebase database
+    private FirebaseAuth mAuth; // Authenticator to create user accounts
+    private FirebaseFirestore db; // Database
+    private CollectionReference userCollection; // Collection of users in firebase database
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +118,7 @@ public class SignupActivity extends AppCompatActivity {
         userCollection = db.collection("users");
         usernamelist = new ArrayList<String>();
 
-        //Makes Snapshot listener which updates username list to keep track of all usernames
+        // Makes Snapshot listener which updates username list to keep track of all usernames
         addUsernameSL();
 
         // Back Button On Click Listener - sends user back to welcome screen
@@ -138,7 +166,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void changeAccountType(int type){
-        //Changes account type to Entrant if 0, Organizer if 1, and and update button colors
+        // Changes account type to Entrant if 0, Organizer if 1, and and update button colors
         if (type == 0) {
             // Change account type to Entrant and update button colors
             accountType = 0;
@@ -175,7 +203,7 @@ public class SignupActivity extends AppCompatActivity {
 
         }
         if (usernamelist.contains(username)) {
-            //If somebody is already using the username provided, warn the user
+            // If somebody is already using the username provided, warn the user
             warnText.setText("Somebody with the same username already exists");
 
             return;
@@ -210,7 +238,7 @@ public class SignupActivity extends AppCompatActivity {
                             // If sign in is successful, show a toast
                             Toast.makeText(SignupActivity.this, "Account Created.",
                                     Toast.LENGTH_SHORT).show();
-                            FirebaseUser user = mAuth.getCurrentUser(); // user on mauth
+                            FirebaseUser user = mAuth.getCurrentUser(); // User on mauth
 
                             Map<String, Object> usermap = new HashMap<>();
                             usermap.put("name", name);

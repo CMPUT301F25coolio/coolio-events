@@ -20,15 +20,42 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
-
+/**
+ * Copyright 2025 Ethan Diep
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class represents the Entrant Activity which is an activity with
+ * a frame container which holds entrant fragment screens such as home, search, profile
+ * and my events aswell as a navigation bar to navigate between these screens.
+ *
+ * RATIONALE:
+ * This class was designed give entrant the ability to navigate through
+ * the different fragments they have access to
+ *
+ * @author Ethan Diep
+ * @version 1.0
+ * @since 2025-11-06
+ */
 public class EntrantActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth; //  authenticator to create user accounts
-    private FirebaseFirestore db; // database
-    private CollectionReference userCollection; // collection of users in firebase database
+    private FirebaseAuth mAuth; // Authenticator to create user accounts
+    private FirebaseFirestore db; // Database
+    private CollectionReference userCollection; // Collection of users in firebase database
 
-    private FirebaseUser user; //The current user
-    private Fragment homeFragment; //Fragment for home screen
-    private Fragment myEventsFragment; //Fragment for home screen
+    private FirebaseUser user; // The current user
+    private Fragment homeFragment; // Fragment for home screen
+    private Fragment myEventsFragment; // Fragment for home screen
     private BottomNavigationView bottomNavView;
 
 
@@ -41,7 +68,7 @@ public class EntrantActivity extends AppCompatActivity {
         homeFragment = new EntrantHomeFragment();
         myEventsFragment = new EntrantMyEventsFragment();
 
-        SwitchFragment(homeFragment); //Default fragment is home
+        SwitchFragment(homeFragment); // Default fragment is home
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();

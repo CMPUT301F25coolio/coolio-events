@@ -67,7 +67,7 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
 
         // Setting event status text
         if (event.getDetails().getStatus().equals("open")) {
-            //If event open make text open with green background
+            // If event open make text open with green background
             eventStatus.setText("Open");
             eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
         }
@@ -89,7 +89,7 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
         System.out.println(isUserOnWaitList);
         // Setting user status text
         if (isUserOnWaitList) {
-            //Set Visibility of registration status
+            // Set Visibility of registration status
             eventUserStatusRegistration.setVisibility(View.GONE);
 
             // If the current user is in the waitlist, display an indicator that user is in the waiting list
@@ -97,7 +97,7 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
             eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
         }
         if (!isUserOnWaitList && !isUserChosen && !isUserAccepted) {
-            //Set Visibility of registration status
+            // Set Visibility of registration status
             eventUserStatusRegistration.setVisibility(View.GONE);
 
             // If the current user is not in the waitlist, display an indicator that user is  not in the waiting list
@@ -105,7 +105,7 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
             eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greybuttonbackground));
         }
         if (isUserChosen) {
-            //Set Visibility of registration status
+            // Set Visibility of registration status
             eventUserStatusRegistration.setVisibility(View.VISIBLE);
 
             // If the current user is chosen, display an indicator that user is chosen

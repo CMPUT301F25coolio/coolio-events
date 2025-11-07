@@ -25,7 +25,33 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+/**
+ * Copyright 2025 Ethan Diep
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class represents the Login Activity
+ * It displays fields a user needs to log into their account (email and password).
+ * When done, the user can press login and the user is logged into their account.
+ *
+ * RATIONALE:
+ * This class was designed to provide users with a way to login to their account
+ *
+ * @author Ethan Diep
+ * @version 1.0
+ * @since 2025-11-06
+ */
 public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
     private TextView warnText;
@@ -34,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
-    Button backButton; //button to go back to welcome screen
+    Button backButton; // Button to go back to welcome screen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
