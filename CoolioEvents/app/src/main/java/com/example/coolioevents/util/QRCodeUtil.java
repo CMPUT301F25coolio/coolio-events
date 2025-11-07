@@ -21,19 +21,12 @@ import com.google.zxing.qrcode.QRCodeWriter;
  * limitations under the License.
  *
  * PURPOSE:
- * This utility class provides static methods to generate QR codes as Bitmap images.
- * It supports both the newer and older method names (“generate” and “make”) for
- * compatibility with teammate code. The QR code is generated using the ZXing library.
+ * Utility class to generate QR codes as Bitmap images using the ZXing library.
+ * Supports both generate(...) and make(...) so older method calls still work.
  *
  * RATIONALE:
- * Keeping QR generation logic in a separate utility class ensures reusability across
- * different activities and services, such as event creation or sharing links.
- * It centralizes encoding behavior and prevents duplicate code.
- *
- * OUTSTANDING ISSUES:
- * The current implementation does not handle invalid or empty content strings.
- * QR code color customization or error correction level adjustment is not yet supported.
- * Future versions could include automatic scaling or saving to storage options.
+ * Keeps QR code logic separate so different activities and services can reuse it
+ * easily without repeating the same encoding code everywhere.
  *
  * @author Parth Mittal
  * @version 1.0
