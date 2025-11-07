@@ -6,6 +6,41 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+/**
+ * Copyright 2025 Parth Mittal
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This repository class manages reading entrant lists (waitlist, chosen, and final)
+ * for a given event from Firestore. It abstracts Firestore access, so activities
+ * can fetch entrant data without directly handling Firestore logic.
+ *
+ * RATIONALE:
+ * A centralized repository layer improves maintainability and reduces code duplication.
+ * Since different teams may have used varying field names in Firestore, this class
+ * checks multiple possible field names for each entrant list to maintain compatibility.
+ *
+ * OUTSTANDING ISSUES:
+ * Currently, there is no caching, so each call triggers a full Firestore read.
+ * No listener or live update mechanism is implemented, meaning list changes
+ * won’t reflect automatically in the UI.
+ * Additional validation or custom error handling could be added for robustness.
+ *
+ * @author Parth Mittal
+ * @version 1.0
+ * @since 2025-11-07
+ */
 /*
   Purpose to Handles reading entrant lists waitlist, chosen, final for a given event
   Works as a tiny data helper so activities dont need to talk to Firestore directly
