@@ -23,20 +23,16 @@ import com.example.coolioevents.services.PoolingService;
  * limitations under the License.
  *
  * PURPOSE:
- * This activity provides a simple interface for organizers to draw a replacement
- * entrant from the event’s waitlist. It allows the user to input an event ID and
- * execute a Firestore transaction that moves the first person from the waitlist
- * to the chosen list using the PoolingService.
+ * A small organizer-only screen that lets the user pick an event ID and
+ * draw a replacement entrant from the waitlist using Firestore transactions.
  *
  * RATIONALE:
- * This class was designed as a standalone utility screen to test and verify
- * the pooling (replacement draw) feature independently from other organizer flows.
- * Keeping it separate helps avoid interference with teammate screens and simplifies debugging.
+ * This was built mainly as a simple test screen for pooling logic.
+ * Keeping it separate avoids breaking other teammates’ flows and makes debugging easier.
  *
  * OUTSTANDING ISSUES:
- * Currently, there is no validation for invalid event IDs that do not exist in Firestore.
- * The UI also does not display detailed error messages for transaction failures.
- * Future updates could include automatic event ID fetching or user-friendly dialogs.
+ * Currently, there’s no check for invalid event IDs or detailed error display.
+ * Could later add clearer messages or auto-fill valid event IDs from Firestore.
  *
  * @author Parth Mittal
  * @version 1.0
