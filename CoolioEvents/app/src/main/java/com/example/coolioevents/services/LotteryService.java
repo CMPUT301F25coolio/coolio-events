@@ -1,10 +1,8 @@
 package com.example.coolioevents.services;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 
 /**
  * Copyright 2025 Avery Dancocks
@@ -28,17 +26,14 @@ import java.util.Random;
  * This class was designed to do different lottery functions based on
  * what the organizer wants to do.
  *
- *
  * @author Avery Dancocks
  * @version 1.0
  * @since 2025-11-05
  */
 public class LotteryService {
 
-
     public LotteryService() {
     }
-
 
     /**
      * This function selects random users from waitList, removes
@@ -51,15 +46,10 @@ public class LotteryService {
         List<String> entrantsToChoose = new ArrayList<>(originalWaitlist);
         List<String> selectedEntrants = new ArrayList<>();
 
-
-        //if event.lotterhasbeenpulled = true --> Toast message and retunr
-
-
         if (originalWaitlist.isEmpty()) {
             //Display a message somehow
             return new LotteryResult(selectedEntrants, entrantsToChoose);
         }
-
 
         if (entrantsToChoose.size() < entrantLimit) {
             selectedEntrants.addAll(entrantsToChoose);
@@ -71,23 +61,17 @@ public class LotteryService {
                 // Get Random Index within bounds of the list
                 int randomIndex = random.nextInt(entrantsToChoose.size());
 
-
                 // Get the entrant at that index
                 String randomEntrant = entrantsToChoose.get(randomIndex);
 
-
                 // Add entrant to selected entrants
                 selectedEntrants.add(randomEntrant);
-
 
                 // Remove entrant from waitlist
                 entrantsToChoose.remove(randomIndex);
             }
         }
-
-
         // Return LotteryResult object with selected entrants and updated
         return new LotteryResult(selectedEntrants, entrantsToChoose);
     }
 }
-

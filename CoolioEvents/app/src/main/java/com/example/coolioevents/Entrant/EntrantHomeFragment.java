@@ -59,7 +59,7 @@ public class EntrantHomeFragment extends Fragment {
         eventsList = new ArrayList<>();
 
         eventViewModel.getEventList().observe(this, new Observer<ArrayList<Event>>() {
-            // When eventlist in viewmodel is updated, update eventList too (aswell as notify array adapter)
+            // When event list in viewmodel is updated, update eventList too (as well as notify array adapter)
             @Override
             public void onChanged(ArrayList<Event> events) {
                 eventsList.clear();

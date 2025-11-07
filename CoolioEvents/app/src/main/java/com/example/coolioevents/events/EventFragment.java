@@ -1,5 +1,6 @@
 package com.example.coolioevents.events;
 
+
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,21 +26,52 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+/**
+ * Copyright 2025 Avery Dancocks
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class represents a fragment for a single event.
+ * Contains methods to initialize the layout as well as deals with
+ * the actions given to different button controllers in the fragment.
+ * It displays the details of an event.
+ *
+ * RATIONALE:
+ * Utilizes an event view model to retrieve the details of the event
+ * from a previous fragment.
+ *
+ * @author Avery Dancocks
+ * @version 1.0
+ * @since 2025-11-05
+ */
 public class EventFragment extends Fragment {
 
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private EventViewModel eventViewModel;
     private FirebaseUser currentUser;
     private String currentEventId;
     private boolean isUserOnWaitList = false;
     private boolean isUserChosen = false;
     private boolean isUserAccepted = false;
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // Attributes for displaying details
     private TextView eventNameTextView;
+    private TextView eventOrganizerTextView;
     private TextView eventDescriptionTextView;
     private ImageView eventPosterImageView;
     private TextView eventTimeTextView;
+    private TextView eventLocationTextView;
     private TextView eventRegistrationPeriodTextView;
     private TextView eventEntrantLimitTextView;
     private TextView eventStatusTextView;
@@ -52,6 +84,12 @@ public class EventFragment extends Fragment {
     private Button unregisterButton;
     private int waitlistCount;
 
+    /**
+     * This is a constructor for the Event Fragment
+     *
+     * @param eventId the event we want the fragment to display
+     * @return the fragment
+     */
     public static EventFragment newInstance(String eventId) {
         EventFragment fragment = new EventFragment();
         Bundle args = new Bundle();
@@ -62,7 +100,9 @@ public class EventFragment extends Fragment {
 
     // Getting color and setting button background - https://stackoverflow.com/questions/48717021/setbackgroundtintlist-for-button-programmatically-with-a-hex-value-colordrawab
     // Rajesh Satvara on oct29
-    // Helper function that could be turned into a class later for simplicity
+    /**
+     * This is a helper function to update the state of the UI
+     */
     private void updateButtonState() {
         // User is on the waitlist --> Button shows option to leave, user status says "In Waitlist"
         if (isUserOnWaitList) {
@@ -156,9 +196,11 @@ public class EventFragment extends Fragment {
 
         // Establishing UI components
         eventNameTextView = view.findViewById(R.id.eventViewName);
+        eventOrganizerTextView = view.findViewById(R.id.eventViewOrganizer);
         eventDescriptionTextView = view.findViewById(R.id.eventViewDescription);
         eventPosterImageView = view.findViewById(R.id.eventViewPoster);
         eventTimeTextView = view.findViewById(R.id.eventViewTime);
+        eventLocationTextView = view.findViewById(R.id.eventViewLocation);
         eventRegistrationPeriodTextView = view.findViewById(R.id.eventViewRegistrationPeriod);
         eventEntrantLimitTextView = view.findViewById(R.id.eventViewLimit);
         eventStatusTextView = view.findViewById(R.id.eventViewEventStatus);
@@ -167,15 +209,7 @@ public class EventFragment extends Fragment {
         eventUserStatusRegistrationView = view.findViewById(R.id.eventViewUserStatusRegistration);
 
         // Getting ViewModel and displaying event details
-        // eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
-
-        // Source - https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
-        // Posted by mlykotom
-        // Retrieved by Juliane Phan on 2025-11-06, License - CC BY-SA 4.0
-        // Used to instantiate the EventViewModel which uses the EventViewModel Factory class
-        // Modifications made: Used our own class and parameter names
         eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
-
 
         //TODO: Implement a check to make sure the event ID exists
         eventViewModel.getEventById(currentEventId).observe(getViewLifecycleOwner(), event -> {
@@ -194,18 +228,44 @@ public class EventFragment extends Fragment {
 
                     // Change button based on user status
                     updateButtonState();
+
                     System.out.println("WE MADE IT HERE");
                     // Updating UI components to match clicked event
                     eventNameTextView.setText(details.getEventName());
-                    eventDescriptionTextView.setText(details.getEventDescription());
+                    eventDescriptionTextView.setText(String.format("Description: %s", event.getDetails().getEventDescription()));
+                    if (event.getDetails().getEventLocation() != null){
+                        eventLocationTextView.setText(String.format("Event Location: %s",event.getDetails().getEventLocation())); // Sets event location if not null
+                    }
+                    else {
+                        eventLocationTextView.setText("Event Location: Not Available"); // Sets event location if  null
+                    }
+                    if (event.getDetails().getEventTime() != null){
+                        eventTimeTextView.setText(String.format("Time: %s",event.getDetails().getEventTime())); // Sets event time if not null
+                    }
+                    else {
+                        eventLocationTextView.setText("Time: Not Available"); // Sets event time if  null
+                    }
+                    eventRegistrationPeriodTextView.setText(String.format("Registration Period: %s", String.valueOf(details.getRegistrationPeriod())));
+                    eventEntrantLimitTextView.setText(String.format("Max Entrees: %s", String.valueOf(details.getEntrantLimit())));
+                    eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(event.getWaitlistEntrants().size())));
+
+                    // UI set up specifically for organizer
+                    String organizerId = event.getOrganizerId();
+                    if (organizerId != null) {
+                        eventViewModel.getOrganizerById(organizerId).observe(getViewLifecycleOwner(), organizer -> {
+                            if (organizer != null && organizer.getProfile() != null) {
+                                String username = organizer.getProfile().getUsername();
+                                if (username != null) { // Organizer has a username
+                                    eventOrganizerTextView.setText(String.format("Posted By: %s", username)); // Set the text for organizer
+                                }
+                                else {
+                                    eventOrganizerTextView.setText("Posted By: Unknown");
+                                }
+                            }
+                        });
+                    }
 
                     // TODO: eventPosterImageView - how to do
-                    // -- something to do with getPosterUrl() in events
-                    // TODO: eventTimeTextView.setText(details.getEventTime()); - add getEventTime
-                    eventRegistrationPeriodTextView.setText(details.getRegistrationPeriod());
-                    eventEntrantLimitTextView.setText(String.valueOf(details.getEntrantLimit()));
-                    eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(event.getWaitlistEntrants().size())));
-                    updateButtonState(); //--> make sure all buttons and text match user status
 
                     // Keeping track of current waitlist size in a figure
                     waitlistCount = event.getWaitlistEntrants().size();
@@ -224,12 +284,14 @@ public class EventFragment extends Fragment {
             }
         });
 
+
         // Establishing Buttons
         joinLeaveWaitlistButton = view.findViewById(R.id.eventViewJoinWaitListButton);
         acceptInviteButton = view.findViewById(R.id.eventAcceptInviteButton);
         declineInviteButton = view.findViewById(R.id.eventDeclineInviteButton);
         unregisterButton = view.findViewById(R.id.eventUnregisterButton);
         Button backButton = view.findViewById((R.id.eventViewBackButton));
+
 
         // Join/Leave waitlist button onclick activity
         joinLeaveWaitlistButton.setOnClickListener(new View.OnClickListener() {
@@ -262,8 +324,6 @@ public class EventFragment extends Fragment {
                         isUserOnWaitList = !isUserOnWaitList;
                         // Change button state
                         updateButtonState();
-
-                        // TODO: update the user status/figure out best way to show user status
                     }
                     else {
                         Toast.makeText(getContext(), "You were not added to the waitlist.", Toast.LENGTH_SHORT).show();
@@ -358,6 +418,5 @@ public class EventFragment extends Fragment {
                 getParentFragmentManager().popBackStack();
             }
         });
-
     }
 }
