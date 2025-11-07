@@ -2,6 +2,7 @@ package com.example.coolioevents.Entrant;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.SearchEvent;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.coolioevents.Event;
+import com.example.coolioevents.ProfileFragment;
 import com.example.coolioevents.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -56,6 +58,7 @@ public class EntrantActivity extends AppCompatActivity {
     private FirebaseUser user; // The current user
     private Fragment homeFragment; // Fragment for home screen
     private Fragment myEventsFragment; // Fragment for home screen
+    private Fragment ProfileFragment;
     private BottomNavigationView bottomNavView;
 
 
@@ -67,6 +70,7 @@ public class EntrantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_entrant);
         homeFragment = new EntrantHomeFragment();
         myEventsFragment = new EntrantMyEventsFragment();
+        ProfileFragment = new ProfileFragment();
 
         SwitchFragment(homeFragment); // Default fragment is home
 
@@ -85,6 +89,12 @@ public class EntrantActivity extends AppCompatActivity {
             } else if (menuItem.getItemId() == R.id.myevents) {
                 // If myevents item is selected in nav bar switch to home fragment
                 SwitchFragment(myEventsFragment);
+            } else if (menuItem.getItemId() == R.id.profile) {
+                // If myevents item is selected in nav bar switch to home fragment
+                SwitchFragment(ProfileFragment);
+            } else if (menuItem.getItemId() == R.id.search) {
+                // TODO
+                SwitchFragment(SearchEvent);
             }
             return true;
         });
