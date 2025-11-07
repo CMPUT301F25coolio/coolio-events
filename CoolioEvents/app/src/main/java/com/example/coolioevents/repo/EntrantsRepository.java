@@ -22,20 +22,18 @@ import java.util.List;
  * limitations under the License.
  *
  * PURPOSE:
- * This repository class manages reading entrant lists (waitlist, chosen, and final)
- * for a given event from Firestore. It abstracts Firestore access, so activities
- * can fetch entrant data without directly handling Firestore logic.
+ * Handles fetching entrant lists (waitlist, chosen, and final) for a given event
+ * from Firestore. Lets activities grab entrant data without touching Firestore
+ * logic directly.
  *
  * RATIONALE:
- * A centralized repository layer improves maintainability and reduces code duplication.
- * Since different teams may have used varying field names in Firestore, this class
- * checks multiple possible field names for each entrant list to maintain compatibility.
+ * Having a small data helper like this keeps Firestore code in one place and
+ * avoids repeating the same query logic in multiple activities. Also supports
+ * different field names used by teammates for better compatibility.
  *
  * OUTSTANDING ISSUES:
- * Currently, there is no caching, so each call triggers a full Firestore read.
- * No listener or live update mechanism is implemented, meaning list changes
- * won’t reflect automatically in the UI.
- * Additional validation or custom error handling could be added for robustness.
+ * Firestore reads happen every time — no caching or live updates yet.
+ * Future improvement could be using listeners so UI auto-refreshes when lists change.
  *
  * @author Parth Mittal
  * @version 1.0
