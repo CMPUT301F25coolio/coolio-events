@@ -191,12 +191,30 @@
         app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
 
     <!-- Organizer Action Buttons -->
+
+    <TextView
+        android:id="@+id/eventWaitingCount"
+        android:layout_width="180dp"
+        android:layout_height="20dp"
+
+        android:layout_marginEnd="212dp"
+        android:layout_marginBottom="240dp"
+        android:autoSizeTextType="uniform"
+        android:background="@drawable/purplecircularbackground"
+        android:fontFamily="@font/clearsans_bold"
+
+        android:gravity="center"
+        android:text="0 PEOPLE IN WAITLIST"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <Button
         android:id="@+id/view_lists_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="52dp"
         android:layout_marginEnd="40dp"
         android:paddingTop="14dp"
         android:paddingBottom="14dp"
@@ -206,6 +224,7 @@
         app:backgroundTint="#2962FF"
         app:cornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatus" />
 

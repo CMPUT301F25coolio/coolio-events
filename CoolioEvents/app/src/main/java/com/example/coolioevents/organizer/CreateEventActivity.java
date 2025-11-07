@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 /**
- * Copyright 2025 Aasta Tsai
+ * Copyright 2025 Aasta Tsai & Parth Mittal
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ import java.util.UUID;
  * This activity allows organizers to input event details, select or capture a poster image,
  * and upload event information to Firebase Firestore and Storage.
  *
- * @author Aasta Tsai
+ * @author Aasta Tsai & Parth Mittal
  * @version 1.0
  * @since 2025-11-05
  */
