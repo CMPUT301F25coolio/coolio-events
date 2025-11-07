@@ -27,22 +27,18 @@ import java.util.List;
  * limitations under the License.
  *
  * PURPOSE:
- * This activity lets an organizer enter an event ID and view one of three
- * entrant lists (Waiting, Chosen/Invited, Final Enrolled). It wires a Spinner
- * to choose the list type, uses EntrantsRepository to fetch arrays from the
- * event document in Firestore, and displays results in a RecyclerView via
- * EntrantIDAdapter. It can optionally prefill the event ID from an intent extra.
+ * Lets the organizer type an event ID and view different entrant lists
+ * (waiting, chosen, or final). Uses EntrantsRepository to fetch data
+ * from Firestore and displays it using EntrantIDAdapter.
  *
  * RATIONALE:
- * Kept as a standalone screen so viewing lists can be tested and demonstrated
- * without touching teammates flows. Keeping the UI minimal simplifies verifying
- * that Firestore data is shaped correctly and that each list loads as expected.
+ * Made as a separate simple screen so list loading can be tested
+ * without affecting the main organizer flow. Also helps confirm
+ * Firestore data structure and adapter behavior.
  *
  * OUTSTANDING ISSUES:
- * No loading/progress indicator or empty-state message is shown.
- * Errors are surfaced only as toasts and are not localized.
- * There is no validation beyond checking that the event ID is non-empty.
- * List data is not paginated or cached and large arrays may re-render slowly.
+ * No progress indicator or empty-state message yet.
+ * Errors only appear as short toasts and aren’t very descriptive.
  *
  * @author Parth Mittal
  * @version 1.0
