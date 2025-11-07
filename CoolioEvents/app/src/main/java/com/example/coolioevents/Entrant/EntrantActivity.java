@@ -92,10 +92,11 @@ public class EntrantActivity extends AppCompatActivity {
             } else if (menuItem.getItemId() == R.id.profile) {
                 // If myevents item is selected in nav bar switch to home fragment
                 SwitchFragment(ProfileFragment);
-            } else if (menuItem.getItemId() == R.id.search) {
-                // TODO
-                SwitchFragment(SearchEvent);
             }
+//           else if (menuItem.getItemId() == R.id.search) {
+//                // TODO
+//                SwitchFragment(SearchEvent);
+//            }
             return true;
         });
     }
