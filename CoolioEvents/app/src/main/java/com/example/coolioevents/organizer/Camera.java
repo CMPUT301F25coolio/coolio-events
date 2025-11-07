@@ -18,13 +18,16 @@ import java.util.Locale;
 
 /**
  * Camera class handles camera operations for taking pictures and save them as event posters
+ *
  * PURPOSE:
  * Launch camera to take pictures
  * Save captured images to device storage
  * Compress and optimize images
  * Return image path/URI for event details
+ *
  * OUTSTANDING ISSUES:
- * This class is not fully complete, still need to testing and debugging, which  will be complete in project part 4
+ * This class is not fully complete, still need to testing and debugging,
+ * which  will be complete in project part 4
  */
 public class Camera {
     public static final int REQUEST_IMAGE_CAPTURE = 1001;

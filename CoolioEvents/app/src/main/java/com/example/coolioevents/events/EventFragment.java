@@ -27,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
 /**
- * Copyright 2025 Avery Dancocks
+ * Copyright 2025 Avery Dancocks, Juliane Phan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ import java.util.List;
  * Utilizes an event view model to retrieve the details of the event
  * from a previous fragment.
  *
- * @author Avery Dancocks
+ * @author Avery Dancocks, Juliane Phan
  * @version 1.0
  * @since 2025-11-05
  */
@@ -98,8 +98,13 @@ public class EventFragment extends Fragment {
         return fragment;
     }
 
-    // Getting color and setting button background - https://stackoverflow.com/questions/48717021/setbackgroundtintlist-for-button-programmatically-with-a-hex-value-colordrawab
-    // Rajesh Satvara on oct29
+
+    /*Taken from: https://stackoverflow.com/questions/48717021/setbackgroundtintlist-for-button-programmatically-with-a-hex-value-colordrawab
+            License: http://www.apache.org/licenses/LICENSE-4.0
+            Authored by: Rejesh Satvara
+            Taken by: Avery Dancocks
+            Taken on: 10/29/25
+        */
     /**
      * This is a helper function to update the state of the UI
      */

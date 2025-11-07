@@ -143,7 +143,6 @@ public class OrganizerEventActivity extends AppCompatActivity {
         eventRegistrationPeriodTextView = findViewById(R.id.eventViewRegistrationPeriod);
         eventEntrantLimitTextView = findViewById(R.id.eventViewLimit);
         eventStatusTextView = findViewById(R.id.eventViewEventStatus);
-        eventWaitlistEntrantCount = findViewById(R.id.eventWaitlistEntrantCount);
 
         // Establish ViewModel
         eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
@@ -194,8 +193,6 @@ public class OrganizerEventActivity extends AppCompatActivity {
                     }
                     eventRegistrationPeriodTextView.setText(String.format("Registration Period: %s", String.valueOf(details.getRegistrationPeriod())));
                     eventEntrantLimitTextView.setText(String.format("Max Entrees: %s", String.valueOf(details.getEntrantLimit())));
-                    eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(event.getWaitlistEntrants().size())));
-
 
                     // UI set up specifically for organizer
                     String organizerId = event.getOrganizerId();
@@ -227,6 +224,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
         viewLists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(OrganizerEventActivity.this, "Coming Soon", Toast.LENGTH_SHORT).show();
                 //TODO - to be implemented by whoever made the view lists activity
             }
         });

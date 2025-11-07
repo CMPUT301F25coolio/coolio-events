@@ -47,7 +47,11 @@ public class EventViewModel extends ViewModel {
     public MutableLiveData<Event> getEventById(String eventId) {
         MutableLiveData<Event> singleEventData = new MutableLiveData<>();
 
-        //Gemini - how to convert firebase document to object oct29
+        /*Taken from: Google Gemini
+                Prompt: how to convert firebase document to object?
+                Taken by: Avery Dancocks
+                Taken on: 10/29/25
+         */
         //Get document from firebase and convert to event object
         db.collection("events").document(eventId).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -102,7 +106,11 @@ public class EventViewModel extends ViewModel {
         return singleOrganizerData;
     }
 
-    //Gemini - How do i update a list on firestore oct29
+    /*Taken from: Google Gemini
+                Prompt: How do i update a list on firestore?
+                Taken by: Avery Dancocks
+                Taken on: 10/29/25
+     */
     /**
      * Adds a user to an event's waitlist and updates the firebase.
      *
