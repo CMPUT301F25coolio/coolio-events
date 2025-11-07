@@ -22,19 +22,16 @@ import java.util.List;
  * limitations under the License.
  *
  * PURPOSE:
- * This adapter provides a simple RecyclerView implementation that lists entrant
- * IDs as plain text. It is used by the OrganizerEntrantsActivity to display
- * the waitlist, chosen, or final entrants for a given event.
+ * A basic RecyclerView adapter that displays entrant IDs in a simple list format.
+ * Used by OrganizerEntrantsActivity to show waitlist, chosen, and final entrants.
  *
  * RATIONALE:
- * The adapter was kept intentionally simple for readability and maintainability.
- * Since the entrant lists are relatively short, a minimal adapter using
- * the default Android layout was sufficient without requiring optimizations.
+ * The adapter is kept lightweight because the entrant lists are short and do not
+ * require custom view holders or performance optimizations. Simplicity helps with
+ * readability and quick debugging.
  *
  * OUTSTANDING ISSUES:
- * The adapter currently only supports a single TextView layout and assumes all
- * entrant data is provided as strings. Future improvements could include
- * adding click listeners or a more detailed layout with additional entrant info.
+ * Currently shows only plain text. Could later include profile details or click actions.
  *
  * @author Parth Mittal
  * @version 1.0
