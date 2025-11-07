@@ -1,5 +1,6 @@
 package com.example.coolioevents;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -8,7 +9,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 
+import static org.hamcrest.Matchers.anything;
+
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.example.coolioevents.authentication.WelcomeActivity;
@@ -229,6 +233,204 @@ public class SignupLoginTest {
         onView(withText("Please put in a password")).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void testEntrantHomeDisplay() {
+        // Log in to the test account
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "testguy@test.com";
+        String password = "tttttt";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Check if home screen is displayed
+        onView(withId(R.id.eventList)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testEntrantClickedEventDisplay() {
+        // Log in to the test account
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "testguy@test.com";
+        String password = "tttttt";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Click on an event
+        onData(anything()).inAdapterView(withId(R.id.eventList)).atPosition(0).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Check if back button present
+        onView(withText("Back")).check(ViewAssertions.matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void testEntrantJoinsThenLeavesWaitingList() {
+        // Log in to the test account
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "testguy@test.com";
+        String password = "tttttt";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Click on an event
+        onData(anything()).inAdapterView(withId(R.id.eventList)).atPosition(0).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Click on Join waitlist
+        onView(withId(R.id.eventViewJoinWaitListButton)).perform(click());
+
+        onView(withId(R.id.eventViewJoinWaitListButton)).check(matches(withText("Leave Waitlist")));
+
+        // Click to Leave waitlist
+        onView(withId(R.id.eventViewJoinWaitListButton)).perform(click());
+
+        onView(withId(R.id.eventViewJoinWaitListButton)).check(matches(withText("Join Waitlist")));
+    }
+
+    @Test
+    public void testEntrantGoesToMyEvents() {
+        // Log in to the test account
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "testguy@test.com";
+        String password = "tttttt";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Click profile on nav bar
+        onView(withId(R.id.myevents)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        onView(withId(R.id.eventList)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testEntrantGoesToProfile() {
+        // Log in to the test account
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "testguy@test.com";
+        String password = "tttttt";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Click profile on nav bar
+        onView(withId(R.id.profile)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        onView(withId(R.id.btn_edit_profile)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testLoginAsOrganizer() {
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "test@testy.com";
+        String password = "testpassword";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        onView(withId(R.id.optMakeEvent)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testOrganizerGoesToMakeEvent() {
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "test@testy.com";
+        String password = "testpassword";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Go to Make event
+        onView(withId(R.id.optMakeEvent)).perform(click());
+
+        onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testOrganizerGoesToMyEvents() {
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        String email = "test@testy.com";
+        String password = "testpassword";
+        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+        onView(withId(R.id.loginButton)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Go to My Events
+        onView(withId(R.id.optMyEvents)).perform(click());
+
+        onView(withId(R.id.eventList)).check(matches(isDisplayed()));
+    }
+
+//    @Test
+//    public void testOrganizerClickedEventDisplay() {
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        String email = "test@testy.com";
+//        String password = "testpassword";
+//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        // Go to My Events
+//        onView(withId(R.id.optMyEvents)).perform(click());
+//
+//        // Click on an event
+//        // TODO - finish (How do I make this test organizer have a test event without messing with the database?)
+//    }
 
 
 //    @Test
