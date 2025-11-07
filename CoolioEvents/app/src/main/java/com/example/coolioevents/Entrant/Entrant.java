@@ -30,10 +30,10 @@ import com.example.coolioevents.Profile;
 public class Entrant {
     private Profile profile;
 
-
     public Entrant(Profile profile) {
         this.profile = profile;
     }
+
     /**
      * This method gets the profile of the entrant
      * @return

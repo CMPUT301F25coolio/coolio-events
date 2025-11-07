@@ -17,8 +17,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.Entrant.EntrantActivity;
 import com.example.coolioevents.R;
+import com.example.coolioevents.organizer.Organizer;
 import com.example.coolioevents.organizer.OrganizerActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -152,8 +154,11 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Sets up Snapshotlistener for users to keep update list of all usernames in usernamelist
+     */
     private void addUsernameSL(){
-        // Sets up Snapshotlistener for users to keep update list of all usernames in usernamelist
         userCollection.addSnapshotListener((value, error) -> {
             if (value !=null && !value.isEmpty()){
                 usernamelist.clear();
@@ -165,8 +170,12 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Changes account type to Entrant if 0, Organizer if 1, and and update button colors
+     * @param type the type of account; 0 for Entrant, 1 for Organizer
+     */
     private void changeAccountType(int type){
-        // Changes account type to Entrant if 0, Organizer if 1, and and update button colors
+
         if (type == 0) {
             // Change account type to Entrant and update button colors
             accountType = 0;
@@ -180,8 +189,11 @@ public class SignupActivity extends AppCompatActivity {
 
         }
     }
+
+    /**
+     * Goes through signup process for user
+     */
     private void doSignup(){
-        // Goes through signup process for user
         String name, username, email, password;
         name = nameEditText.getText().toString();
         username = usernameEditText.getText().toString();
@@ -229,6 +241,13 @@ public class SignupActivity extends AppCompatActivity {
         attemptMakeAccount(name, username, email, password);
     }
 
+    /**
+     * Attempts to make an account for the user. Adds their account to the database if successful.
+     * @param name The user's name that they provided
+     * @param username The user's username that they provided
+     * @param email The user's email that they provided
+     * @param password The user's password that they provided
+     */
     private void attemptMakeAccount(String name, String username, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

@@ -73,6 +73,10 @@ public class WelcomeActivity extends AppCompatActivity {
                 startActivity(new Intent(WelcomeActivity.this, SignupActivity.class)));
     }
 
+    /**
+     * Sets the FirebaseAuth, which logs users into the app.
+     * @param mAuth The system that logs users into the app.
+     */
     public void setmAuth(FirebaseAuth mAuth) {
         this.mAuth = mAuth;
     }

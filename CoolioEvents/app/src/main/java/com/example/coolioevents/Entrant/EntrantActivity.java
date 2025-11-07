@@ -101,8 +101,11 @@ public class EntrantActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Switches fragment to fragment in the fragment container
+     * @param fragment The fragment to switch to
+     */
     public void SwitchFragment(Fragment fragment){
-        // Switches fragment to fragment in the fragment container
         FragmentManager fragManager = getSupportFragmentManager();
         FragmentTransaction fragTransaction = fragManager.beginTransaction();
         fragTransaction.replace(R.id.fragment_container, fragment);
