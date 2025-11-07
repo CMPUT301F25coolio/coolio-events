@@ -7,6 +7,41 @@ import com.google.firebase.firestore.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+/**
+ * Copyright 2025 Parth Mittal
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This service encapsulates waitlist pooling logic for organizers. It provides
+ * a transaction that pops the first UID from waitlistEntrants and appends it to
+ * chosenEntrants, plus a non-transactional helper to move a specific UID.
+ *
+ * RATIONALE:
+ * Keeping the mutation logic in one place avoids duplication and ensures that
+ * concurrent updates are handled safely through a Firestore transaction.
+ * Lists are copied to mutable instances before modification.
+ *
+ * OUTSTANDING ISSUES:
+ * No guard exists for duplicate entries across lists. If data is inconsistent,
+ * the transaction will still append the UID to chosenEntrants.
+ * Errors are surfaced as generic IllegalStateException messages.
+ * There is no retry/backoff strategy if the transaction fails due to contention.
+ *
+ * @author Parth Mittal
+ * @version 1.0
+ * @since 2025-11-07
+ */
 /*
   Pooling logic for organizers.
    - Take the first uid from waitlistEntrants and append to chosenEntrants
