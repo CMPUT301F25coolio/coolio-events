@@ -18,7 +18,37 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Copyright 2025 Avery Dancocks & Juliane Phan & Ethan Diep
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class represents an event viewmodel, responsible for holding information
+ * related to events from the db, and contains methods that allow for the interaction
+ * with the events in the database. It contains an eventList containing all events in the db,
+ * kept up to date with it. It also has an organizerMap containing all organizers,
+ * also kept up to date in the db.
+ *
+ *
+ * RATIONALE:
+ * This class was designed to allow users to browse events they may be
+ * interested in.
+ *
+ * @author Avery Dancocks & Juliane Phan & Ethan Diep
+ * @version 1.0
+ * @since 2025-11-06
+ */
 public class EventViewModel extends ViewModel {
 
     // ViewModel needs to hold reference to firebase

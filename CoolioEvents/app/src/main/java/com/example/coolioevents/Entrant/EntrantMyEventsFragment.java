@@ -27,7 +27,36 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * Copyright 2025 Ethan Diep
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class represents the Entrant's My Events Fragment
+ * It displays a screen showing the history of all the events the current
+ * entrant was in. Pressing on event allows an entrant to view more details about the event
+ * and register/unregister/leave waiting list depending on the status of the event and
+ * whether they were chosen or not.
+ *
+ * RATIONALE:
+ * This class was designed allow users to see which events they have joined the waiting list for
+ * and check if they were chosen.
+ *
+ * @author Ethan Diep
+ * @version 1.0
+ * @since 2025-11-06
+ */
 public class EntrantMyEventsFragment extends Fragment {
     EventViewModel eventViewModel; // View Model eventList up to date with database
     FirebaseAuth mAuth;
@@ -100,7 +129,7 @@ public class EntrantMyEventsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event clickedEvent = (Event) parent.getItemAtPosition(position);
 
-                //If event is null do nothing
+                // If event is null do nothing
                 if (clickedEvent == null) {
                     return;
                 }

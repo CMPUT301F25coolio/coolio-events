@@ -94,7 +94,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
 
         // Setting event status text
         if (event.getDetails().getStatus().equals("open")) {
-            //If event open make text open with green background
+            // If event open make text open with green background
             eventStatus.setText("Open");
             eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
         }

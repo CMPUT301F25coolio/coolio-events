@@ -14,8 +14,32 @@ import com.example.coolioevents.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
- * Welcome screen. Always shows Login/Sign Up and forces logout on launch (testing mode).
- * Remove the signOut() line if you want persistent sessions later.
+ * Copyright 2025 Ethan Diep
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class represents the Welcome Activity
+ * It displays a screen which welcomes the user into the app, along with
+ * 2 buttons options - login and signup
+ *
+ * RATIONALE:
+ * This class was designed to welcome users into the app and have them
+ * choose to login or sign up.
+ *
+ * @author Ethan Diep
+ * @version 1.0
+ * @since 2025-11-06
  */
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -47,6 +71,10 @@ public class WelcomeActivity extends AppCompatActivity {
                 startActivity(new Intent(WelcomeActivity.this, LoginActivity.class)));
         signupButton.setOnClickListener(v ->
                 startActivity(new Intent(WelcomeActivity.this, SignupActivity.class)));
+    }
+
+    public void setmAuth(FirebaseAuth mAuth) {
+        this.mAuth = mAuth;
     }
 
     // No onStart auto-redirect. User must tap Login/Sign Up.
