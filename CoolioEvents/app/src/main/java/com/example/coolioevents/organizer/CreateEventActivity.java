@@ -40,7 +40,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Activity for organizers to create events, including picking or capturing poster images.
+ * CreateEventActivity is a class for organizers to create events, including picking or capturing poster images.
+ * PURPOSE:
+ *This activity allows organizers to input event details, select or capture a poster image, and upload event information to Firebase Firestore and Storage.
  */
 public class CreateEventActivity extends AppCompatActivity {
 
@@ -57,6 +59,9 @@ public class CreateEventActivity extends AppCompatActivity {
     private Camera camera;
     private String eventPosterPath;
 
+    /**
+     * ActivityResultLauncher to pick poster image from gallery.
+     */
     private final ActivityResultLauncher<String> pickPosterLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
                 if (uri != null) {
@@ -65,6 +70,12 @@ public class CreateEventActivity extends AppCompatActivity {
                 }
             });
 
+    /**
+     * This method initializes the activity, sets up UI components, and attaches event listeners.
+     *
+     * @param savedInstanceState
+     *      Bundle containing the activity's previous state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +106,14 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     /**
-     * Handles camera and gallery results for poster images.
+     * This method handles results from camera and gallery activities for poster image selection.
+     *
+     * @param requestCode
+     *      Code identifying which activity returned a result
+     * @param resultCode
+     *      Result status from the called activity
+     * @param data
+     *      Intent containing returned data (if any)
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -124,6 +142,9 @@ public class CreateEventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method creates a new event using input fields and uploads the details to Firebase Firestore.
+     */
     private void createEvent() {
         String title = etTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
@@ -173,6 +194,14 @@ public class CreateEventActivity extends AppCompatActivity {
                         Toast.makeText(this, "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * This method uploads the event poster and QR code to Firebase Storage, then updates the Firestore document.
+     *
+     * @param eventId
+     *      Unique ID of the event
+     * @param deepLink
+     *      Deep link URL for the event QR code
+     */
     private void uploadAssetsAndFinish(String eventId, String deepLink) {
         // 2) Upload poster (if selected) AND upload QR image, then update Firestore with URLs
 
