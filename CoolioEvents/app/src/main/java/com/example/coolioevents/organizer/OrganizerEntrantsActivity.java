@@ -11,6 +11,43 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.coolioevents.R;
 import com.example.coolioevents.repo.EntrantsRepository;
 import java.util.List;
+/**
+ * Copyright 2025 Parth Mittal
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This activity lets an organizer enter an event ID and view one of three
+ * entrant lists (Waiting, Chosen/Invited, Final Enrolled). It wires a Spinner
+ * to choose the list type, uses EntrantsRepository to fetch arrays from the
+ * event document in Firestore, and displays results in a RecyclerView via
+ * EntrantIDAdapter. It can optionally prefill the event ID from an intent extra.
+ *
+ * RATIONALE:
+ * Kept as a standalone screen so viewing lists can be tested and demonstrated
+ * without touching teammates flows. Keeping the UI minimal simplifies verifying
+ * that Firestore data is shaped correctly and that each list loads as expected.
+ *
+ * OUTSTANDING ISSUES:
+ * No loading/progress indicator or empty-state message is shown.
+ * Errors are surfaced only as toasts and are not localized.
+ * There is no validation beyond checking that the event ID is non-empty.
+ * List data is not paginated or cached and large arrays may re-render slowly.
+ *
+ * @author Parth Mittal
+ * @version 1.0
+ * @since 2025-11-07
+ */
 /*
   Screen where I can type an event id and peek at different entrant lists
   waiting,chosen,final. This basically reads a couple arrays from the event doc.
