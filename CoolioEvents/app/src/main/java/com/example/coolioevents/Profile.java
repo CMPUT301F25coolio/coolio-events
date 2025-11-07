@@ -1,6 +1,6 @@
 package com.example.coolioevents;
 /**
- * Copyright 2025 Aasta Tsai
+ * Copyright 2025 Parth Mittal
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package com.example.coolioevents;
  * It contains all the attributes of a profile.
  * Profiles are had by Entrants and Organizers.
  *
- * @author Aasta Tsai
+ * @author Parth Mittal
  * @version 1.0
  * @since 2025-11-05
  */

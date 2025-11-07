@@ -118,13 +118,13 @@ public class EntrantHomeFragment extends Fragment {
         eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList); // Make new event adapter linked to eventList
         eventsListView.setAdapter(eventAdapter); // Make listview have adapter connected to eventList
 
-        //Navigating to Event Fragment
+        // Navigating to Event Fragment
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event clickedEvent = (Event) parent.getItemAtPosition(position);
 
-                //If event is null do nothing
+                // If event is null do nothing
                 if (clickedEvent == null) {
                     return;
                 }

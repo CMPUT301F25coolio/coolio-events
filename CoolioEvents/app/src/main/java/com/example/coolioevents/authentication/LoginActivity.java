@@ -93,6 +93,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Goes through the login process for a user.
+     * If login is successful, the user is navigated to the home screen.
+     */
     private void doLogin() {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString();
