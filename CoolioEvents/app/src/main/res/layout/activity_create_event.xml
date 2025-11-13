@@ -153,17 +153,17 @@
                 android:textColor="#212121"
                 android:textColorHint="#9E9E9E" />
 
-            <!-- Event Time -->
+            <!-- Event Date and Time -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event time"
+                android:text="Event date and time"
                 android:textColor="#212121"
                 android:textSize="14sp"
                 android:layout_marginBottom="4dp"/>
 
             <EditText
-                android:id="@+id/etEventTime"
+                android:id="@+id/etEventDateTime"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/edittextbackground"

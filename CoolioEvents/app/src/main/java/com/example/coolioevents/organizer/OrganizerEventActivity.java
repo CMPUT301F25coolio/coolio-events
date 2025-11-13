@@ -192,8 +192,8 @@ public class OrganizerEventActivity extends AppCompatActivity {
                     else {
                         eventLocationTextView.setText("Event Location: Not Available"); // Sets event location if  null
                     }
-                    if (event.getDetails().getEventTime() != null){
-                        eventTimeTextView.setText(String.format("Time: %s",event.getDetails().getEventTime())); // Sets event time if not null
+                    if (event.getDetails().getEventDateTime() != null){
+                        eventTimeTextView.setText(String.format("Time: %s",event.getDetails().getEventDateTime())); // Sets event time if not null
                     }
                     else {
                         eventLocationTextView.setText("Time: Not Available"); // Sets event time if  null

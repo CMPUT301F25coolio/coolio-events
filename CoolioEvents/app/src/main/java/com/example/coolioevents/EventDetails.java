@@ -32,11 +32,11 @@ import java.util.Locale;
 public class EventDetails {
     private String eventName;
     private String eventDescription;
-    private String eventTime;
     private String eventLocation;
-    private String registrationPeriod; // string input, e.g. "2025/10/28 - 2025/11/11"
+    private String registrationPeriod; // string for display only, e.g. "2025/10/28 - 2025/11/11"
     private int entrantLimit;
 
+    private Date eventDateTime; // actual event date and time
     private Date postedDate;
     private Date startDate;
     private Date endDate;
@@ -47,11 +47,11 @@ public class EventDetails {
     }
 
 
-    public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, String eventTime, String eventLocation,
+    public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, Date eventDateTime, String eventLocation,
                          Date postedDate) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
-        this.eventTime = eventTime;
+        this.eventDateTime = eventDateTime;
         this.eventLocation = eventLocation;
         this.registrationPeriod = registrationPeriod;
         this.entrantLimit = entrantLimit;
@@ -82,7 +82,7 @@ public class EventDetails {
      * @return
      *      The time of the event
      */
-    public String getEventTime() { return eventTime; }
+    public Date getEventDateTime() { return eventDateTime; }
 
     /**
      * This method gets the description of the event.
@@ -178,6 +178,13 @@ public class EventDetails {
     }
 
     /**
+     * This method sets the event's date and time to eventDateTime
+     * @param eventDateTime
+     *      The date and time of the event
+     */
+    public void setEventDateTime(Date eventDateTime) { this.eventDateTime = eventDateTime; }
+
+    /**
      * This method sets the entrant limit of the event to entrantLimit
      * @param entrantLimit
      *      The limit of entrants in the event
@@ -191,6 +198,13 @@ public class EventDetails {
      */
     public void setPosterUrl(String posterUrl) { this.posterUrl = posterUrl; }
 
+    /**
+     * This method sets te poster's start date of the event to startDate
+     * @param startDate
+     *      the start date of the event
+     */
+    public void setStartDate(Date startDate) { this.startDate = startDate; }
+    public void setEndDate(Date endDate) { this.endDate = endDate; }
 
     /**
      * Parses the registration period string (e.g., "2025/10/28 - 2025/11/11") into startDate and endDate.
