@@ -26,6 +26,9 @@
         <activity
             android:name=".administrator.AdministratorHomeActivity"
             android:exported="false" />
+        <activity
+            android:name=".administrator.AdministratorEventsActivity"
+            android:exported="false" />
 
         <!-- Organizer side -->
         <activity

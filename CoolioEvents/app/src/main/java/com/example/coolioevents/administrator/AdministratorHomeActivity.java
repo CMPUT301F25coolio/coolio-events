@@ -1,6 +1,8 @@
 package com.example.coolioevents.administrator;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.coolioevents.R;
+import com.example.coolioevents.organizer.CreateEventActivity;
 
 /**
  * Copyright 2025 Juliane Phan
@@ -45,5 +48,14 @@ public class AdministratorHomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_administrator_home);
+
+        // Establishing views
+        View eventsOption = findViewById(R.id.optAdminEvents);
+
+        // Events option onclick activity --> Leads to Events activity
+        if (eventsOption != null) {
+            eventsOption.setOnClickListener(v ->
+                    startActivity(new Intent(this, AdministratorEventsActivity.class)));
+        }
     }
 }
