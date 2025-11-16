@@ -190,10 +190,9 @@
         app:layout_constraintStart_toEndOf="@+id/eventViewEventStatusLabel"
         app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
 
-    <!-- Organizer Action Buttons -->
-
+    <!-- Number of people in waitlist -->
     <TextView
-        android:id="@+id/eventWaitingCount"
+        android:id="@+id/eventWaitlistEntrantCount"
         android:layout_width="180dp"
         android:layout_height="20dp"
 
@@ -209,6 +208,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Organizer Action Buttons -->
     <Button
         android:id="@+id/view_lists_button"
         android:layout_width="0dp"

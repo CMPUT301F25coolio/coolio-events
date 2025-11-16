@@ -49,7 +49,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * from a previous activity.
  *
  * OUTSTANDING ISSUES:
- * The functionality of the settings button is not currently developed.
+ * The functionality of the edit button is not currently developed.
  *
  * @author Avery Dancocks
  * @version 1.0
@@ -149,6 +149,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
         eventLocationTextView = findViewById(R.id.eventViewLocation);
         eventRegistrationPeriodTextView = findViewById(R.id.eventViewRegistrationPeriod);
         eventEntrantLimitTextView = findViewById(R.id.eventViewLimit);
+        eventWaitlistEntrantCount = findViewById(R.id.eventWaitlistEntrantCount);
         eventStatusTextView = findViewById(R.id.eventViewEventStatus);
 
         // Establish ViewModel
@@ -196,10 +197,11 @@ public class OrganizerEventActivity extends AppCompatActivity {
                         eventTimeTextView.setText(String.format("Time: %s",event.getDetails().getEventDateTime())); // Sets event time if not null
                     }
                     else {
-                        eventLocationTextView.setText("Time: Not Available"); // Sets event time if  null
+                        eventTimeTextView.setText("Time: Not Available"); // Sets event time if  null
                     }
                     eventRegistrationPeriodTextView.setText(String.format("Registration Period: %s", String.valueOf(details.getRegistrationPeriod())));
                     eventEntrantLimitTextView.setText(String.format("Max Entrees: %s", String.valueOf(details.getEntrantLimit())));
+                    eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(event.getWaitlistEntrants().size())));
 
                     // UI set up specifically for organizer
                     String organizerId = event.getOrganizerId();
@@ -226,7 +228,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
         drawLottery = findViewById(R.id.draw_lottery_button);
         drawNewEntrant = findViewById(R.id.draw_new_user_button);
         ImageButton backButton = findViewById(R.id.organizer_event_back_button);
-        ImageButton settingsButton = findViewById(R.id.organizer_event_edit_button);
+        ImageButton editButton = findViewById(R.id.organizer_event_edit_button);
 
         viewLists.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,11 +269,18 @@ public class OrganizerEventActivity extends AppCompatActivity {
         // Back button onclick activity
         backButton.setOnClickListener(v -> finish());
 
-        // Setting button onclick activity
-        settingsButton.setOnClickListener(new View.OnClickListener() {
+        // Edit button onclick activity
+        editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(OrganizerEventActivity.this, "Coming Soon", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(OrganizerEventActivity.this, EditEventActivity.class);
+
+                // Pass the event ID so the edit screen knows which event to load
+                if (currentEvent != null) {
+                    intent.putExtra("EVENT_ID", currentEventId);
+                }
+
+                startActivity(intent);
             }
         });
 

@@ -185,6 +185,13 @@ public class EventDetails {
     public void setEventDateTime(Date eventDateTime) { this.eventDateTime = eventDateTime; }
 
     /**
+     * This method sets the event's location to eventLocation
+     * @param eventLocation
+     *      The location of the event
+     */
+    public void setEventLocation(String eventLocation) { this.eventLocation = eventLocation; }
+
+    /**
      * This method sets the entrant limit of the event to entrantLimit
      * @param entrantLimit
      *      The limit of entrants in the event

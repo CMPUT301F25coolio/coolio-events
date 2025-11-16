@@ -28,6 +28,7 @@ import com.example.coolioevents.util.QRCodeUtil;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -35,48 +36,25 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
 /**
- * Copyright 2025 Aasta Tsai & Parth Mittal
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * PURPOSE:
- * CreateEventActivity is a class for organizers to create events,
- * including picking or capturing poster images.
- * This activity allows organizers to input event details, select or capture a poster image,
- * and upload event information to Firebase Firestore and Storage.
- *
- * @author Aasta Tsai & Parth Mittal
- * @version 1.0
- * @since 2025-11-05
+ * EditEventActivity: same behaviour as CreateEventActivity but pre-fills fields
+ * and updates the existing Firestore document instead of creating a new one.
  */
-public class CreateEventActivity extends AppCompatActivity {
+public class EditEventActivity extends AppCompatActivity {
 
     private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventDateTime, etEventLocation;
-    private Button btnCreate, btnPickPoster, btnTakePhoto;
+    private Button btnSave, btnPickPoster, btnTakePhoto;
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
 
     private FirebaseFirestore db;
-    private FirebaseUser currentUser;
     private FirebaseStorage storage;
 
     private Uri posterUri = null;
@@ -89,6 +67,8 @@ public class CreateEventActivity extends AppCompatActivity {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
     private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US);
 
+    private String eventId; // event being edited
+
     /**
      * ActivityResultLauncher to pick poster image from gallery.
      */
@@ -100,20 +80,13 @@ public class CreateEventActivity extends AppCompatActivity {
                 }
             });
 
-    /**
-     * This method initializes the activity, sets up UI components, and attaches event listeners.
-     *
-     * @param savedInstanceState
-     *      Bundle containing the activity's previous state
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_event);
+        setContentView(R.layout.activity_edit_event); // reuse same layout
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         camera = new Camera(this);
 
@@ -123,7 +96,7 @@ public class CreateEventActivity extends AppCompatActivity {
         etEntrantLimit = findViewById(R.id.etEntrantLimit);
         etEventDateTime = findViewById(R.id.etEventDateTime);
         etEventLocation = findViewById(R.id.etEventLocation);
-        btnCreate = findViewById(R.id.btnCreate);
+        btnSave = findViewById(R.id.btnSave);
         btnBack = findViewById(R.id.btnBack);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
         btnPickPoster = findViewById(R.id.btnPickPoster);
@@ -139,11 +112,72 @@ public class CreateEventActivity extends AppCompatActivity {
         etEventDateTime.setFocusable(false);
         etEventDateTime.setOnClickListener(v -> showDateTimePicker());
 
-        btnCreate.setOnClickListener(v -> createEvent());
+        // get event id from intent
+        Intent intent = getIntent();
+        eventId = intent.getStringExtra("EVENT_ID");
+
+        if (eventId != null) {
+            loadEventAndPrefill(eventId);
+        } else {
+            Toast.makeText(this, "No event id provided", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        btnSave.setOnClickListener(v -> saveChanges());
+    }
+
+    private void loadEventAndPrefill(String eventId) {
+        db.collection("events").document(eventId).get()
+                .addOnSuccessListener((DocumentSnapshot doc) -> {
+                    if (doc.exists()) {
+                        // attempt to convert to Event if your Event class exists
+                        Event event = doc.toObject(Event.class);
+                        if (event != null && event.getDetails() != null) {
+                            EventDetails details = event.getDetails();
+
+                            // prefill text fields
+                            etTitle.setText(details.getEventName());
+                            etDescription.setText(details.getEventDescription());
+                            if (details.getRegistrationPeriod() != null) {
+                                etRegistrationPeriod.setText(details.getRegistrationPeriod());
+                            }
+                            etEntrantLimit.setText(String.valueOf(details.getEntrantLimit()));
+                            if (details.getEventDateTime() != null) {
+                                eventDateTimeCalendar = Calendar.getInstance();
+                                eventDateTimeCalendar.setTime(details.getEventDateTime());
+                                etEventDateTime.setText(dateTimeFormat.format(details.getEventDateTime()));
+                            }
+                            etEventLocation.setText(details.getEventLocation());
+
+                            if (details.getStartDate() != null) {
+                                startDateCalendar = Calendar.getInstance();
+                                startDateCalendar.setTime(details.getStartDate());
+                            }
+                            if (details.getEndDate() != null) {
+                                endDateCalendar = Calendar.getInstance();
+                                endDateCalendar.setTime(details.getEndDate());
+                            }
+
+                            // if posterUrl is a local path you could attempt to show it.
+                            // We leave poster preview alone for remote URLs (Firebase Storage).
+                            if (details.getPosterUrl() != null && details.getPosterUrl().startsWith("file")) {
+                                try {
+                                    Uri u = Uri.parse(details.getPosterUrl());
+                                    posterUri = u;
+                                    imgPosterPreview.setImageURI(u);
+                                } catch (Exception ignored) {}
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load event: " + e.getMessage(), Toast.LENGTH_LONG).show());
     }
 
     private void showDateTimePicker() {
-        eventDateTimeCalendar = Calendar.getInstance();
+        if (eventDateTimeCalendar == null) {
+            eventDateTimeCalendar = Calendar.getInstance();
+        }
 
         DatePickerDialog datePicker = new DatePickerDialog(this,
                 (view, year, month, dayOfMonth) -> {
@@ -172,8 +206,8 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void showDateRangePicker() {
-        startDateCalendar = Calendar.getInstance();
-        endDateCalendar = Calendar.getInstance();
+        if (startDateCalendar == null) startDateCalendar = Calendar.getInstance();
+        if (endDateCalendar == null) endDateCalendar = Calendar.getInstance();
 
         DatePickerDialog startPicker = new DatePickerDialog(this,
                 (view, year, month, dayOfMonth) -> {
@@ -204,17 +238,6 @@ public class CreateEventActivity extends AppCompatActivity {
         startPicker.show();
     }
 
-
-    /**
-     * This method handles results from camera and gallery activities for poster image selection.
-     *
-     * @param requestCode
-     *      Code identifying which activity returned a result
-     * @param resultCode
-     *      Result status from the called activity
-     * @param data
-     *      Intent containing returned data (if any)
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -242,12 +265,10 @@ public class CreateEventActivity extends AppCompatActivity {
         }
     }
 
-
-
     /**
-     * This method creates a new event using input fields and uploads the details to Firebase Firestore.
+     * Save changes to existing event document and upload assets if needed.
      */
-    private void createEvent() {
+    private void saveChanges() {
         String title = etTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
         String registrationPeriod = etRegistrationPeriod.getText().toString().trim();
@@ -270,68 +291,65 @@ public class CreateEventActivity extends AppCompatActivity {
 
         Date eventDateTime = null;
         try {
-            eventDateTime = dateTimeFormat.parse(etEventDateTime.getText().toString());
+            String dtText = etEventDateTime.getText().toString();
+            if (!TextUtils.isEmpty(dtText)) {
+                eventDateTime = dateTimeFormat.parse(dtText);
+            }
         } catch (Exception e) {
             Toast.makeText(this, "Invalid event date/time format", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String organizerId = currentUser != null ? currentUser.getUid() : "unknown";
-        String eventId = UUID.randomUUID().toString();
-        String deepLink = "coolioevents://event/" + eventId;
+        // Read the existing details object and update fields
+        db.collection("events").document(eventId).get()
+                .addOnSuccessListener(doc -> {
+                    if (!doc.exists()) {
+                        Toast.makeText(EditEventActivity.this, "Event not found", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        EventDetails details = new EventDetails(
-                title,
-                description,
-                registrationPeriod,
-                entrantLimit,
-                eventDateTime,
-                eventLocation,
-                new Date());
-        if (startDateCalendar != null && endDateCalendar != null) {
-            details.setStartDate(startDateCalendar.getTime());
-            details.setEndDate(endDateCalendar.getTime());
-        }
+                    Event event = doc.toObject(Event.class);
+                    EventDetails details;
+                    if (event != null && event.getDetails() != null) {
+                        details = event.getDetails();
+                    } else {
+                        // fallback: build new details if mapping failed
+                        details = new EventDetails();
+                    }
 
-        details.setPosterUrl(eventPosterPath);
-        details.setPosterUrl(eventPosterPath);
-        Event event = new Event(eventId, organizerId, details);
+                    details.setEventName(title);
+                    details.setEventDescription(description);
+                    details.setRegistrationPeriod(registrationPeriod);
+                    details.setEntrantLimit(entrantLimit);
+                    details.setEventLocation(eventLocation);
+                    if (eventDateTimeCalendar != null) details.setEventDateTime(eventDateTimeCalendar.getTime());
+                    if (startDateCalendar != null) details.setStartDate(startDateCalendar.getTime());
+                    if (endDateCalendar != null) details.setEndDate(endDateCalendar.getTime());
+                    // posterUrl will be updated after poster upload (if any)
+                    // write updated details back to doc (other fields remain)
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put("details", details);
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("eventId", eventId);
-        map.put("details", details);
-        map.put("organizerId", organizerId);
-        map.put("lotteryDone", false);
-        map.put("waitlistEntrants", new ArrayList<String>());
-        map.put("chosenEntrants", new ArrayList<String>());
-        map.put("acceptedEntrants", new ArrayList<String>());
-        map.put("cancelledEntrants", new ArrayList<String>());
-        map.put("deepLink", deepLink);
-        map.put("posterUrl", null);
-        map.put("promoQrUrl", null);
-
-        // 1) Create Firestore doc
-        db.collection("events").document(eventId).set(map)
-                .addOnSuccessListener(aVoid -> uploadAssetsAndFinish(eventId, deepLink))
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    db.collection("events").document(eventId)
+                            .update(updates)
+                            .addOnSuccessListener(aVoid -> {
+                                // Now upload assets (poster + QR) same as create
+                                uploadAssetsAndFinish(eventId, "coolioevents://event/" + eventId);
+                            })
+                            .addOnFailureListener(e1 -> Toast.makeText(EditEventActivity.this, "Failed to save details: " + e1.getMessage(), Toast.LENGTH_LONG).show());
+                })
+                .addOnFailureListener(e -> Toast.makeText(EditEventActivity.this, "Failed to load event for update: " + e.getMessage(), Toast.LENGTH_LONG).show());
     }
 
     /**
-     * This method uploads the event poster and QR code to Firebase Storage, then updates the Firestore document.
-     *
-     * @param eventId
-     *      Unique ID of the event
-     * @param deepLink
-     *      Deep link URL for the event QR code
+     * Upload poster if selected and generate + upload QR; then update posterUrl/promoQrUrl fields.
+     * Reused (with minimal changes) from CreateEventActivity.
      */
     private void uploadAssetsAndFinish(String eventId, String deepLink) {
-        // 2) Upload poster (if selected) AND upload QR image, then update Firestore with URLs
-
         StorageReference postersRef = storage.getReference().child("posters/" + eventId + ".jpg");
         StorageReference qrRef = storage.getReference().child("qrcodes/" + eventId + ".png");
 
-        // Task A: Poster upload (optional)
+        // Poster upload task
         var posterTask = Tasks.forResult((String) null);
         if (posterUri != null) {
             try {
@@ -344,12 +362,11 @@ public class CreateEventActivity extends AppCompatActivity {
                         .continueWithTask(t -> postersRef.getDownloadUrl())
                         .continueWith(t -> t.getResult() != null ? t.getResult().toString() : null);
             } catch (Exception e) {
-                // Keep going even if poster fails
                 posterTask = Tasks.forResult((String) null);
             }
         }
 
-        // Task B: QR bitmap -> upload -> URL
+        // QR generation + upload
         var qrTask = Tasks.call(() -> {
             Bitmap qr = QRCodeUtil.generateQRCode(deepLink);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -359,7 +376,6 @@ public class CreateEventActivity extends AppCompatActivity {
         ).continueWithTask(t -> qrRef.getDownloadUrl()
         ).continueWith(t -> t.getResult() != null ? t.getResult().toString() : null);
 
-        // When both finish, update doc
         Tasks.whenAllSuccess(posterTask, qrTask).addOnSuccessListener(results -> {
             String posterUrl = (String) results.get(0);
             String qrUrl = (String) results.get(1);
@@ -370,19 +386,21 @@ public class CreateEventActivity extends AppCompatActivity {
 
             db.collection("events").document(eventId).update(updates)
                     .addOnSuccessListener(x -> {
-                        Toast.makeText(this, "Event created! Poster/QR saved.", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(CreateEventActivity.this, OrganizerActivity.class));
+                        Toast.makeText(this, "Event saved! Poster/QR saved.", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(EditEventActivity.this, OrganizerActivity.class));
                         finish();
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Event created, but asset update failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(CreateEventActivity.this, OrganizerActivity.class));
+                        Toast.makeText(this, "Event saved, but asset update failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(EditEventActivity.this, OrganizerActivity.class));
                         finish();
                     });
         }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Event created, asset upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            startActivity(new Intent(CreateEventActivity.this, OrganizerActivity.class));
+            Toast.makeText(this, "Event saved, but asset upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            startActivity(new Intent(EditEventActivity.this, OrganizerActivity.class));
             finish();
         });
     }
 }
+
+
