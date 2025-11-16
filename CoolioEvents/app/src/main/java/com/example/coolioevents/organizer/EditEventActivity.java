@@ -85,14 +85,6 @@ public class EditEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
 
-        eventId = getIntent().getStringExtra("EVENT_ID");
-
-        if (eventId == null || eventId.isEmpty()) {
-            Toast.makeText(this, "Error: No event ID provided", Toast.LENGTH_SHORT).show();
-            finish(); // prevent empty screen
-            return;
-        }
-
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
