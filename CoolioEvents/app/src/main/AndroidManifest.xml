@@ -29,6 +29,9 @@
             android:name=".organizer.OrganizerMyEventsActivity"
             android:exported="false" />
         <activity
+            android:name=".organizer.EditEventActivity"
+            android:exported="false" />
+        <activity
             android:name=".organizer.OrganizerEntrantsActivity"
             android:exported="true" />
         <activity

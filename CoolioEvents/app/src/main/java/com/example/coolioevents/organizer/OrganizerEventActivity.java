@@ -273,17 +273,17 @@ public class OrganizerEventActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(OrganizerEventActivity.this, EditEventActivity.class);
 
-                // Pass the event ID so the edit screen knows which event to load
-                if (currentEvent != null) {
-                    intent.putExtra("EVENT_ID", currentEventId);
+                if (currentEventId == null || currentEventId.isEmpty()) {
+                    Toast.makeText(OrganizerEventActivity.this,
+                            "Error: Event ID missing", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
+                Intent intent = new Intent(OrganizerEventActivity.this, EditEventActivity.class);
+                intent.putExtra("EVENT_ID", currentEventId);
                 startActivity(intent);
             }
         });
-
-
     }
 }
