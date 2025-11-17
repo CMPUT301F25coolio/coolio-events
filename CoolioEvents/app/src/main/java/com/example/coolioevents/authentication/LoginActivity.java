@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.coolioevents.Entrant.EntrantActivity;
 import com.example.coolioevents.R;
+import com.example.coolioevents.administrator.AdministratorHomeActivity;
 import com.example.coolioevents.organizer.OrganizerActivity; // <-- use this (it exists)
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,7 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 /**
- * Copyright 2025 Ethan Diep
+ * Copyright 2025 Ethan Diep & Juliane Phan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -129,6 +130,9 @@ public class LoginActivity extends AppCompatActivity {
                                         finish();
                                     } else if ("Entrant".equals(role)) {
                                         startActivity(new Intent(LoginActivity.this, EntrantActivity.class));
+                                        finish();
+                                    } else if ("Administrator".equals(role)) {
+                                        startActivity(new Intent(LoginActivity.this, AdministratorHomeActivity.class));
                                         finish();
                                     } else {
                                         Toast.makeText(LoginActivity.this, "Role not found. Contact admin.", Toast.LENGTH_SHORT).show();
