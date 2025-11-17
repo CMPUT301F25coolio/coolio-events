@@ -1,43 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--purpose is screen that lets the organizer type an event id,
-    pick which entrant list to see and then view it in a RecyclerView
-    I kept the same ids so Java code still works fine.-->
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#FAFAFA">
-    <!-- text field for event id the doc id in Firestore basically -->
-    <EditText
-        android:id="@+id/eventIdInput"
+    android:background="#FFF7FB">
+
+    <!-- Top blue bar -->
+    <LinearLayout
+        android:id="@+id/toolbar_lists"
         android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:gravity="center_vertical"
+        android:background="@color/back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:contentDescription="Back"
+            android:src="@drawable/outline_arrow_back_24"
+            app:tint="@android:color/white" />
+        <TextView
+            android:id="@+id/text_title_lists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Lists"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <!-- Cards container -->
+    <LinearLayout
+        android:id="@+id/list_buttons_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Event ID"
-        android:inputType="text"
-        android:singleLine="true"
-        android:imeOptions="actionDone" />
-    <!-- dropdown menu where I choose which list to show -->
-    <Spinner
-        android:id="@+id/spinnerListType"
-        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_lists"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Wait List card -->
+        <LinearLayout
+            android:id="@+id/card_wait_list"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#E6ECFF"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="Wait List"
+                android:src="@android:drawable/ic_lock_idle_alarm" />
+            <TextView
+                android:id="@+id/text_wait_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Wait List"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <!-- Entrant List card -->
+        <LinearLayout
+            android:id="@+id/card_entrant_list"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#E6ECFF"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="Entrant List"
+                android:src="@android:drawable/checkbox_on_background" />
+            <TextView
+                android:id="@+id/text_entrant_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Entrant List"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Cancelled Entrant List card -->
+        <LinearLayout
+            android:id="@+id/card_cancelled_list"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#E6ECFF"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="Cancelled Entrant List"
+                android:src="@android:drawable/ic_delete" />
+
+            <TextView
+                android:id="@+id/text_cancelled_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Cancelled Entrant List"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+    <!-- Dynamic list title (hidden at start and used for wait or cancelled lists) -->
+    <TextView
+        android:id="@+id/text_current_list_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
-    <!-- button to actually load entrants waitlist/chosen/enrolled -->
-    <Button
-        android:id="@+id/btnLoad"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Load Entrants"
-        android:textAllCaps="false" />
-    <!-- recycler shows the uids after the query runs -->
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#444444"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/list_buttons_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- RecyclerView with entrant IDs (for wait / cancelled) -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
+        android:id="@+id/recyclerEntrantIds"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical" />
-</LinearLayout>
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/text_current_list_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

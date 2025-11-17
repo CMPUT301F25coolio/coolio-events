@@ -1,9 +1,10 @@
 package com.example.coolioevents.organizer;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,105 +28,109 @@ import java.util.List;
  * limitations under the License.
  *
  * PURPOSE:
- * Lets the organizer type an event ID and view different entrant lists
- * (waiting, chosen, or final). Uses EntrantsRepository to fetch data
- * from Firestore and displays it using EntrantIDAdapter.
+ * This activity lets the organizer check different entrant lists
+ * waitlist, chosen entrants, cancelled entrants for a specific event
+ * Instead of putting everything inside OrganizerEventActivity,
+ * we moved all the list related UI here so the main event screen stays clean.
  *
  * RATIONALE:
- * Made as a separate simple screen so list loading can be tested
- * without affecting the main organizer flow. Also helps confirm
- * Firestore data structure and adapter behavior.
+ * The goal was to split the UI so organizers have a separate place to
+ * browse lists without cluttering the main event details. Also keeps the
+ * Firestore calls organized by using EntrantsRepository instead of repeating
+ * code everywhere.
  *
- * OUTSTANDING ISSUES:
- * No progress indicator or empty-state message yet.
- * Errors only appear as short toasts and aren’t very descriptive.
+ * NOTES:
+ *  The Wait List and Cancelled list are shown directly on this screen.
+ *  The actual Entrant List with Yes/No enrolled opens a new screen
+ *  This keeps things simple and matches what the design wanted.
  *
  * @author Parth Mittal
  * @version 1.0
- * @since 2025-11-07
+ * @since 2025-11-16
  */
-/*
-  Screen where I can type an event id and peek at different entrant lists
-  waiting,chosen,final. This basically reads a couple arrays from the event doc.
-  Why a separate Activity cuz Keeps it isolated so I don't mess with team flows*/
 public class OrganizerEntrantsActivity extends AppCompatActivity {
-    // data helper that actually talks to Firestore
-    private EntrantsRepository repo;
-    // recycler adapter that just shows a bunch of strings
-    private EntrantIDAdapter adapter;
-    // lazy shortcut array so I don't hardcode strings in a switch every time
-    private static final String[] LIST_OPTIONS = new String[]{
-            "Waiting List",      // index 0
-            "Chosen / Invited",  // index 1
-            "Final Enrolled"     // index 2
-    };
+    private EntrantsRepository repo;     // helps fetch lists from Firestore
+    private EntrantIDAdapter adapter;    // adapter for wait and cancelled lists
+    private String eventId;              // event we are viewing lists for
+    private String eventName;            // used when launching next screen
+    private TextView currentListTitle;   // label above recycler that changes depending on which list user picks
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_entrants);
-        // init things I need
-        repo = new EntrantsRepository();
-        EditText eventIdEt = findViewById(R.id.eventIdInput);
-        Spinner listType = findViewById(R.id.spinnerListType);
-        Button loadBtn = findViewById(R.id.btnLoad);
-        RecyclerView recycler = findViewById(R.id.recycler);
-        // recycler setup (basic vertical list)
+        // Getting event information from previous screen
+        eventId = getIntent().getStringExtra("EVENT_ID");
+        eventName = getIntent().getStringExtra("EVENT_NAME");
+        // Quick sanity check in case eventId didnt get passed
+        if (eventId == null || eventId.isEmpty()) {
+            Toast.makeText(this, "Missing event id", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        repo = new EntrantsRepository(); // setting up data helper
+        // Back button in top bar
+        ImageButton backButton = findViewById(R.id.button_back);
+        backButton.setOnClickListener(v -> finish());
+        // Hidden title above recycler (we show it when user picks a list)
+        currentListTitle = findViewById(R.id.text_current_list_title);
+        // RecyclerView used only for Waitlist and Cancelled list
+        RecyclerView recycler = findViewById(R.id.recyclerEntrantIds);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         adapter = new EntrantIDAdapter();
         recycler.setAdapter(adapter);
-        // spinner items I used a small array constant above
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_dropdown_item, LIST_OPTIONS
-        );
-        listType.setAdapter(spinnerAdapter);
-        // if someone launched me with an eventId already, just fill it in
-        String prefill = getIntent().getStringExtra("eventId");
-        if (prefill != null && !prefill.isEmpty()) {
-            eventIdEt.setText(prefill);
-        }
-        // main button that reads whichever list the user picked
-        loadBtn.setOnClickListener(v -> {
-            String eventId = eventIdEt.getText().toString().trim();
-            if (eventId.isEmpty()) {
-                toast("Enter eventId");
-                return;
-            }
-            int choice = listType.getSelectedItemPosition();
-            loadListForChoice(eventId, choice);
+        // These are the three cards user can click
+        LinearLayout cardWait = findViewById(R.id.card_wait_list);
+        LinearLayout cardEntrant = findViewById(R.id.card_entrant_list);
+        LinearLayout cardCancelled = findViewById(R.id.card_cancelled_list);
+        // Wait List  stays on this activity
+        cardWait.setOnClickListener(v -> {
+            setCurrentTitle("Wait List");
+            loadWaitList(); // calls Firestore to get waitlistEntrants
         });
+        // Entrant List opens new screen
+        // the Yes/no final enrollment screen
+        cardEntrant.setOnClickListener(v -> {
+            Intent intent = new Intent(OrganizerEntrantsActivity.this, EventEntrantListActivity.class);
+            intent.putExtra("EVENT_ID", eventId);
+            // if eventName exists we pass it so the title looks nice
+            if (eventName != null) {
+                intent.putExtra("EVENT_NAME", eventName);
+            }
+            startActivity(intent);
+        });
+        // Cancelled List stays on this screen
+        cardCancelled.setOnClickListener(v -> {
+            setCurrentTitle("Cancelled Entrant List");
+            loadCancelledList(); // using repo's cancelled list (or fallback)
+        });
+        // Nothing is loaded at the beginning, user chooses one card first
     }
-    /*
-      Decides which Firestore array to grab based on spinner index.
-      I split it out so onClick stays short.*/
-    private void loadListForChoice(String eventId, int index) {
-        switch (index) {
-            case 0: // Waiting List
-                repo.getWaitlist(eventId)
-                        .addOnSuccessListener(this::show)
-                        .addOnFailureListener(e -> toast("Error: " + e.getMessage()));
-                break;
-            case 1: // Chosen / Invited
-                repo.getChosen(eventId)
-                        .addOnSuccessListener(this::show)
-                        .addOnFailureListener(e -> toast("Error: " + e.getMessage()));
-                break;
-            case 2: // Final Enrolled
-                repo.getFinalEnrolled(eventId)
-                        .addOnSuccessListener(this::show)
-                        .addOnFailureListener(e -> toast("Error: " + e.getMessage()));
-                break;
-            default:
-                toast("Pick a list type first");
-        }
+    //Updates the bold title above recycler view based on what user clicked.
+    private void setCurrentTitle(String title) {
+        currentListTitle.setText(title);
+        currentListTitle.setVisibility(View.VISIBLE);
     }
-    /*
-      Binds the list to the recycler and shows a tiny toast with count.
-      If your adapter still uses submit or swap updateData for submit*/
+    //Loads the waitlist for the event using the repo helper class
+    private void loadWaitList() {
+        repo.getWaitlist(eventId)
+                .addOnSuccessListener(this::show)
+                .addOnFailureListener(e -> toast("Error: " + e.getMessage()));
+    }
+    /*Loads cancelled entrants list.
+      For now, this is reusing enrolled list as a placeholder
+      because the original project didnt include an official cancelled field.
+      (I added support for cancelled in repo but some events might not have it) */
+    private void loadCancelledList() {
+        repo.getCancelled(eventId)
+                .addOnSuccessListener(this::show)
+                .addOnFailureListener(e -> toast("Error: " + e.getMessage()));
+    }
+    //Shows the fetched list in the recycler
     private void show(List<String> ids) {
-        adapter.updateData(ids);  //use submit(ids) if didnt change the adapter
+        adapter.updateData(ids); // simple list of strings
         toast("Loaded " + (ids == null ? 0 : ids.size()));
     }
-    // tiny convenience wrapper so I dont repeat Toast.makeText everywhere
+    // Quick wrapper to display toasts
     private void toast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }

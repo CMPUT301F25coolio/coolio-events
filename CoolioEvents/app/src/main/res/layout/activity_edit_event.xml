@@ -8,20 +8,13 @@
 
     <!-- Header -->
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#2962FF"
         android:elevation="4dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingTop="48dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:padding="16dp">
 
         <ImageButton
             android:id="@+id/btnBack"
@@ -43,6 +36,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -159,17 +153,17 @@
                 android:textColor="#212121"
                 android:textColorHint="#9E9E9E" />
 
-            <!-- Event Date and Time -->
+            <!-- Event Time -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event date and time"
+                android:text="Event time"
                 android:textColor="#212121"
                 android:textSize="14sp"
                 android:layout_marginBottom="4dp"/>
 
             <EditText
-                android:id="@+id/etEventDateTime"
+                android:id="@+id/etEventTime"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/edittextbackground"
@@ -232,27 +226,18 @@
                 android:text="Choose Poster Image"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
-            <Button
-                android:id="@+id/btnTakePhoto"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/createbutton"
-                android:text="Take Photo"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"/>
         </LinearLayout>
     </ScrollView>
 
     <!-- Create -->
     <Button
-        android:id="@+id/btnSave"
+        android:id="@+id/btnCreate"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_margin="16dp"
         android:background="@drawable/createbutton"
         android:elevation="2dp"
-        android:text="Save"
+        android:text="Create"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold" />

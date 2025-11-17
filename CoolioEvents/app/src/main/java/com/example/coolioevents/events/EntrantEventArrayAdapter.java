@@ -88,8 +88,8 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
         if (event.getDetails().getEventLocation() != null){
             eventLocation.setText(String.format("Event Location: %s",event.getDetails().getEventLocation())); // Sets event location if not null
         }
-        if (event.getDetails().getEventDateTime() != null){
-            eventTime.setText(String.format("Time: %s",event.getDetails().getEventDateTime())); // Sets event time if not null
+        if (event.getDetails().getEventTime() != null){
+            eventTime.setText(String.format("Time: %s",event.getDetails().getEventTime())); // Sets event time if not null
         }
 
         // Setting event status text

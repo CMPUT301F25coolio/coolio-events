@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -23,13 +22,14 @@
         android:theme="@style/Theme.CoolioEvents"
         tools:targetApi="31">
         <activity
+            android:name=".organizer.EventEntrantListActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".organizer.OrganizerEventActivity"
             android:exported="false"/>
         <activity
             android:name=".organizer.OrganizerMyEventsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".organizer.EditEventActivity"
             android:exported="false" />
         <activity
             android:name=".organizer.OrganizerEntrantsActivity"

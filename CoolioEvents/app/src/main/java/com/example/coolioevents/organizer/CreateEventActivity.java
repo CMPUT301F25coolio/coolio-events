@@ -3,8 +3,6 @@ package com.example.coolioevents.organizer;
 import com.example.coolioevents.organizer.Camera;
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,9 +38,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 /**
  * Copyright 2025 Aasta Tsai & Parth Mittal
  *
@@ -70,7 +65,7 @@ import java.util.Locale;
  */
 public class CreateEventActivity extends AppCompatActivity {
 
-    private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventDateTime, etEventLocation;
+    private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventTime, etEventLocation;
     private Button btnCreate, btnPickPoster, btnTakePhoto;
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
@@ -82,12 +77,6 @@ public class CreateEventActivity extends AppCompatActivity {
     private Uri posterUri = null;
     private Camera camera;
     private String eventPosterPath;
-
-    private Calendar startDateCalendar;
-    private Calendar endDateCalendar;
-    private Calendar eventDateTimeCalendar;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
-    private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US);
 
     /**
      * ActivityResultLauncher to pick poster image from gallery.
@@ -121,7 +110,7 @@ public class CreateEventActivity extends AppCompatActivity {
         etDescription = findViewById(R.id.etEventDescription);
         etRegistrationPeriod = findViewById(R.id.etRegistrationPeriod);
         etEntrantLimit = findViewById(R.id.etEntrantLimit);
-        etEventDateTime = findViewById(R.id.etEventDateTime);
+        etEventTime = findViewById(R.id.etEventTime);
         etEventLocation = findViewById(R.id.etEventLocation);
         btnCreate = findViewById(R.id.btnCreate);
         btnBack = findViewById(R.id.btnBack);
@@ -132,78 +121,8 @@ public class CreateEventActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
         btnPickPoster.setOnClickListener(v -> pickPosterLauncher.launch("image/*"));
         btnTakePhoto.setOnClickListener(v -> camera.takePicture(this));
-
-        etRegistrationPeriod.setFocusable(false);
-        etRegistrationPeriod.setOnClickListener(v -> showDateRangePicker());
-
-        etEventDateTime.setFocusable(false);
-        etEventDateTime.setOnClickListener(v -> showDateTimePicker());
-
         btnCreate.setOnClickListener(v -> createEvent());
     }
-
-    private void showDateTimePicker() {
-        eventDateTimeCalendar = Calendar.getInstance();
-
-        DatePickerDialog datePicker = new DatePickerDialog(this,
-                (view, year, month, dayOfMonth) -> {
-                    eventDateTimeCalendar.set(Calendar.YEAR, year);
-                    eventDateTimeCalendar.set(Calendar.MONTH, month);
-                    eventDateTimeCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                    // Now show time picker
-                    TimePickerDialog timePicker = new TimePickerDialog(this,
-                            (timeView, hourOfDay, minute) -> {
-                                eventDateTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                eventDateTimeCalendar.set(Calendar.MINUTE, minute);
-
-                                String formatted = dateTimeFormat.format(eventDateTimeCalendar.getTime());
-                                etEventDateTime.setText(formatted);
-                            },
-                            eventDateTimeCalendar.get(Calendar.HOUR_OF_DAY),
-                            eventDateTimeCalendar.get(Calendar.MINUTE),
-                            true);
-                    timePicker.show();
-                },
-                eventDateTimeCalendar.get(Calendar.YEAR),
-                eventDateTimeCalendar.get(Calendar.MONTH),
-                eventDateTimeCalendar.get(Calendar.DAY_OF_MONTH));
-        datePicker.show();
-    }
-
-    private void showDateRangePicker() {
-        startDateCalendar = Calendar.getInstance();
-        endDateCalendar = Calendar.getInstance();
-
-        DatePickerDialog startPicker = new DatePickerDialog(this,
-                (view, year, month, dayOfMonth) -> {
-                    startDateCalendar.set(year, month, dayOfMonth);
-
-                    DatePickerDialog endPicker = new DatePickerDialog(this,
-                            (view2, year2, month2, dayOfMonth2) -> {
-                                endDateCalendar.set(year2, month2, dayOfMonth2);
-
-                                if (endDateCalendar.before(startDateCalendar)) {
-                                    Toast.makeText(this, "End date cannot be before start date", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-
-                                String text = dateFormat.format(startDateCalendar.getTime())
-                                        + " - " + dateFormat.format(endDateCalendar.getTime());
-                                etRegistrationPeriod.setText(text);
-                            },
-                            startDateCalendar.get(Calendar.YEAR),
-                            startDateCalendar.get(Calendar.MONTH),
-                            startDateCalendar.get(Calendar.DAY_OF_MONTH));
-                    endPicker.getDatePicker().setMinDate(startDateCalendar.getTimeInMillis());
-                    endPicker.show();
-                },
-                startDateCalendar.get(Calendar.YEAR),
-                startDateCalendar.get(Calendar.MONTH),
-                startDateCalendar.get(Calendar.DAY_OF_MONTH));
-        startPicker.show();
-    }
-
 
     /**
      * This method handles results from camera and gallery activities for poster image selection.
@@ -242,8 +161,6 @@ public class CreateEventActivity extends AppCompatActivity {
         }
     }
 
-
-
     /**
      * This method creates a new event using input fields and uploads the details to Firebase Firestore.
      */
@@ -252,6 +169,7 @@ public class CreateEventActivity extends AppCompatActivity {
         String description = etDescription.getText().toString().trim();
         String registrationPeriod = etRegistrationPeriod.getText().toString().trim();
         String entrantLimitStr = etEntrantLimit.getText().toString().trim();
+        String eventTime = etEventTime.getText().toString().trim();
         String eventLocation = etEventLocation.getText().toString().trim();
 
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) ||
@@ -268,32 +186,11 @@ public class CreateEventActivity extends AppCompatActivity {
             return;
         }
 
-        Date eventDateTime = null;
-        try {
-            eventDateTime = dateTimeFormat.parse(etEventDateTime.getText().toString());
-        } catch (Exception e) {
-            Toast.makeText(this, "Invalid event date/time format", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         String organizerId = currentUser != null ? currentUser.getUid() : "unknown";
         String eventId = UUID.randomUUID().toString();
         String deepLink = "coolioevents://event/" + eventId;
 
-        EventDetails details = new EventDetails(
-                title,
-                description,
-                registrationPeriod,
-                entrantLimit,
-                eventDateTime,
-                eventLocation,
-                new Date());
-        if (startDateCalendar != null && endDateCalendar != null) {
-            details.setStartDate(startDateCalendar.getTime());
-            details.setEndDate(endDateCalendar.getTime());
-        }
-
-        details.setPosterUrl(eventPosterPath);
+        EventDetails details = new EventDetails(title, description, registrationPeriod, entrantLimit, eventTime, eventLocation,  new Date());
         details.setPosterUrl(eventPosterPath);
         Event event = new Event(eventId, organizerId, details);
 
@@ -301,7 +198,6 @@ public class CreateEventActivity extends AppCompatActivity {
         map.put("eventId", eventId);
         map.put("details", details);
         map.put("organizerId", organizerId);
-        map.put("lotteryDone", false);
         map.put("waitlistEntrants", new ArrayList<String>());
         map.put("chosenEntrants", new ArrayList<String>());
         map.put("acceptedEntrants", new ArrayList<String>());

@@ -1,7 +1,6 @@
 package com.example.coolioevents.repo;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,28 +21,25 @@ import java.util.List;
  * limitations under the License.
  *
  * PURPOSE:
- * Handles fetching entrant lists (waitlist, chosen, and final) for a given event
- * from Firestore. Lets activities grab entrant data without touching Firestore
- * logic directly.
+ * This class is a small repository that reads different entrant lists for
+ * a single event from Firestore. It provides helper methods for getting the
+ * waitlist, chosen entrants, final enrolled entrants, and cancelled entrants
+ * as simple lists of user IDs.
  *
  * RATIONALE:
- * Having a small data helper like this keeps Firestore code in one place and
- * avoids repeating the same query logic in multiple activities. Also supports
- * different field names used by teammates for better compatibility.
- *
- * OUTSTANDING ISSUES:
- * Firestore reads happen every time — no caching or live updates yet.
- * Future improvement could be using listeners so UI auto-refreshes when lists change.
+ * Instead of making each Activity talk to Firestore directly, this class
+ * keeps all the entrant-related queries in one place. That makes the code
+ * easier to reuse between screens, and it also lets us handle different
+ * possible field names for the same list without changing the UI code.
  *
  * @author Parth Mittal
  * @version 1.0
  * @since 2025-11-07
  */
-/*
-  Purpose to Handles reading entrant lists waitlist, chosen, final for a given event
+/*Purpose Handles reading entrant lists waitlist, chosen, final, cancelled for a given event.
   Works as a tiny data helper so activities dont need to talk to Firestore directly
   Each list might have slightly different field names so I keep a small list of fallbacks.
-  If nothing found, I just return an empty list instead of throwing.*/
+  If nothing found I just return an empty list instead of throwing*/
 public class EntrantsRepository {
     // single firestore reference that this repo will reuse
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -61,9 +57,12 @@ public class EntrantsRepository {
     public Task<List<String>> getFinalEnrolled(String eventId) {
         return fetchEntrantArray(eventId, Arrays.asList("acceptedEntrants", "enrolledEntrants", "finalEntrants"));
     }
-    /*
-      Common helper to check multiple possible field names.
-      I wrote this way so I don't have to duplicate the same Firestore call*/
+    // Fetches people who cancelled  were removed
+    public Task<List<String>> getCancelled(String eventId) {
+        return fetchEntrantArray(eventId, Arrays.asList("cancelledEntrants", "canceledEntrants"));
+    }
+    /*Common helper to check multiple possible field names
+      I wrote this way so I dont have to duplicate the same Firestore call*/
     private Task<List<String>> fetchEntrantArray(String eventId, List<String> possibleFields) {
         return db.collection("events").document(eventId).get()
                 .onSuccessTask(snapshot -> {
@@ -79,7 +78,7 @@ public class EntrantsRepository {
                             return Tasks.forResult((List<String>) data);
                         }
                     }
-                    // if no matching list found, just return empty list to avoid crash
+                    // if no matching list found just return empty list to avoid crash
                     return Tasks.forResult(new ArrayList<String>());
                 });
     }

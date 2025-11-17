@@ -8,23 +8,16 @@
 
     <!-- Header -->
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#2962FF"
         android:elevation="4dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingTop="48dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:padding="16dp">
 
         <ImageButton
-            android:id="@+id/organizer_event_back_button"
+            android:id="@+id/btnBack"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -37,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:text="Create an Event"
+            android:text="Make an Event"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -160,17 +153,17 @@
                 android:textColor="#212121"
                 android:textColorHint="#9E9E9E" />
 
-            <!-- Event Date and Time -->
+            <!-- Event Time -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event date and time"
+                android:text="Event time"
                 android:textColor="#212121"
                 android:textSize="14sp"
                 android:layout_marginBottom="4dp"/>
 
             <EditText
-                android:id="@+id/etEventDateTime"
+                android:id="@+id/etEventTime"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/edittextbackground"
