@@ -1,9 +1,14 @@
 package com.example.coolioevents.Entrant;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,7 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
@@ -20,10 +28,17 @@ import com.example.coolioevents.events.EntrantEventArrayAdapter;
 import com.example.coolioevents.events.EventFragment;
 import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.events.EventViewModelFactory;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Copyright 2025 Ethan Diep
@@ -52,7 +67,7 @@ import java.util.Collections;
  * interested in.
  *
  * @author Ethan Diep
- * @version 1.0
+ * @version 1.5
  * @since 2025-11-06
  */
 public class EntrantHomeFragment extends Fragment {
@@ -60,6 +75,10 @@ public class EntrantHomeFragment extends Fragment {
     ArrayList<Event> eventsList; // Home specific arraylist for array adapter ()
     EntrantEventArrayAdapter eventAdapter; // Array adapter for events
     ListView eventsListView; // ListView on home fragment screen
+    Button filterButton; // Button to filter events
+    Button clearFilterButton; // Button to clear filter
+    Pair<Date, Date> dateRange; // dateRange to apply
+    Boolean filterApplied = false; // Boolean checking if filter is applied or not
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -91,16 +110,7 @@ public class EntrantHomeFragment extends Fragment {
             // When event list in viewmodel is updated, update eventList too (as well as notify array adapter)
             @Override
             public void onChanged(ArrayList<Event> events) {
-                eventsList.clear();
-                System.out.println("CHANGED OMG");
-                for (Event event : events){
-                    if (event.getDetails().getStatus().equals("open")){
-                        //Only add events that are currently open
-                        eventsList.add(event);
-                     }
-                Collections.sort(eventsList);
-                eventAdapter.notifyDataSetChanged();
-            }
+                updateEventList();
         }});
 
     }
@@ -115,6 +125,8 @@ public class EntrantHomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         eventsListView = view.findViewById(R.id.eventList); // Listview in home
+        filterButton = view.findViewById(R.id.filterButton); // Filter button in home
+        clearFilterButton = view.findViewById(R.id.clearFilterButton); // Clear Filter button in home
         eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList); // Make new event adapter linked to eventList
         eventsListView.setAdapter(eventAdapter); // Make listview have adapter connected to eventList
 
@@ -138,6 +150,120 @@ public class EntrantHomeFragment extends Fragment {
             }
         });
 
+        // Press filter button - Shows filter dialog menu
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFilterDialog();
+            }
+        });
+
+        // Press clear filter button - unapplies any filters
+        clearFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterApplied = false;
+                updateEventList();
+                clearFilterButton.setVisibility(GONE);
+            }
+        });
+    }
+    /**
+     * This method updates eventList and updates eventAdapter to be up to date with
+     * the database and apply any filters if filterApplied is true.
+     */
+    private void updateEventList(){
+        ArrayList<Event> events; // events to iteratre over to set eventList to
+
+        if (filterApplied) {
+            // If filter applied apply filters and set events to filtered event list
+            events = eventViewModel.getFilteredEventList(dateRange.first, dateRange.second);
+        }
+        else {
+            // If not, just set events to eventlist in viewmodel
+            events = eventViewModel.getEventList().getValue();
+        }
+
+        eventsList.clear();
+        System.out.println("CHANGED OMG");
+        if (events.isEmpty()){
+            // If events is empty then let the event Adapter just be empty
+            eventAdapter.notifyDataSetChanged();
+            return;
+        }
+        for (Event event : events){
+            if (event.getDetails().getStatus().equals("open")){
+                // Only add events that are currently open
+                eventsList.add(event);
+            }
+            Collections.sort(eventsList);
+            eventAdapter.notifyDataSetChanged();
+        }
     }
 
+    /**
+     * This method displays user with the filter menu Dialog prompt - allowing
+     * user to filter events based on a Date range or tags
+     */
+    private void showFilterDialog(){
+        Dialog dialog = new Dialog(requireActivity()); // Make new dialog
+        dialog.setContentView(R.layout.filter_menu); // Set the content of the dialog to be the filter menu
+        Button dateButton = dialog.findViewById(R.id.dateRangeButton); // Button to allow user to choose date range
+        TextView dateText = dialog.findViewById(R.id.dateRangeView); // Textview showing user the date range they chose
+        Button applyButton = dialog.findViewById(R.id.applyButton); // Apply button to apply filter
+
+        // Source Help: https://www.youtube.com/watch?v=JqGtrQOL4tc
+        // Make Date Range Picker
+        final Date[] DateRange = new Date[2]; // Holds date range (0-startDate, 1-endDate)
+        MaterialDatePicker<Pair<Long, Long>> picker = MaterialDatePicker.Builder.dateRangePicker()
+                .setTitleText("Select date range of events you wish to view")
+                .build();
+        picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
+            @Override
+            public void onPositiveButtonClick(Pair<Long, Long> longLongPair) {
+                // If date range is selected, update dateText to show the range and update DateRange values
+                SimpleDateFormat SDF = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+                DateRange[0] = millisToDate(longLongPair.first); // Convert Long ms to Date type
+                DateRange[1] = millisToDate(longLongPair.second); // Convert Long ms to Date type
+                dateText.setText(SDF.format(DateRange[0].getTime()) + " - " + SDF.format(DateRange[1].getTime()));
+            }
+        });
+
+        // When Date button is clicked show user date range picker
+        dateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                picker.show(getActivity().getSupportFragmentManager(), "TAG");
+            }
+        });
+
+        // When Apply button is clicked apply any filters set (Date range, tags)
+        applyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dateRange = new Pair<>(DateRange[0], DateRange[1]);
+                filterApplied = true; // Set boolean filter applied to true
+                updateEventList(); // Update the event list and adapter to show filtered events
+                clearFilterButton.setVisibility(VISIBLE); // Make clear filter button visible
+                dialog.dismiss(); // Close dialog prompt
+            }
+        });
+        dialog.show(); // Show filter popup menu
+    }
+
+    /**
+     * Converts Long millisecond time to Date type
+     * @param millis
+     *      Time im milliseconds
+     * @return
+     *       Time in Date format
+     */
+    private Date millisToDate(Long millis){
+        Calendar UTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        UTC.setTimeInMillis(millis);
+        Date date = UTC.getTime();
+        SimpleDateFormat SDF = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+        return UTC.getTime();
+
+    }
 }

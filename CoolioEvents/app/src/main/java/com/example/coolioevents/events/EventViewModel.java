@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ import java.util.Map;
  * interested in.
  *
  * @author Avery Dancocks & Juliane Phan & Ethan Diep
- * @version 1.0
+ * @version 1.5
  * @since 2025-11-06
  */
 public class EventViewModel extends ViewModel {
@@ -320,6 +321,39 @@ public class EventViewModel extends ViewModel {
         return eventList;
     }
 
+    /**
+     * Gets the filtered eventList based on some parameters
+     * @param startDate
+     * Start date of range to filter events
+     * @param endDate
+     * End date of range ot filter events
+     *
+     * @return
+     * An eventlist which is filtered according to the parameters
+     */
+    public ArrayList<Event> getFilteredEventList(Date startDate, Date endDate) {
+        ArrayList<Event> events = eventList.getValue(); // Unfiltered events
+        ArrayList<Event> filteredEventList = new ArrayList<>(); // Filtered events to be returned
+
+        if (startDate == null || endDate == null){
+            // If startDate or endDate is null don't apply date range filter (let range be the origin of time to the end of time)
+            startDate = new Date(0);
+            endDate = new Date(10000000000000L);
+        }
+
+        // Apply add events which conform to filters
+        for (Event event : events) {
+            Date eventTime = event.getDetails().getEventDateTime();
+
+                // Date Range Filter
+                if (eventTime.after(startDate) && eventTime.before(endDate)) {
+                    filteredEventList.add(event);
+            }
+            // TODO: Add filter for tags
+
+        }
+        return filteredEventList;
+    }
     /**
      * This function runs a lottery for a given event and updates firebase
      * @param event event to run the lottery for

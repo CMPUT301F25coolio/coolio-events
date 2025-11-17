@@ -124,7 +124,7 @@ public class CreateEventActivity extends AppCompatActivity {
         etEventDateTime = findViewById(R.id.etEventDateTime);
         etEventLocation = findViewById(R.id.etEventLocation);
         btnCreate = findViewById(R.id.btnCreate);
-        btnBack = findViewById(R.id.btnBack);
+        btnBack = findViewById(R.id.organizer_event_back_button);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
         btnPickPoster = findViewById(R.id.btnPickPoster);
         btnTakePhoto = findViewById(R.id.btnTakePhoto);
