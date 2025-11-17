@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,6 +9,59 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/homeHeader"
+        android:layout_width="match_parent"
+        android:layout_height="133dp"
+        android:background="@drawable/bluebackground"
+        android:elevation="4dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/clearsans_regular"
+            android:gravity="center"
+            android:text="HOME"
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/filterButton"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+
+            android:backgroundTint="@color/white"
+            android:contentDescription="Filter Button"
+            android:text="Filter"
+            android:textColor="#250CF6"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <Button
+            android:id="@+id/clearFilterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+
+            android:backgroundTint="@color/white"
+            android:contentDescription="Filter Button"
+            android:text="Clear Filters"
+            android:textColor="#C11ED9"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintVertical_bias="1.0"
+            android:visibility="gone"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ListView
         android:id="@+id/eventList"
@@ -18,5 +72,7 @@
         android:headerDividersEnabled="false"
         android:divider="#DEDEDE"
         android:background="#DEDEDE"
-        />
+        >
+    </ListView>
+
 </LinearLayout>
