@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
 import com.example.coolioevents.events.EntrantEventArrayAdapter;
+import com.example.coolioevents.NotificationFragment;
 import com.example.coolioevents.events.EventFragment;
 import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.events.EventViewModelFactory;
@@ -41,7 +42,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * Copyright 2025 Ethan Diep
+ * Copyright 2025 Ethan Diep, Niharika Rawat
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +67,7 @@ import java.util.TimeZone;
  * This class was designed to allow users to browse events they may be
  * interested in.
  *
- * @author Ethan Diep
+ * @author Ethan Diep, Niharika Rawat
  * @version 1.5
  * @since 2025-11-06
  */
@@ -77,6 +78,7 @@ public class EntrantHomeFragment extends Fragment {
     ListView eventsListView; // ListView on home fragment screen
     Button filterButton; // Button to filter events
     Button clearFilterButton; // Button to clear filter
+    ImageButton notificationButton; //ImageButton for notifications
     Pair<Date, Date> dateRange; // dateRange to apply
     Boolean filterApplied = false; // Boolean checking if filter is applied or not
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -129,6 +131,27 @@ public class EntrantHomeFragment extends Fragment {
         clearFilterButton = view.findViewById(R.id.clearFilterButton); // Clear Filter button in home
         eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList); // Make new event adapter linked to eventList
         eventsListView.setAdapter(eventAdapter); // Make listview have adapter connected to eventList
+        // Find the new Notification Button
+        notificationButton = view.findViewById(R.id.notification_button);
+
+        eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList);
+        eventsListView.setAdapter(eventAdapter);
+
+        // Add click listener to the Notification Button
+        if (notificationButton != null) {
+            notificationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NotificationFragment notificationFragment = new NotificationFragment();
+
+                    // Navigate to the NotificationFragment
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, notificationFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        }
 
         // Navigating to Event Fragment
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
