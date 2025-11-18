@@ -1,6 +1,7 @@
 package com.example.coolioevents.Entrant;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SearchEvent;
 
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.coolioevents.Event;
+import com.example.coolioevents.NotificationFragment;
 import com.example.coolioevents.ProfileFragment;
 import com.example.coolioevents.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
 /**
- * Copyright 2025 Ethan Diep
+ * Copyright 2025 Ethan Diep, Niharika Rawat
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +48,7 @@ import java.util.Map;
  * This class was designed give entrant the ability to navigate through
  * the different fragments they have access to
  *
- * @author Ethan Diep
+ * @author Ethan Diep, Niharika Rawat
  * @version 1.0
  * @since 2025-11-06
  */
@@ -100,7 +102,32 @@ public class EntrantActivity extends AppCompatActivity {
             return true;
         });
     }
+    // 1. Make the Bell Icon appear
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
 
+    // 2. Handle what happens when the Bell is clicked
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_notifications) {
+
+            // Create the notification fragment
+            NotificationFragment notificationFragment = new NotificationFragment();
+
+            // We manually do the transaction here because we want 'addToBackStack'
+            // This allows the user to press the "Back" button on their phone to return to Home
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, notificationFragment)
+                    .addToBackStack(null)
+                    .commit();
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     /**
      * Switches fragment to fragment in the fragment container
