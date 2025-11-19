@@ -65,7 +65,7 @@ import java.util.Locale;
  * and upload event information to Firebase Firestore and Storage.
  *
  * @author Aasta Tsai & Parth Mittal
- * @version 1.0
+ * @version 2.0
  * @since 2025-11-05
  */
 public class CreateEventActivity extends AppCompatActivity {

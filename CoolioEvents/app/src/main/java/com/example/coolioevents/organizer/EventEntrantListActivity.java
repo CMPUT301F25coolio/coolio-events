@@ -5,6 +5,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,8 @@ public class EventEntrantListActivity extends AppCompatActivity {
 
     private EntrantStatusAdapter adapter;
     private EntrantsRepository repo;
+    private String eventId;
+    private int currentType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,12 @@ public class EventEntrantListActivity extends AppCompatActivity {
 
         repo = new EntrantsRepository();
         load(eventId, type);
+
+        adapter.setOnItemClickListener((entrantId, isRegistered) -> {
+            if (!isRegistered) {
+                showCancelDialog(entrantId);  // ONLY show popup when registered = No
+            }
+        });
     }
 
     private void load(String eventId, int type) {
@@ -98,5 +107,26 @@ public class EventEntrantListActivity extends AppCompatActivity {
 
     private void toast(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    /** Popup for removing an entrant */
+    private void showCancelDialog(String entrantId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remove Entrant");
+        builder.setMessage("Do you want to remove \"" + entrantId + "\" from this event?");
+
+        builder.setPositiveButton("DELETE", (dialog, which) -> {
+            repo.removeEntrant(eventId, entrantId)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Entrant removed", Toast.LENGTH_SHORT).show();
+                        load(eventId, currentType);
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                    );
+        });
+
+        builder.setNegativeButton("CANCEL", (dialog, which) -> dialog.dismiss());
+        builder.show();
     }
 }

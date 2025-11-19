@@ -26,7 +26,7 @@ import java.util.Locale;
  * of the events details.
  *
  * @author Aasta Tsai
- * @version 1.0
+ * @version 2.0
  * @since 2025-11-05
  */
 public class EventDetails {
