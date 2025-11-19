@@ -52,6 +52,15 @@
         <activity
             android:name=".organizer.CreateEventActivity"
             android:exported="false" />
+        <!-- Organizer list screens -->
+        <activity
+            android:name=".organizer.ListScreenActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".organizer.EventEntrantListActivity"
+            android:exported="false" />
+
 
         <!-- Entrant side -->
         <activity

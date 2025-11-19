@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,6 +21,7 @@ import com.example.coolioevents.events.EventViewModelFactory;
 import com.example.coolioevents.services.PoolingService;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.coolioevents.organizer.ListScreenActivity;
 
 /**
  * Copyright 2025 Avery Dancocks
@@ -230,13 +230,21 @@ public class OrganizerEventActivity extends AppCompatActivity {
         ImageButton backButton = findViewById(R.id.organizer_event_back_button);
         ImageButton editButton = findViewById(R.id.organizer_event_edit_button);
 
-        viewLists.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(OrganizerEventActivity.this, "Coming Soon", Toast.LENGTH_SHORT).show();
-                //TODO - to be implemented by whoever made the view lists activity
+
+        viewLists.setOnClickListener(v -> {
+            // use the EVENT_ID that was passed into this Activity
+            if (currentEventId == null || currentEventId.isEmpty()) {
+                Toast.makeText(OrganizerEventActivity.this,
+                        "Error: Event ID missing", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            Intent listIntent = new Intent(OrganizerEventActivity.this, ListScreenActivity.class);
+            listIntent.putExtra(ListScreenActivity.EXTRA_EVENT_ID, currentEventId);
+            startActivity(listIntent);
+
         });
+
 
         // Draw lottery button calls function to draw lottery
         drawLottery.setOnClickListener(new View.OnClickListener() {
