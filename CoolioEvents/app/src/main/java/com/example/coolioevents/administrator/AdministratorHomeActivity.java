@@ -54,6 +54,7 @@ public class AdministratorHomeActivity extends AppCompatActivity {
         View imagesOption = findViewById(R.id.optAdminImages);
         View entrantsOption = findViewById(R.id.optAdminEntrants);
         View organizersOption = findViewById(R.id.optAdminOrganizers);
+        View notificationsOption = findViewById(R.id.optAdminNotifications);
 
         // Events option onclick activity --> Leads to Events activity
         if (eventsOption != null) {
@@ -78,6 +79,12 @@ public class AdministratorHomeActivity extends AppCompatActivity {
         if (organizersOption != null) {
             organizersOption.setOnClickListener(v ->
                     startActivity(new Intent(this, AdministratorOrganizersActivity.class)));
+        }
+
+        // Notifications option onclick activity --> Leads to Notification activity
+        if (notificationsOption != null) {
+            notificationsOption.setOnClickListener(v ->
+                    startActivity(new Intent(this, AdministratorNotificationsActivity.class)));
         }
 
     }

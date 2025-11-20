@@ -35,9 +35,11 @@ public class NotificationData {
     boolean shown;
     String type;
     String uid;
+    String sender;
+    String receiver;
     public NotificationData() {
     }
-    public NotificationData(Date createdAt, String eventId, String message, boolean shown, String type, String uid) {
+    public NotificationData(Date createdAt, String eventId, String message, boolean shown, String type, String uid, String sender, String receiver) {
         this.notifId = notifId;
         this.createdAt = createdAt;
         this.eventId = eventId;
@@ -45,6 +47,8 @@ public class NotificationData {
         this.shown = shown;
         this.type = type;
         this.uid = uid;
+        this.sender = sender;
+        this.receiver = receiver;
     }
 
     /**
@@ -190,5 +194,21 @@ public class NotificationData {
      */
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 }

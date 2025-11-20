@@ -17,30 +17,34 @@
         android:text="Date"
         android:textStyle="bold"
         android:textColor="#000000"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:gravity="center"/>
 
     <TextView
-        android:id="@+id/organizer_text"
+        android:id="@+id/sender_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Organizer"
+        android:text="Sent By"
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
     <TextView
-        android:id="@+id/entrant_text"
+        android:id="@+id/receiver_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Entrant"
+        android:text="Recieved By"
         android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="18sp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/notif_type_text"
@@ -51,6 +55,8 @@
         android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="18sp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
 </LinearLayout>

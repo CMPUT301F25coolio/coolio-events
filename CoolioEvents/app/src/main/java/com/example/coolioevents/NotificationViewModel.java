@@ -1,6 +1,7 @@
 package com.example.coolioevents;
 
 import android.app.Notification;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,6 +10,7 @@ import com.example.coolioevents.organizer.Organizer;
 import com.example.coolioevents.services.LotteryService;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -37,6 +39,7 @@ import java.util.Map;
  */
 public class NotificationViewModel  {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final MutableLiveData<ArrayList<NotificationData>> notificationsList = new MutableLiveData<>();
 
     /**
      * This method gets a list of a given user's (given by uid), unseen notifications
@@ -69,5 +72,26 @@ public class NotificationViewModel  {
      */
     public void setNotificationShown(String notifId) {
         db.collection("notifications").document(notifId).update("shown", true);
+    }
+
+    public MutableLiveData<ArrayList<NotificationData>> getNotifications() {
+        ArrayList<NotificationData> notifications = new ArrayList<>();
+
+        db.collection("notifications").whereEqualTo("shown", true).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        NotificationData notification = documentSnapshot.toObject(NotificationData.class);
+                        if (notification != null) {
+                            notifications.add(notification);
+                        }
+                    }
+                    notificationsList.postValue(notifications);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "Error fetching notifications", e);
+                    notificationsList.postValue(null);
+                });
+
+        return notificationsList;
     }
 }

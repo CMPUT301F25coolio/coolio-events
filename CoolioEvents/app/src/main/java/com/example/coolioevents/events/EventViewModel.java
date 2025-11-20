@@ -234,6 +234,7 @@ public class EventViewModel extends ViewModel {
 
                         eventImageData.add(newEventImage);
 
+                        // Gemini - How do i get username from user Id to prevent firestore retrieval delay
                         // Do a task to look up the username
                         Task<DocumentSnapshot> userTask = db.collection("users").document(organizerId).get();
                         usernameLookupTasks.add(userTask);
@@ -241,14 +242,14 @@ public class EventViewModel extends ViewModel {
 
                     // Get usernames of all organizers
                     Tasks.whenAllSuccess(usernameLookupTasks).addOnSuccessListener(userSnapshots -> {
-                        for (int i = 0; i < userSnapshots.size(); i++) {
+                        for (int i = 0; i < userSnapshots.size(); i++) { // Go through all the users
                             DocumentSnapshot userDoc = (DocumentSnapshot) userSnapshots.get(i);
                             EventImageData eventData = eventImageData.get(i); // Getting matching event data
 
                             if (userDoc != null) {
-                                String username = userDoc.getString("username");
+                                String username = userDoc.getString("username"); // Get username
                                 if (username != null) {
-                                    eventData.setOrganizerUsername(username);
+                                    eventData.setOrganizerUsername(username); // Set username
                                 }
                                 else {
                                     eventData.setOrganizerUsername("Unknown User");

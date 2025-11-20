@@ -49,18 +49,9 @@ public class ImagesGridAdapter extends RecyclerView.Adapter<ImagesGridAdapter.Vi
         EventImageData data = imageList.get(position);
         String imageUrl = data.getEventPoster();
 
-        // ======================== DEBUG LOGGING ========================
-        // This will print the data to the Logcat window.
-        // The tag "AdapterDebug" lets us filter for this specific message.
-        Log.d("AdapterDebug", "Position: " + position + " | Username: " + data.getOrganizerUsername() + " | URL: " + imageUrl);
-        // ===============================================================
 
-        // Set organizer username
-        viewHolder.organizerUsername.setText(data.getOrganizerUsername());
-
-        // Set image with Glide
         //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
-
+        // Set image with Glide
         Glide.with(context)
                 .load(data.getEventPoster()) // loads poster URL
                 .placeholder(R.drawable.ic_image_placeholder)

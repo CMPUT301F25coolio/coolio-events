@@ -1,5 +1,6 @@
 package com.example.coolioevents.administrator;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -8,6 +9,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.coolioevents.NotificationData;
+import com.example.coolioevents.NotificationViewModel;
 import com.example.coolioevents.R;
 import com.example.coolioevents.User;
 import com.example.coolioevents.events.EventViewModel;
@@ -19,7 +22,7 @@ import java.util.ArrayList;
 public class AdministratorNotificationsActivity extends AppCompatActivity {
     NotificationViewModel notificationViewModel; // View Model eventList up to date with database
     ArrayList<NotificationData> notificationsList; // My Organizer specific arraylist for array adapter ()
-    NotificationsArrayAdapter notificationsAdapter; // Array adapter for organizer
+    NotificationArrayAdapter notificationsAdapter; // Array adapter for organizer
     ListView notificationsListView;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -35,13 +38,26 @@ public class AdministratorNotificationsActivity extends AppCompatActivity {
 
         // Establishing Adapter
         notificationsList = new ArrayList<NotificationData>();
-        notificationsAdapter = new UserArrayAdapter(this, notificationsList);
+        notificationsAdapter = new NotificationArrayAdapter(this, notificationsList);
         notificationsListView.setAdapter(notificationsAdapter);
 
         // Establish ViewModel
-        notificationViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
+        notificationViewModel = new NotificationViewModel();
 
+        // Get notifications from view model
+        notificationViewModel.getNotifications().observe(this, notificationData -> {
+            if (notificationData != null) {
+                notificationsList.clear(); // Clear old list
+                notificationsList.addAll(notificationData); // Add all notification objects
+                notificationsAdapter.notifyDataSetChanged(); // Tell adapter data has been changed
+            }
+        });
 
+        // Back button onclick activity --> Leads to Home activity
+        if (backButton != null) {
+            backButton.setOnClickListener(v ->
+                    startActivity(new Intent(this, AdministratorHomeActivity.class)));
+        }
 
     }
 }

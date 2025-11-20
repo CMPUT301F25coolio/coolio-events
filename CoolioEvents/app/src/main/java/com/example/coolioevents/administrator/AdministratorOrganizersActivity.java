@@ -73,7 +73,7 @@ public class AdministratorOrganizersActivity extends AppCompatActivity {
         eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
 
         eventViewModel.getUserList("Organizer").observe(this, new Observer<ArrayList<User>>() {
-            // When organizer list in viewmodel is updated, update eventList too (as well as notify array adapter)
+            // When organizer list in viewmodel is updated, update organizerList too (as well as notify array adapter)
             @Override
             public void onChanged(ArrayList<User> organizers) {
                 organizerList.clear();
