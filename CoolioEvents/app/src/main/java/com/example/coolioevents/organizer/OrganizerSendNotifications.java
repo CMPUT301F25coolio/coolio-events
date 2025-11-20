@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,8 @@ public class OrganizerSendNotifications extends AppCompatActivity {
     private EventViewModel eventViewModel;
     private NotificationViewModel notificationViewModel;
 
+    ImageButton btnBack;
+
     private TextView eventNameTextView;
 
     private Button waitListButton;
@@ -80,6 +83,7 @@ public class OrganizerSendNotifications extends AppCompatActivity {
         notificationViewModel = new NotificationViewModel();
 
         // Initializing view items
+        btnBack = findViewById(R.id.btnBack);
         eventNameTextView = findViewById(R.id.eventViewName);
         waitListButton = findViewById(R.id.waitListButton);
         chosenButton = findViewById(R.id.chosenButton);
@@ -101,6 +105,9 @@ public class OrganizerSendNotifications extends AppCompatActivity {
                 sendMessageButton.setText(String.format("Send Notifications to %d %s", event.getWaitlistEntrants().size(), messageRecipient));
             });
         }
+
+        // Back button sends user back to Event Menu
+        btnBack.setOnClickListener(v -> finish());
 
         // If Waitlist Button pressed change message recipient to Waitlist Entrants
         waitListButton.setOnClickListener(new View.OnClickListener() {
