@@ -2,17 +2,23 @@ package com.example.coolioevents.events;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.coolioevents.Event;
 import com.example.coolioevents.Profile;
+import com.example.coolioevents.User;
 import com.example.coolioevents.organizer.Organizer;
 import com.example.coolioevents.services.LotteryResult;
 import com.example.coolioevents.services.LotteryService;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +60,9 @@ public class EventViewModel extends ViewModel {
     // ViewModel needs to hold reference to firebase
     private final FirebaseFirestore db;
     private final MutableLiveData<ArrayList<Event>> eventList = new MutableLiveData<>(); // List of all events in db
+    private final MutableLiveData<ArrayList<User>> organizerList = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<User>> entrantList = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<EventImageData>> eventImageList = new MutableLiveData<>();
     private final MutableLiveData<Map<String, Organizer>> organizerMap = new MutableLiveData<Map<String, Organizer>>(); // Map of all organizers in db (key: userid, value: Organizer object)
 
     // Make a LotteryService Object
@@ -134,6 +143,126 @@ public class EventViewModel extends ViewModel {
                     singleOrganizerData.setValue(null);
                 });
         return singleOrganizerData;
+    }
+
+    /**
+     * This function returns a LiveData ArrayList of Users that may be Organizers
+     * or Entrants from firebase depending on the "role" parameter provided.
+     * @param role
+     *      A string representing either "Organizer" or "Entrant"
+     * @return
+     *      A MutableLiveData ArrayList of Users where Users can be either
+     *      Organizers or Entrants depending on the provided "role" argument
+     */
+    public MutableLiveData<ArrayList<User>> getUserList(String role) {
+        ArrayList<User> users = new ArrayList<>();
+
+        db.collection("users").whereEqualTo("role", role).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        User user = documentSnapshot.toObject(User.class);
+                        if (user != null) {
+                            Profile profile = new Profile();
+                            // Set all profile aspects
+                            profile.setUserId(documentSnapshot.getId());
+
+                            String username = documentSnapshot.getString("username");
+                            profile.setUsername(username);
+
+                            String name = documentSnapshot.getString("name");
+                            profile.setName(name);
+
+                            String email = documentSnapshot.getString("email");
+                            profile.setEmail(email);
+
+                            user.setProfile(profile);
+                            users.add(user);
+                        }
+                    }
+                    if (role.equals("Organizer")) {
+                        organizerList.postValue(users);
+                    }
+                    if (role.equals("Entrant")) {
+                        entrantList.postValue(users);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "Error fetching organizers", e);
+                    if (role.equals("Organizer")) {
+                        organizerList.postValue(null);
+                    }
+                    if (role.equals("Entrant")) {
+                        entrantList.postValue(null);
+                    }
+                });
+
+        if (role.equals("Organizer")) {
+            return organizerList;
+        }
+        if (role.equals("Entrant")) {
+            return entrantList;
+        }
+        return null;
+    }
+
+    /**
+     * This function returns a LiveData ArrayList of EventImageData that
+     * contains the events image URL, and the organizer of the event.
+     * @return
+     *      MutableLiveData ArrayList of EventImageData
+     */
+    public MutableLiveData<ArrayList<EventImageData>> getEventImages() {
+        ArrayList<EventImageData> eventImageData= new ArrayList<>();
+        List<Task<DocumentSnapshot>> usernameLookupTasks = new ArrayList<>();
+
+        db.collection("events").get()
+                .addOnSuccessListener(queryDocumentSnapshot -> {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshot) {
+                        String imageUrl = documentSnapshot.getString("posterUrl");
+
+                        Event event = documentSnapshot.toObject(Event.class);
+                        EventImageData newEventImage = new EventImageData();
+
+                        // Getting organizer ID and Image URL
+                        String organizerId = event.getOrganizerId();
+                        String imageURL = event.getDetails().getPosterUrl();
+
+                        // Setting organizer ID and Image URL
+                        newEventImage.setOrganizerId(organizerId);
+                        newEventImage.setEventPoster(imageURL);
+
+                        eventImageData.add(newEventImage);
+
+                        // Do a task to look up the username
+                        Task<DocumentSnapshot> userTask = db.collection("users").document(organizerId).get();
+                        usernameLookupTasks.add(userTask);
+                    }
+
+                    // Get usernames of all organizers
+                    Tasks.whenAllSuccess(usernameLookupTasks).addOnSuccessListener(userSnapshots -> {
+                        for (int i = 0; i < userSnapshots.size(); i++) {
+                            DocumentSnapshot userDoc = (DocumentSnapshot) userSnapshots.get(i);
+                            EventImageData eventData = eventImageData.get(i); // Getting matching event data
+
+                            if (userDoc != null) {
+                                String username = userDoc.getString("username");
+                                if (username != null) {
+                                    eventData.setOrganizerUsername(username);
+                                }
+                                else {
+                                    eventData.setOrganizerUsername("Unknown User");
+                                }
+                            }
+                        }
+                     eventImageList.postValue(eventImageData);
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "Error fetching event images", e);
+                    eventImageList.postValue(null);
+                });
+
+        return eventImageList;
     }
 
     /*Taken from: Google Gemini
@@ -352,5 +481,4 @@ public class EventViewModel extends ViewModel {
                     Log.e("ViewModel", "FAILURE: Could not update acceptedEntrants for event " + eventId, e);
                 });
     }
-    //TODO: maybe have the function directly change isLotteryDone directly in the event and not on the database?
 }
