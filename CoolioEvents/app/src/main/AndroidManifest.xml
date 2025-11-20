@@ -10,7 +10,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,16 +22,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CoolioEvents"
         tools:targetApi="31">
-
+        <activity
+            android:name=".organizer.OrganizerSendNotifications"
+            android:exported="false" />
         <!-- Administrator side -->
         <activity
             android:name=".administrator.AdministratorHomeActivity"
             android:exported="false" />
         <activity
             android:name=".administrator.AdministratorEventsActivity"
-            android:exported="false" />
-
-        <!-- Organizer side -->
+            android:exported="false" /> <!-- Organizer side -->
         <activity
             android:name=".organizer.OrganizerEventActivity"
             android:exported="false" />
@@ -51,23 +52,16 @@
             android:exported="false" />
         <activity
             android:name=".organizer.CreateEventActivity"
-            android:exported="false" />
-        <!-- Organizer list screens -->
+            android:exported="false" /> <!-- Organizer list screens -->
         <activity
             android:name=".organizer.ListScreenActivity"
             android:exported="false" />
-
         <activity
             android:name=".organizer.EventEntrantListActivity"
-            android:exported="false" />
-
-
-        <!-- Entrant side -->
+            android:exported="false" /> <!-- Entrant side -->
         <activity
             android:name=".Entrant.EntrantActivity"
-            android:exported="false" />
-
-        <!-- Deep link handler for events -->
+            android:exported="false" /> <!-- Deep link handler for events -->
         <activity
             android:name=".events.EventDeepLinkActivity"
             android:exported="true">
@@ -81,17 +75,13 @@
                     android:host="event"
                     android:scheme="coolioevents" />
             </intent-filter>
-        </activity>
-
-        <!-- Authentication screens -->
+        </activity> <!-- Authentication screens -->
         <activity
             android:name=".authentication.SignupActivity"
             android:exported="false" />
         <activity
             android:name=".authentication.LoginActivity"
-            android:exported="false" />
-
-        <!-- Launcher -->
+            android:exported="false" /> <!-- Launcher -->
         <activity
             android:name=".authentication.WelcomeActivity"
             android:exported="true">
@@ -100,9 +90,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Miscellaneous -->
+        </activity> <!-- Miscellaneous -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />

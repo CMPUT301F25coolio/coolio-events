@@ -11,7 +11,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 /**
  * Copyright 2025 Ethan Diep
  *
@@ -69,5 +73,27 @@ public class NotificationViewModel  {
      */
     public void setNotificationShown(String notifId) {
         db.collection("notifications").document(notifId).update("shown", true);
+    }
+
+
+    /**
+     * This method creates notifications on the db for a given group of people (entrant Lists)
+     * @param eventId
+     *  eventId of the notification
+     * @param eventName
+     *  name of the event the notification is being sent form
+     * @param message
+     *  Message to be sent
+     * @param sendList
+     *  List of people to send the notification to
+     */
+    public void createNotifications(String eventId, String eventName, String message, List<String> sendList) {
+        for (String entrantId : sendList){
+            // Iterates through each entrant on the sendlist and creates/sends them a notification
+            String notifId = UUID.randomUUID().toString(); // Generate random notificaiton id for notification
+            String title = String.format("New Notification from %s", eventName);
+            NotificationData notification = new NotificationData(notifId, new Date(), eventId, title, message, false, "organizerToEntrant",  entrantId);
+            db.collection("notifications").document(notifId).set(notification);
+        }
     }
 }
