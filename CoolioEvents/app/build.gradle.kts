@@ -53,6 +53,12 @@ dependencies {
     implementation("com.google.zxing:core:3.5.3")
     implementation(libs.firebase.storage)
 
+    // Images
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // Recycler View
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+
     //  Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
