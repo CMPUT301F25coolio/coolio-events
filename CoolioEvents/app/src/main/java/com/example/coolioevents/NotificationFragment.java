@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.coolioevents.models.Notifications;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,7 +25,7 @@ public class NotificationFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private NotificationAdapter adapter;
-    private List<Notifications> notificationList = new ArrayList<>();
+    private List<NotificationData> notificationList = new ArrayList<>();
     private FirebaseFirestore db;
     private String currentUid;
 
@@ -60,8 +59,7 @@ public class NotificationFragment extends Fragment {
         if (currentUid == null || getContext() == null) return;
 
         // Corrected: Single, unified addSnapshotListener call
-        db.collection("Notifications")
-                .whereEqualTo("uid", currentUid)
+        db.collection("notifications").whereEqualTo("uid", currentUid)
                 .addSnapshotListener((value, error) -> {
 
                     if (error != null) {
@@ -75,9 +73,10 @@ public class NotificationFragment extends Fragment {
 
                     if (value != null) {
                         for (QueryDocumentSnapshot doc : value) {
+
                             // Safely convert Firestore document to your Notifications model object
-                            Notifications notif = doc.toObject(Notifications.class);
-                            notif.setId(doc.getId()); // Set the document ID
+                            NotificationData notif = doc.toObject(NotificationData.class);
+                            notif.setNotifId(doc.getId()); // Set the document ID
                             notificationList.add(notif);
                         }
                     }

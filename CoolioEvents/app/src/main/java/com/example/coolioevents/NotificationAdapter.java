@@ -7,15 +7,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.coolioevents.models.Notifications;
+
 
 import java.util.List;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
-    private List<Notifications> notificationList;
+    private List<NotificationData> notificationList;
 
-    public NotificationAdapter(List<Notifications> notificationList) {
+    public NotificationAdapter(List<NotificationData> notificationList) {
         this.notificationList = notificationList;
     }
 
@@ -29,10 +29,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Notifications notif = notificationList.get(position);
+        NotificationData notif = notificationList.get(position);
 
         holder.message.setText(notif.getMessage());
-        holder.time.setText(notif.getCreatedAt());  // You can format it later
+        holder.time.setText(notif.getCreatedAt().toString());  // You can format it later
     }
 
     @Override
