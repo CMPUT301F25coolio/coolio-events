@@ -320,7 +320,6 @@ public class CreateEventActivity extends AppCompatActivity {
         map.put("acceptedEntrants", new ArrayList<String>());
         map.put("cancelledEntrants", new ArrayList<String>());
         map.put("deepLink", deepLink);
-        map.put("posterUrl", null);
         map.put("promoQrUrl", null);
 
         // 1) Create Firestore doc
@@ -378,7 +377,7 @@ public class CreateEventActivity extends AppCompatActivity {
             String qrUrl = (String) results.get(1);
 
             Map<String, Object> updates = new HashMap<>();
-            updates.put("posterUrl", posterUrl);
+            updates.put("details.posterUrl", posterUrl);
             updates.put("promoQrUrl", qrUrl);
 
             db.collection("events").document(eventId).update(updates)
