@@ -1,6 +1,7 @@
 package com.example.coolioevents.events;
 
 import android.content.Context;
+import android.nfc.Tag;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.coolioevents.Event;
+import com.example.coolioevents.MainActivity;
 import com.example.coolioevents.R;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -78,6 +82,7 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
         TextView eventUserStatus = view.findViewById(R.id.eventuserStatus);
         TextView eventUserStatusRegistration = view.findViewById(R.id.eventUserStatusRegistration);
         TextView eventWaitingCount = view.findViewById(R.id.eventWaitingCount);
+        ChipGroup tagsChipGroup = view.findViewById(R.id.tagsGroup);
 
         eventName.setText(event.getDetails().getEventName());
         eventOrganizer.setText(String.format("Posted By: %s", event.getOrganizer().getProfile().getUsername())); // Sets event organizer text
@@ -151,6 +156,19 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
             eventUserStatusRegistration.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
         }
 
+
+
+        //Setting tags
+        if (event.getDetails().getTags() != null){
+            for (String tagString : event.getDetails().getTags()){
+                Chip tag = new Chip(context);
+                final float scale = getContext().getResources().getDisplayMetrics().density;
+                tag.setText(tagString);
+                tag.setHeight(40);
+                tagsChipGroup.addView(tag);
+
+            }
+        }
         // Set waiting list count text
         if (event.getWaitlistEntrants().size() == 1){
 

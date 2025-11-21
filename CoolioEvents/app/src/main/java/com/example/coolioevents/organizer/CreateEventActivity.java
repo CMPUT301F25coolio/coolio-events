@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.coolioevents.Event;
@@ -26,6 +27,8 @@ import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
 import com.example.coolioevents.util.QRCodeUtil;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,6 +41,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.text.SimpleDateFormat;
@@ -71,6 +75,7 @@ import java.util.Locale;
 public class CreateEventActivity extends AppCompatActivity {
 
     private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventDateTime, etEventLocation;
+    private ChipGroup etTags;
     private Button btnCreate, btnPickPoster, btnTakePhoto;
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
@@ -88,6 +93,8 @@ public class CreateEventActivity extends AppCompatActivity {
     private Calendar eventDateTimeCalendar;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
     private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US);
+
+    private ArrayList<String> selectedTags = new ArrayList();
 
     /**
      * ActivityResultLauncher to pick poster image from gallery.
@@ -123,6 +130,8 @@ public class CreateEventActivity extends AppCompatActivity {
         etEntrantLimit = findViewById(R.id.etEntrantLimit);
         etEventDateTime = findViewById(R.id.etEventDateTime);
         etEventLocation = findViewById(R.id.etEventLocation);
+        etTags = findViewById(R.id.etTags);
+
         btnCreate = findViewById(R.id.btnCreate);
         btnBack = findViewById(R.id.organizer_event_back_button);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
@@ -138,6 +147,9 @@ public class CreateEventActivity extends AppCompatActivity {
 
         etEventDateTime.setFocusable(false);
         etEventDateTime.setOnClickListener(v -> showDateTimePicker());
+        etTags.setOnCheckedStateChangeListener((chipGroup, checkedTags) -> {
+            updateTags(chipGroup, checkedTags);
+        });
 
         btnCreate.setOnClickListener(v -> createEvent());
     }
@@ -287,7 +299,8 @@ public class CreateEventActivity extends AppCompatActivity {
                 entrantLimit,
                 eventDateTime,
                 eventLocation,
-                new Date());
+                new Date(),
+                selectedTags);
         if (startDateCalendar != null && endDateCalendar != null) {
             details.setStartDate(startDateCalendar.getTime());
             details.setEndDate(endDateCalendar.getTime());
@@ -384,5 +397,13 @@ public class CreateEventActivity extends AppCompatActivity {
             startActivity(new Intent(CreateEventActivity.this, OrganizerActivity.class));
             finish();
         });
+    }
+
+    private void updateTags(ChipGroup chipGroup, List<Integer> checkedTags){
+        selectedTags.clear();
+        for (Integer tagId : checkedTags){
+            Chip tag = chipGroup.findViewById(tagId);
+            selectedTags.add(tag.getText().toString());
+        }
     }
 }
