@@ -5,9 +5,13 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.coolioevents.Entrant.Entrant;
+import com.example.coolioevents.Entrant.UserViewModel;
 import com.example.coolioevents.organizer.Organizer;
 import com.example.coolioevents.services.LotteryService;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -44,6 +48,7 @@ import java.util.UUID;
 public class NotificationViewModel  {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final MutableLiveData<ArrayList<NotificationData>> notificationsList = new MutableLiveData<>();
+    UserViewModel userViewModel = new UserViewModel();
 
     /**
      * This method gets a list of a given user's (given by uid), unseen notifications
@@ -101,22 +106,27 @@ public class NotificationViewModel  {
 
 
     /**
-     * This method creates notifications on the db for a given group of people (entrant Lists)
-     * @param eventId
-     *  eventId of the notification
-     * @param eventName
-     *  name of the event the notification is being sent form
+     * Creates a notification with a given event, message, and sendList (users to send notification to)
+     * @param event
+     *  event of the notification
      * @param message
      *  Message to be sent
      * @param sendList
      *  List of people to send the notification to
      */
-    public void createNotifications(String eventId, String eventName, String message, List<String> sendList) {
+    public void createNotifications(Event event, String message, List<String> sendList, String type) {
+
         for (String entrantId : sendList){
             // Iterates through each entrant on the sendlist and creates/sends them a notification
             String notifId = UUID.randomUUID().toString(); // Generate random notificaiton id for notification
-            String title = String.format("New Notification from %s", eventName);
-            NotificationData notification = new NotificationData(notifId, new Date(), eventId, title, message, false, "organizerToEntrant",  entrantId);
+            User organizer = userViewModel.getUserById(event.getOrganizerId()); // Get Organizer User Object
+            User entrant = userViewModel.getUserById(entrantId); // Get Entrant User Object
+
+            String title = String.format("New Notification from %s", event.getDetails().getEventName());
+            String entrantUsername = entrant.getProfile().getUsername(); // Get entrant username
+            String orgUsername = organizer.getProfile().getUsername(); // Get organizerusername
+
+            NotificationData notification = new NotificationData(notifId, new Date(), event.getEventId(), title, message, false, type,  entrantId, orgUsername, entrantUsername);
             db.collection("notifications").document(notifId).set(notification);
         }
     }

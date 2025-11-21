@@ -77,6 +77,8 @@ public class NotificationArrayAdapter extends ArrayAdapter<NotificationData> {
 
         // Set View - Notification Type
         String type = notification.getType();
+
+            // Automated Notifications
         if (type.equals("entrantChosen")) {
             notifType.setText("Chosen");
         }
@@ -85,6 +87,20 @@ public class NotificationArrayAdapter extends ArrayAdapter<NotificationData> {
         }
         if (type.equals("entrantNotChosen")) {
             notifType.setText("Not Chosen");
+        }
+
+            // Manual Notifications "Sent" notifications
+        if (type.equals("organizerToWaitlistEntrants")) {
+            notifType.setText("WL Entrant");
+        }
+        if (type.equals("organizerToChosenEntrants")) {
+            notifType.setText("Chosen Entrant");
+        }
+        if (type.equals("organizerToCancelledEntrants")) {
+            notifType.setText("Cancelled Entrant");
+        }
+        if (type.equals("organizerToAcceptedEntrants")) {
+            notifType.setText("Accepted Entrant");
         }
 
         return view;
