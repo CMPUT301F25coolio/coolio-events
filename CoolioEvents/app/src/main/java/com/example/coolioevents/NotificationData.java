@@ -25,7 +25,7 @@ import java.util.Date;
  * @version 1.0
  * @since 2025-11-18
  */
-public class NotificationData {
+public class NotificationData implements Comparable<NotificationData> {
 
     String notifId;
     Date createdAt;
@@ -39,19 +39,8 @@ public class NotificationData {
     String receiver;
     public NotificationData() {
     }
-    public NotificationData(Date createdAt, String eventId, String message, boolean shown, String type, String uid, String sender, String receiver) {
-        this.notifId = notifId;
-        this.createdAt = createdAt;
-        this.eventId = eventId;
-        this.message = message;
-        this.shown = shown;
-        this.type = type;
-        this.uid = uid;
-        this.sender = sender;
-        this.receiver = receiver;
-    }
 
-    public NotificationData(String notifId, Date createdAt, String eventId, String title, String message, boolean shown, String type, String uid) {
+    public NotificationData(String notifId, Date createdAt, String eventId, String title, String message, boolean shown, String type, String uid, String sender, String receiver) {
         this.notifId = notifId;
         this.createdAt = createdAt;
         this.eventId = eventId;
@@ -60,6 +49,8 @@ public class NotificationData {
         this.shown = shown;
         this.type = type;
         this.uid = uid;
+        this.sender = sender;
+        this.receiver = receiver;
     }
 
     /**
@@ -222,4 +213,28 @@ public class NotificationData {
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
+
+    /**
+     * This is the comparison method for Notifications
+     * Notifications that are posted more recently are deemed higher.
+     *
+     * @param n
+     *      Notificaion to be compared to this notification
+     * @return
+     *      A negative integer, zero, or positive integer
+     *      negative int: Indicates this notification is lower then notification n
+     *      zero: Indicates this notification is on the same level as notification n
+     *      positive: Indicates this notification is higher then notification n
+     */
+    @Override
+    public int compareTo(NotificationData n) {
+        if (getClass() == n.getClass()){
+            // Notifications that are created sooner are sorted higher
+            return ((NotificationData) n).getCreatedAt().compareTo(this.createdAt);
+        }
+        return -1;
+    }
 }
+
+
+
