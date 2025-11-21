@@ -79,6 +79,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
     private Button viewLists;
     private MaterialButton drawLottery;
     private MaterialButton drawNewEntrant;
+    private Button sendNotifications;
 
     /**
      * This is a helper function to assist in changing the state of the UI
@@ -227,6 +228,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
         viewLists = findViewById(R.id.view_lists_button);
         drawLottery = findViewById(R.id.draw_lottery_button);
         drawNewEntrant = findViewById(R.id.draw_new_user_button);
+        sendNotifications = findViewById(R.id.sendNotificationsButton);
         ImageButton backButton = findViewById(R.id.organizer_event_back_button);
         ImageButton editButton = findViewById(R.id.organizer_event_edit_button);
 
@@ -259,6 +261,18 @@ public class OrganizerEventActivity extends AppCompatActivity {
                     currentEvent.setLotteryDone(true);
                     lotteryDone = true;
                     updateButtonState();
+                }
+            }
+        });
+
+        // Send Notifications button to go to an activity to send notifications to entrants
+        sendNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentEvent != null) {
+                    Intent intent = new Intent(OrganizerEventActivity.this, OrganizerSendNotifications.class);
+                    intent.putExtra("EVENT_ID", currentEventId);
+                    startActivity(intent);
                 }
             }
         });

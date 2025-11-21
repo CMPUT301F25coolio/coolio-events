@@ -51,6 +51,17 @@ public class NotificationData {
         this.receiver = receiver;
     }
 
+    public NotificationData(String notifId, Date createdAt, String eventId, String title, String message, boolean shown, String type, String uid) {
+        this.notifId = notifId;
+        this.createdAt = createdAt;
+        this.eventId = eventId;
+        this.title = title;
+        this.message = message;
+        this.shown = shown;
+        this.type = type;
+        this.uid = uid;
+    }
+
     /**
      * This method gets notification's unique Id
      * @return
