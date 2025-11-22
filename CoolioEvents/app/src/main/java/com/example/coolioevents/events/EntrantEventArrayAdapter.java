@@ -173,6 +173,7 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
 
 
         //Setting tags
+        tagsChipGroup.removeAllViews();
         if (event.getDetails().getTags() != null){
             for (String tagString : event.getDetails().getTags()){
                 Chip tag = new Chip(context);

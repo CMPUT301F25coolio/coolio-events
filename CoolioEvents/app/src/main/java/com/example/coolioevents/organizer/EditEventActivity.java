@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,6 +27,8 @@ import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
 import com.example.coolioevents.util.QRCodeUtil;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,8 +39,10 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -50,6 +55,7 @@ import java.util.Locale;
 public class EditEventActivity extends AppCompatActivity {
 
     private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventDateTime, etEventLocation;
+    private ChipGroup etTags;
     private Button btnSave, btnPickPoster, btnTakePhoto;
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
@@ -66,7 +72,7 @@ public class EditEventActivity extends AppCompatActivity {
     private Calendar eventDateTimeCalendar;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
     private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US);
-
+    private ArrayList<String> selectedTags = new ArrayList();
     private String eventId; // event being edited
 
     /**
@@ -96,6 +102,7 @@ public class EditEventActivity extends AppCompatActivity {
         etEntrantLimit = findViewById(R.id.etEntrantLimit);
         etEventDateTime = findViewById(R.id.etEventDateTime);
         etEventLocation = findViewById(R.id.etEventLocation);
+        etTags = findViewById(R.id.etTags);
         btnSave = findViewById(R.id.btnSave);
         btnBack = findViewById(R.id.btnBack);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
@@ -111,6 +118,9 @@ public class EditEventActivity extends AppCompatActivity {
 
         etEventDateTime.setFocusable(false);
         etEventDateTime.setOnClickListener(v -> showDateTimePicker());
+        etTags.setOnCheckedStateChangeListener((chipGroup, checkedTags) -> {
+            updateTags(chipGroup, checkedTags);
+        });
 
         // get event id from intent
         Intent intent = getIntent();
@@ -158,6 +168,26 @@ public class EditEventActivity extends AppCompatActivity {
                                 endDateCalendar = Calendar.getInstance();
                                 endDateCalendar.setTime(details.getEndDate());
                             }
+                            for (String tag : event.getDetails().getTags()){
+                                System.out.println(tag);
+                            }
+                            // Pre"check" already selected tags for the event
+                                    /*Taken from: Google Gemini
+                                    Prompt: how to check all chips in a chipgroup java android stuydio
+                                    Taken by: Ethan Diep
+                                    Taken on: 11/22/25
+                                         */
+                                for (int i=0; i < etTags.getChildCount(); i++){
+                                    View child = etTags.getChildAt(i);
+                                    if (child instanceof Chip){
+                                        if (event.getDetails().getTags().contains(((Chip) child).getText().toString())){
+                                            etTags.check(child.getId());
+                                        }
+                                    }
+                                }
+
+
+
 
                             // if posterUrl is a local path you could attempt to show it.
                             // We leave poster preview alone for remote URLs (Firebase Storage).
@@ -322,6 +352,7 @@ public class EditEventActivity extends AppCompatActivity {
                     details.setRegistrationPeriod(registrationPeriod);
                     details.setEntrantLimit(entrantLimit);
                     details.setEventLocation(eventLocation);
+                    details.setTags(selectedTags);
                     if (eventDateTimeCalendar != null) details.setEventDateTime(eventDateTimeCalendar.getTime());
                     if (startDateCalendar != null) details.setStartDate(startDateCalendar.getTime());
                     if (endDateCalendar != null) details.setEndDate(endDateCalendar.getTime());
@@ -400,6 +431,33 @@ public class EditEventActivity extends AppCompatActivity {
             startActivity(new Intent(EditEventActivity.this, OrganizerActivity.class));
             finish();
         });
+    }
+
+    /**
+     * This method updates the event's selectedTags list to match what is currently selected
+     * on the selected chips (tags). Limits the amount of selected tags to 3
+     *
+     * @param chipGroup
+     *      Chip group to get selected tags from
+     * @param checkedTags
+     *      List of checkedTags viewIds
+     */
+    private void updateTags(ChipGroup chipGroup, List<Integer> checkedTags) {
+        ArrayList<String> newSelectTags = new ArrayList<>(); // Newly selected tags to be put into selectedTags
+        if (checkedTags.size() < 4)
+            // Limit the number of tags to be 3
+            for (Integer tagId : checkedTags) {
+                Chip tag = chipGroup.findViewById(tagId);
+                newSelectTags.add(tag.getText().toString());
+            }
+        else {
+            // If tag size is currently 3, dont add any tag, instead remove all tags and warn user
+            chipGroup.clearCheck();
+            Toast.makeText(this, "Max of 3 tags allowed - tags reset", Toast.LENGTH_SHORT).show();
+        }
+        selectedTags.clear();
+        selectedTags.addAll(newSelectTags);
+        System.out.println(selectedTags);
     }
 }
 

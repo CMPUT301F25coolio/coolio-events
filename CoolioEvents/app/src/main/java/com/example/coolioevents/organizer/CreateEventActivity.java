@@ -48,7 +48,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 /**
- * Copyright 2025 Aasta Tsai & Parth Mittal
+ * Copyright 2025 Aasta Tsai & Parth Mittal & Ethan Diep
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ import java.util.Locale;
  * This activity allows organizers to input event details, select or capture a poster image,
  * and upload event information to Firebase Firestore and Storage.
  *
- * @author Aasta Tsai & Parth Mittal
+ * @author Aasta Tsai & Parth Mittal & Ethan Diep
  * @version 1.0
  * @since 2025-11-05
  */
@@ -147,6 +147,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
         etEventDateTime.setFocusable(false);
         etEventDateTime.setOnClickListener(v -> showDateTimePicker());
+
         etTags.setOnCheckedStateChangeListener((chipGroup, checkedTags) -> {
             updateTags(chipGroup, checkedTags);
         });
@@ -397,12 +398,32 @@ public class CreateEventActivity extends AppCompatActivity {
             finish();
         });
     }
-
-    private void updateTags(ChipGroup chipGroup, List<Integer> checkedTags){
-        selectedTags.clear();
-        for (Integer tagId : checkedTags){
-            Chip tag = chipGroup.findViewById(tagId);
-            selectedTags.add(tag.getText().toString());
+    /**
+     * This method updates the event's selectedTags list to match what is currently selected
+     * on the selected chips (tags). Limits the amount of selected tags to 3
+     *
+     * @param chipGroup
+     *      Chip group to get selected tags from
+     * @param checkedTags
+     *      List of checkedTags viewIds
+     */
+    private void updateTags(ChipGroup chipGroup, List<Integer> checkedTags) {
+        ArrayList<String> newSelectTags = new ArrayList<>(); // Newly selected tags to be put into selectedTags
+        if (checkedTags.size() < 4)
+            // Limit the number of tags to be 3
+            for (Integer tagId : checkedTags) {
+                Chip tag = chipGroup.findViewById(tagId);
+                newSelectTags.add(tag.getText().toString());
+            }
+        else {
+            // If tag size is currently 3, dont add any tag, instead remove all tags and warn user
+            chipGroup.clearCheck();
+            Toast.makeText(this, "Max of 3 tags allowed - tags reset", Toast.LENGTH_SHORT).show();
         }
+        selectedTags.clear();
+        selectedTags.addAll(newSelectTags);
+        System.out.println(selectedTags);
     }
+
+
 }

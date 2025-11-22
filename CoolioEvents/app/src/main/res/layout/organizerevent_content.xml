@@ -133,6 +133,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars"
         app:shapeAppearance="@style/roundedcornerimageview"
+        android:scaleType="centerCrop"
         />
 
     <TextView
