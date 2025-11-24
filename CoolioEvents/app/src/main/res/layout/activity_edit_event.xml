@@ -204,6 +204,19 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:layout_marginBottom="16dp"/>
+
+            <!-- Geolocation Verification -->
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/geolocation_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enable Geolocation Verification for this Event"
+                android:textColor="#212121"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
+                app:thumbTint="@color/switch_thumb_tint"
+                app:trackTint="@color/switch_track_tint"/>
+
             <!-- Tags -->
             <TextView
                 android:layout_width="wrap_content"

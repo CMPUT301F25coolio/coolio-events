@@ -2,6 +2,7 @@ package com.example.coolioevents.events;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,16 +10,20 @@ import androidx.lifecycle.ViewModel;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.Profile;
 import com.example.coolioevents.User;
+import com.example.coolioevents.WaitlistLocation;
 import com.example.coolioevents.organizer.Organizer;
 import com.example.coolioevents.services.LotteryResult;
 import com.example.coolioevents.services.LotteryService;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -280,10 +285,38 @@ public class EventViewModel extends ViewModel {
      * @param userId
      *      the user that will be added to the event waitlist
      */
-    public void joinWaitlist(String eventId, String userId) {
+    public void joinWaitlist(String eventId, String userId, @Nullable GeoPoint location) {
         if (eventId == null || userId == null) {
             return;
         }
+
+        // https://firebase.google.com/docs/firestore/manage-data/transactions#java_4
+        WriteBatch batch = db.batch();
+
+        // Update Waitlist - always occurs
+        DocumentReference eventRef = db.collection("events)").document(eventId);
+        batch.update(eventRef, "waitlistEntrants", FieldValue.arrayUnion(userId));
+
+        // Save Location - conditional
+        if (location != null) {// If location was provided
+            WaitlistLocation waitlistLocation = new WaitlistLocation(userId, eventId, location);
+
+            // Make a new location document
+            DocumentReference locationRef = db.collection("waitlist_locations").document();
+
+            // Set the new location in the batch
+            batch.set(locationRef, waitlistLocation);
+        }
+
+        // Commiting the batch
+        batch.commit()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("ViewModel", "SUCCESS: User " + userId + " added to waitlist for event " + eventId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "FAILURE: Could not update waitlist for event " + eventId, e);
+                });
+        /**
         db.collection("events").document(eventId)
                 .update("waitlistEntrants", FieldValue.arrayUnion(userId))
                 .addOnSuccessListener(aVoid -> {
@@ -292,6 +325,7 @@ public class EventViewModel extends ViewModel {
                 .addOnFailureListener(e -> {
                 Log.e("ViewModel", "FAILURE: Could not update waitlist for event " + eventId, e);
             });
+         */
     }
 
     /**

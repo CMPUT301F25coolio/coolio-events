@@ -41,6 +41,7 @@ public class Event implements Comparable<Event> {
     private List<String> cancelledEntrants;  // Entrants who cancelled their invite
     private List<String> acceptedEntrants;  // Entrants who accepted their invite
     private boolean lotteryDone;
+    private boolean geolocationVerificationEnabled;
 
     public Event() {
         // Empty constructor for Firebase
@@ -55,6 +56,7 @@ public class Event implements Comparable<Event> {
         this.chosenEntrants = new ArrayList<>();
         this.cancelledEntrants = new ArrayList<>();
         this.lotteryDone = true;
+        this.geolocationVerificationEnabled = false;
     }
 
 
@@ -157,6 +159,22 @@ public class Event implements Comparable<Event> {
     }
 
     /**
+     * This method returns if the geolocation verification is enabled or not
+     * @return geolocationVerificationEnabled
+     */
+    public boolean isGeolocationVerificationEnabled() {
+        return geolocationVerificationEnabled;
+    }
+
+    /**
+     * This method sets the parameter geolocationVerificationEnabled
+     * @param geolocationVerificationEnabled
+     *      a boolean representing if geolocation verification is enabled
+     */
+    public void setGeolocationVerificationEnabled(boolean geolocationVerificationEnabled) {
+        this.geolocationVerificationEnabled = geolocationVerificationEnabled;
+    }
+    /**
      * This is the comparison method for Events
      * Events that are posted more recently are deemed higher.
      *
@@ -176,6 +194,5 @@ public class Event implements Comparable<Event> {
         }
         return -1;
     }
-
 
 }

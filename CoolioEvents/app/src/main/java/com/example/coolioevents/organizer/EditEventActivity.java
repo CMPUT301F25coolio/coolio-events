@@ -29,6 +29,7 @@ import com.example.coolioevents.util.QRCodeUtil;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -59,6 +60,7 @@ public class EditEventActivity extends AppCompatActivity {
     private Button btnSave, btnPickPoster, btnTakePhoto;
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
+    private SwitchMaterial switchGeolocationVerification;
 
     private FirebaseFirestore db;
     private FirebaseStorage storage;
@@ -108,6 +110,7 @@ public class EditEventActivity extends AppCompatActivity {
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
         btnPickPoster = findViewById(R.id.btnPickPoster);
         btnTakePhoto = findViewById(R.id.btnTakePhoto);
+        switchGeolocationVerification = findViewById(R.id.geolocation_switch);
 
         btnBack.setOnClickListener(v -> finish());
         btnPickPoster.setOnClickListener(v -> pickPosterLauncher.launch("image/*"));
@@ -141,12 +144,16 @@ public class EditEventActivity extends AppCompatActivity {
         db.collection("events").document(eventId).get()
                 .addOnSuccessListener((DocumentSnapshot doc) -> {
                     if (doc.exists()) {
-                        // attempt to convert to Event if your Event class exists
+                        // Setting Geolocation Verification Switch
+                        boolean geolocationVerificationEnabled = doc.getBoolean("geolocationVerificationEnabled");
+                        switchGeolocationVerification.setChecked(geolocationVerificationEnabled);
+
+                        // Attempt to convert to Event if your Event class exists
                         Event event = doc.toObject(Event.class);
                         if (event != null && event.getDetails() != null) {
                             EventDetails details = event.getDetails();
 
-                            // prefill text fields
+                            // Prefill text fields
                             etTitle.setText(details.getEventName());
                             etDescription.setText(details.getEventDescription());
                             if (details.getRegistrationPeriod() != null) {
@@ -360,6 +367,10 @@ public class EditEventActivity extends AppCompatActivity {
                     // write updated details back to doc (other fields remain)
                     Map<String, Object> updates = new HashMap<>();
                     updates.put("details", details);
+
+                    // Updating Geolocation Verification
+                    boolean geolocationVerificationEnabled = switchGeolocationVerification.isChecked();
+                    updates.put("geolocationVerificationEnabled", geolocationVerificationEnabled);
 
                     db.collection("events").document(eventId)
                             .update(updates)

@@ -11,5 +11,9 @@
     <color name="back">#0047AB</color>
     <color name="drawfromlottery">#4CBB17</color>
     <color name="grey">#A9A9A9</color>
+    <color name="thumb_geolocation_off">#D22B2B</color>
+    <color name="thumb_geolocation_on">#4CBB17</color>
+    <color name="track_geolocation_off">#80D22B2B</color>
+    <color name="track_geolocation_on">#804CBB17</color>
 
 </resources>
