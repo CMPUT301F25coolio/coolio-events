@@ -241,6 +241,11 @@ public class EditEventActivity extends AppCompatActivity {
                                     Toast.makeText(this, "End date cannot be before start date", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                                // Force end time to be 11:59 PM
+                                endDateCalendar.set(Calendar.HOUR_OF_DAY, 23);
+                                endDateCalendar.set(Calendar.MINUTE, 59);
+                                endDateCalendar.set(Calendar.SECOND, 0);
+                                endDateCalendar.set(Calendar.MILLISECOND, 0);
 
                                 String text = dateFormat.format(startDateCalendar.getTime())
                                         + " - " + dateFormat.format(endDateCalendar.getTime());
@@ -289,6 +294,7 @@ public class EditEventActivity extends AppCompatActivity {
      * Save changes to existing event document and upload assets if needed.
      */
     private void saveChanges() {
+        btnSave.setEnabled(false);  // prevent double click
         String title = etTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
         String registrationPeriod = etRegistrationPeriod.getText().toString().trim();
