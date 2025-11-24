@@ -1,11 +1,19 @@
 package com.example.coolioevents.authentication;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -71,6 +79,11 @@ public class WelcomeActivity extends AppCompatActivity {
                 startActivity(new Intent(WelcomeActivity.this, LoginActivity.class)));
         signupButton.setOnClickListener(v ->
                 startActivity(new Intent(WelcomeActivity.this, SignupActivity.class)));
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // Ask user for permission to recieve notifications if they have not allowed it yet
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        }
     }
 
     /**
@@ -80,6 +93,8 @@ public class WelcomeActivity extends AppCompatActivity {
     public void setmAuth(FirebaseAuth mAuth) {
         this.mAuth = mAuth;
     }
+
+
 
     // No onStart auto-redirect. User must tap Login/Sign Up.
 }

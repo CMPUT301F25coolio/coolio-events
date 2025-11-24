@@ -1,6 +1,7 @@
 package com.example.coolioevents.organizer;
 
 import com.example.coolioevents.Profile;
+import com.example.coolioevents.User;
 
 /**
  * Copyright 2025 Ethan Diep
@@ -28,7 +29,7 @@ import com.example.coolioevents.Profile;
  * @version 1.0
  * @since 2025-11-06
  */
-public class Organizer {
+public class Organizer extends User {
     private Profile profile;
 
     /**

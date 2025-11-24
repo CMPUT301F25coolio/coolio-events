@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
-    android:background="@drawable/whitebackground">
+    android:layout_height="330dp"
+    android:background="@drawable/whitebackground"
+    android:descendantFocusability="blocksDescendants">
 
     <TextView
         android:id="@+id/eventName"
@@ -114,16 +115,14 @@
         android:layout_width="180dp"
         android:layout_height="20dp"
 
+        android:autoSizeTextType="uniform"
         android:background="@drawable/purplecircularbackground"
+        android:fontFamily="@font/clearsans_bold"
         android:gravity="center"
         android:text="0 PEOPLE IN WAITLIST"
-        android:autoSizeTextType="uniform"
         android:textColor="@color/white"
-
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/clearsans_bold"
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView"
@@ -132,6 +131,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars"
+        android:scaleType="centerCrop"
         app:shapeAppearance="@style/roundedcornerimageview"
         />
 
@@ -180,4 +180,27 @@
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/eventuserStatus"
         app:layout_constraintTop_toBottomOf="@+id/eventStatus" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/tagsGroup"
+        android:layout_width="355dp"
+        android:layout_height="40dp"
+        app:layout_constraintStart_toEndOf="@+id/tagLabel"
+        app:layout_constraintTop_toBottomOf="@+id/eventuserStatus"
+        android:clickable="false"
+        android:focusable="false">
+
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:id="@+id/tagLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/clearsans_regular"
+        android:text="Tags:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userStatusLabel" />
 </androidx.constraintlayout.widget.ConstraintLayout>

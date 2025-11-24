@@ -61,7 +61,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:shapeAppearance="@style/roundedcornerimageview"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@tools:sample/avatars"
+        android:scaleType="centerCrop"/>
 
     <!-- Title -->
     <TextView
@@ -193,32 +194,81 @@
         app:layout_constraintStart_toEndOf="@+id/eventViewEventStatusLabel"
         app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
 
+    <!-- Tags -->
+
     <!-- Number of people in waitlist -->
 
     <!-- Organizer Action Buttons -->
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/tagsGroup"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+
+        android:layout_marginStart="2dp"
+        android:clickable="false"
+        android:focusable="false"
+        app:layout_constraintStart_toEndOf="@+id/tagLabel"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatus">
+
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:id="@+id/tagLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Tags:"
+        android:textSize="17dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatusLabel" />
+
+    <Button
+        android:id="@+id/sendNotificationsButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="40dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="Send Notifications"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:backgroundTint="#2962FF"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/draw_new_user_button"
+        app:layout_constraintVertical_bias="0.027" />
+
     <TextView
         android:id="@+id/eventWaitlistEntrantCount"
         android:layout_width="180dp"
         android:layout_height="20dp"
 
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="212dp"
-        android:layout_marginBottom="208dp"
         android:autoSizeTextType="uniform"
         android:background="@drawable/purplecircularbackground"
-        android:fontFamily="@font/clearsans_bold"
 
+        android:fontFamily="@font/clearsans_bold"
         android:gravity="center"
         android:text="0 PEOPLE IN WAITLIST"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatusLabel" />
 
     <Button
         android:id="@+id/view_lists_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="40dp"
         android:paddingTop="14dp"
         android:paddingBottom="14dp"
@@ -233,34 +283,11 @@
         app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatus" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/draw_lottery_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="40dp"
-        android:enabled="false"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:text="Draw From Lottery"
-        android:textAllCaps="false"
-        android:textColor="#A9A9A9"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="#FFFFFF"
-        app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_lists_button"
-        app:strokeColor="#A9A9A9"
-        app:strokeWidth="2dp" />
-
-    <com.google.android.material.button.MaterialButton
         android:id="@+id/draw_new_user_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="40dp"
         android:enabled="false"
         android:paddingTop="14dp"
@@ -273,8 +300,33 @@
         app:backgroundTint="#FFFFFF"
         app:cornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/draw_lottery_button"
+        app:strokeColor="#A9A9A9"
+        app:strokeWidth="2dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/draw_lottery_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:enabled="false"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="Draw From Lottery"
+        android:textAllCaps="false"
+        android:textColor="#A9A9A9"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:backgroundTint="#FFFFFF"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_lists_button"
         app:strokeColor="#A9A9A9"
         app:strokeWidth="2dp" />
 

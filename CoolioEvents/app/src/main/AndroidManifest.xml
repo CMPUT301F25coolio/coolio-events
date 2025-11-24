@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CoolioEvents"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:usesCleartextTraffic="true">
 
         <!-- Administrator side -->
         <activity
@@ -29,6 +30,19 @@
         <activity
             android:name=".administrator.AdministratorEventsActivity"
             android:exported="false" />
+        <activity
+            android:name=".administrator.AdministratorOrganizersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".administrator.AdministratorEntrantsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".administrator.AdministratorImagesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".administrator.AdministratorNotificationsActivity"
+            android:exported="false" />
+
 
         <!-- Organizer side -->
         <activity
@@ -51,6 +65,9 @@
             android:exported="false" />
         <activity
             android:name=".organizer.CreateEventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".organizer.OrganizerSendNotifications"
             android:exported="false" />
         <!-- Organizer list screens -->
         <activity
