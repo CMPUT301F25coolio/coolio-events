@@ -4,10 +4,12 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.app.Dialog;
+import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -29,6 +31,8 @@ import com.example.coolioevents.NotificationFragment;
 import com.example.coolioevents.events.EventFragment;
 import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.events.EventViewModelFactory;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -80,6 +85,7 @@ public class EntrantHomeFragment extends Fragment {
     Button clearFilterButton; // Button to clear filter
     ImageButton notificationButton; //ImageButton for notifications
     Pair<Date, Date> dateRange; // dateRange to apply
+    ArrayList<String> selectedTags; // tags to apply
     Boolean filterApplied = false; // Boolean checking if filter is applied or not
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -136,6 +142,13 @@ public class EntrantHomeFragment extends Fragment {
 
         eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList);
         eventsListView.setAdapter(eventAdapter);
+
+        // If a filter is applied make sure clearFilterButton is visible
+        if (filterApplied){
+            clearFilterButton.setVisibility(VISIBLE);
+        }
+        else {
+            clearFilterButton.setVisibility(GONE);}
 
         // Add click listener to the Notification Button
         if (notificationButton != null) {
@@ -200,7 +213,7 @@ public class EntrantHomeFragment extends Fragment {
 
         if (filterApplied) {
             // If filter applied apply filters and set events to filtered event list
-            events = eventViewModel.getFilteredEventList(dateRange.first, dateRange.second);
+            events = eventViewModel.getFilteredEventList(dateRange.first, dateRange.second, selectedTags);
         }
         else {
             // If not, just set events to eventlist in viewmodel
@@ -231,9 +244,21 @@ public class EntrantHomeFragment extends Fragment {
     private void showFilterDialog(){
         Dialog dialog = new Dialog(requireActivity()); // Make new dialog
         dialog.setContentView(R.layout.filter_menu); // Set the content of the dialog to be the filter menu
+        dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(requireActivity(), R.drawable.whitebackground)); // Set background of dialog to be rounded
+        ChipGroup tagsGroup = dialog.findViewById(R.id.tagsGroup); // ChipGroup of tags
         Button dateButton = dialog.findViewById(R.id.dateRangeButton); // Button to allow user to choose date range
         TextView dateText = dialog.findViewById(R.id.dateRangeView); // Textview showing user the date range they chose
         Button applyButton = dialog.findViewById(R.id.applyButton); // Apply button to apply filter
+
+        // Gets all selected tags and put them in filterTags
+        ArrayList<String> filterTags = new ArrayList<>();
+        tagsGroup.setOnCheckedStateChangeListener((chipGroup, tagIds) -> {
+            filterTags.clear();
+            for (Integer tagId : tagIds){
+                Chip tag = chipGroup.findViewById(tagId);
+                filterTags.add(tag.getText().toString());
+            }
+        });
 
         // Source Help: https://www.youtube.com/watch?v=JqGtrQOL4tc
         // Make Date Range Picker
@@ -265,12 +290,15 @@ public class EntrantHomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dateRange = new Pair<>(DateRange[0], DateRange[1]);
+                selectedTags = filterTags;
+                System.out.println(selectedTags);
                 filterApplied = true; // Set boolean filter applied to true
                 updateEventList(); // Update the event list and adapter to show filtered events
                 clearFilterButton.setVisibility(VISIBLE); // Make clear filter button visible
                 dialog.dismiss(); // Close dialog prompt
             }
         });
+
         dialog.show(); // Show filter popup menu
     }
 

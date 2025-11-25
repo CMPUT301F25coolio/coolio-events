@@ -2,6 +2,7 @@ package com.example.coolioevents;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -26,7 +27,7 @@ import java.util.Locale;
  * of the events details.
  *
  * @author Aasta Tsai
- * @version 1.0
+ * @version 2.0
  * @since 2025-11-05
  */
 public class EventDetails {
@@ -41,6 +42,8 @@ public class EventDetails {
     private Date startDate;
     private Date endDate;
     private String posterUrl;
+
+    private ArrayList<String> tags = new ArrayList<>();
 
     public EventDetails() {
         // Empty constructor needed for Firebase
@@ -57,6 +60,21 @@ public class EventDetails {
         this.entrantLimit = entrantLimit;
 
         this.postedDate = postedDate;
+
+        parseRegistrationPeriod();  // Convert to date objects
+    }
+
+
+    public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, Date eventDateTime, String eventLocation,
+                        Date postedDate, ArrayList<String> tags) {
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventDateTime = eventDateTime;
+        this.eventLocation = eventLocation;
+        this.registrationPeriod = registrationPeriod;
+        this.entrantLimit = entrantLimit;
+        this.postedDate = postedDate;
+        this.tags = tags;
 
         parseRegistrationPeriod();  // Convert to date objects
     }
@@ -212,6 +230,24 @@ public class EventDetails {
      */
     public void setStartDate(Date startDate) { this.startDate = startDate; }
     public void setEndDate(Date endDate) { this.endDate = endDate; }
+
+    /**
+     * This method gets the tags of the event
+     *      @return
+     *      The tags of the event (Arraylist)
+     */
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    /**
+     * This method sets the tags of the event to array list "tags"
+     * @param tags
+     *      List of tags to be applied to the event
+     */
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
+    }
 
     /**
      * Parses the registration period string (e.g., "2025/10/28 - 2025/11/11") into startDate and endDate.

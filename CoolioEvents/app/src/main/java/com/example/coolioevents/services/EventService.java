@@ -1,14 +1,19 @@
 package com.example.coolioevents.services;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.util.QRCodeUtil;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestore;
+import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,31 +41,25 @@ import java.util.Map;
  *
  * RATIONALE:
  * Keeping event creation and QR generation in one service keeps the flow simple,
-* avoids duplicate code in activities, and makes it easier to test the full path
+ * avoids duplicate code in activities, and makes it easier to test the full path
  * (Firestore write + QR save) in one place.
- *
- * OUTSTANDING ISSUES (to tackle next part):
- * 1) Add basic input validation for required fields (e.g., title/description not empty).
- * 2) Surface clearer error messages to the UI (distinguish Firestore vs. MediaStore failure).
- *
  * @author Parth Mittal
  * @version 1.0
  * @since 2025-11-07
  */
-/*
-  Tiny service for event creation.
-  Flow I used:
-   1. create Firestore doc with some default arrays so pooling doesnt crash
-   2. generate a deeplink string for the event
-   3. render QR and save it to MediaStore Pictures/CoolioEvents
-  Kept the public API the same so other files wont break.*/
+/*  Flow:
+    1. Make Firestore document for the event
+    2. Make a deeplink string using the event ID
+    3. Turn the deep link into a QR image
+    4. Save the QR inside /Pictures/CoolioEvents on the device*/
 public class EventService {
-    // shared Firestore instance for this app
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     /*
-      Creates a brand new event and also saves a QR image locally.
-      @param ctx Android context needed for MediaStore
-      return a Task that completes after both Firestore write and QR save finish*/
+        Creates an event and also saves a QR code for it.
+        ctx is context so we can access MediaStore
+        other params are event info from CreateEventActivity
+        Returns a Task that finishes only after both Firestore write
+        and QR saving are done*/
     public Task<Void> createEventWithQR(Context ctx,
                                         String title,
                                         String description,
@@ -68,50 +67,69 @@ public class EventService {
                                         int entrantLimit,
                                         Date time,
                                         String location) {
-        // generate an id upfront so we can use it both in Firestore and the qr content
+        // Generate a fresh eventId so we can use it everywhere consistently
         String eventId = db.collection("events").document().getId();
-        // pack some basic info open is our initial status and date is createdAt
+        // Build event details object (Firestore stores this in "details")
         EventDetails details = new EventDetails(
                 title, description, registrationPeriod, entrantLimit, time, location, new Date()
         );
-        // build the event document (I keep arrays initialized so pooling can safely mutate them)
+        // Build the Firestore document for this event
         Map<String, Object> eventDoc = new HashMap<>();
         eventDoc.put("eventId", eventId);
         eventDoc.put("details", details);
-        eventDoc.put("waitlistEntrants", new ArrayList<String>()); // default empty
-        eventDoc.put("chosenEntrants",  new ArrayList<String>());  // default empty
-        // deeplink payload (the app has an intentfilter for this scheme host)
+        // Initialize arrays so nothing breaks later
+        eventDoc.put("waitlistEntrants", new ArrayList<String>());
+        eventDoc.put("chosenEntrants", new ArrayList<String>());
+        // Deep link stored inside Firestore. App uses this for QR.
         String qrContent = "coolioevents://event/" + eventId;
         eventDoc.put("qrContent", qrContent);
-        // 1) write Firestore doc
+        // Step 1 write event to Firestore
         Task<Void> writeTask = db.collection("events").document(eventId).set(eventDoc);
-        // 2) render and store the QR bitmap done off the main thread via Tasks.call
+        // Step 2 save QR image to device gallery
         Task<Void> saveTask = saveQrToGallery(ctx, qrContent, eventId);
-        // complete when both are done
+        // Wait for both to finish
         return Tasks.whenAll(writeTask, saveTask);
     }
-    /*
-      Renders a QR code and saves it to MediaStore under Pictures CoolioEvents.
-      I broke this out just to keep the main method readable.*/
     private Task<Void> saveQrToGallery(Context ctx, String qrContent, String eventId) {
         return Tasks.call(() -> {
-            // generate a reasonably sharp QR (1024px)
+            // Generate the QR bitmap
             Bitmap bmp = QRCodeUtil.make(qrContent, 1024);
             String fileName = "QR_" + eventId + ".png";
-            // describe the media entry we want to insert
+            // Make sure Pictures/CoolioEvents exists cuz emulator sometimes has nothing
+            File picturesDir = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES
+            );
+            File coolioDir = new File(picturesDir, "CoolioEvents");
+            // Create folder if missing
+            if (!coolioDir.exists()) {
+                coolioDir.mkdirs();
+            }
+            // Build metadata for MediaStore insert
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // on Android 10+, we can target a relative folder without write external storage
+                // Scoped storage style (Android 10+)
                 values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CoolioEvents");
+            } else {
+                // Older style full path
+                File outFile = new File(coolioDir, fileName);
+                values.put(MediaStore.Images.Media.DATA, outFile.getAbsolutePath());
             }
-            // insert the row and stream the bitmap into it
-            var resolver = ctx.getContentResolver();
-            var uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            try (OutputStream os = uri == null ? null : resolver.openOutputStream(uri)) {
-                if (os != null) {
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
+            // Insert into MediaStore
+            ContentResolver resolver = ctx.getContentResolver();
+            Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            if (uri == null) {
+                throw new IOException("Failed to create MediaStore entry for QR");
+            }
+            // Write the bitmap to the file
+            try (OutputStream os = resolver.openOutputStream(uri)) {
+                if (os == null) {
+                    throw new IOException("Couldn't open output stream for QR");
+                }
+                boolean ok = bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
+                if (!ok) {
+                    throw new IOException("Failed to compress QR image");
                 }
             }
             return null;

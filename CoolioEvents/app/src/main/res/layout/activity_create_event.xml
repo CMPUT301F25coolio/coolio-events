@@ -206,6 +206,97 @@
                 android:maxLines="1"
                 android:layout_marginBottom="16dp"/>
 
+            <!-- Tags -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tags"
+                android:textColor="#212121"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center"/>
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/etTags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                >
+                <com.google.android.material.chip.Chip
+                    android:text="Contest"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true"
+                    >
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Dance"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true">
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Party"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true">
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Kids"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true">
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Tech"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true"
+                    >
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Sports"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true">
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Arts"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true">
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Food"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true">
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Workshop"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true">
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Music"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true">
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Learning"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true">
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:text="Games"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checkable="true">
+                </com.google.android.material.chip.Chip>
+            </com.google.android.material.chip.ChipGroup>
+
             <!-- Poster -->
             <TextView
                 android:layout_width="wrap_content"
@@ -233,6 +324,7 @@
                 android:text="Choose Poster Image"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
+
             <Button
                 android:id="@+id/btnTakePhoto"
                 android:layout_width="match_parent"
@@ -244,6 +336,8 @@
                 android:textStyle="bold"/>
 
         </LinearLayout>
+
+
     </ScrollView>
 
     <!-- Create -->

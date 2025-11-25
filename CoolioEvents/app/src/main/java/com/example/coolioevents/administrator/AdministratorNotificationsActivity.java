@@ -18,6 +18,8 @@ import com.example.coolioevents.events.EventViewModelFactory;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class AdministratorNotificationsActivity extends AppCompatActivity {
     NotificationViewModel notificationViewModel; // View Model eventList up to date with database
@@ -49,6 +51,7 @@ public class AdministratorNotificationsActivity extends AppCompatActivity {
             if (notificationData != null) {
                 notificationsList.clear(); // Clear old list
                 notificationsList.addAll(notificationData); // Add all notification objects
+                Collections.sort(notificationsList); // Sort notifications based on date
                 notificationsAdapter.notifyDataSetChanged(); // Tell adapter data has been changed
             }
         });

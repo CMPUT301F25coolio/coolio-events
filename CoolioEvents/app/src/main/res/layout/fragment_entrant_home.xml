@@ -83,6 +83,7 @@
         android:headerDividersEnabled="false"
         android:divider="#DEDEDE"
         android:background="#DEDEDE"
+        android:descendantFocusability="beforeDescendants"
         >
     </ListView>
 

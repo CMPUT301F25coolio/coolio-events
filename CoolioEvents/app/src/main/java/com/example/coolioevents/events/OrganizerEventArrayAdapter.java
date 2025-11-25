@@ -5,14 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -67,6 +71,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         Event event = eventList.get(position);
+        ImageView eventImageView = view.findViewById(R.id.imageView);
         TextView eventName = view.findViewById(R.id.eventName);
         TextView eventOrganizer = view.findViewById(R.id.eventOrganizer);
         TextView eventDescription = view.findViewById(R.id.eventDescription);
@@ -75,6 +80,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
         TextView eventRegPrd = view.findViewById(R.id.eventRegPeriod);
         TextView eventMaxEntrees = view.findViewById(R.id.eventmaxEntrees);
         TextView eventStatus = view.findViewById(R.id.eventStatus);
+        ChipGroup tagsChipGroup = view.findViewById(R.id.tagsGroup);
 
 
         TextView eventWaitingCount = view.findViewById(R.id.eventWaitingCount);
@@ -84,6 +90,15 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
         eventDescription.setText(String.format("Description: %s", event.getDetails().getEventDescription())); // Sets event description text
         eventRegPrd.setText(String.format("Registration Period: %s", event.getDetails().getRegistrationPeriod())); // Sets event registration period text
         eventMaxEntrees.setText(String.format("Entrant Limit: %s", String.valueOf(event.getDetails().getEntrantLimit()))); // Sets entrant limit organizer text
+
+        //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
+        // Set event image with Glide
+        Glide.with(context)
+                .load(event.getDetails().getPosterUrl()) // loads poster URL
+                .placeholder(R.drawable.ic_image_placeholder)
+                .error(R.drawable.ic_image_error)
+                .fallback(R.drawable.ic_image_placeholder) // If imageURL is null
+                .into(eventImageView);
 
         if (event.getDetails().getEventLocation() != null){
             eventLocation.setText(String.format("Event Location: %s",event.getDetails().getEventLocation())); // Sets event location if not null
@@ -102,6 +117,18 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
             // If event closed make text open with red background
             eventStatus.setText(event.getDetails().getStatus());
             eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
+        }
+        //Setting tags
+        tagsChipGroup.removeAllViews();
+        if (event.getDetails().getTags() != null){
+            for (String tagString : event.getDetails().getTags()){
+                Chip tag = new Chip(context);
+                final float scale = getContext().getResources().getDisplayMetrics().density;
+                tag.setText(tagString);
+                tag.setHeight(40);
+                tag.setClickable(false);
+                tagsChipGroup.addView(tag);
+            }
         }
 
         // Set waiting list count text

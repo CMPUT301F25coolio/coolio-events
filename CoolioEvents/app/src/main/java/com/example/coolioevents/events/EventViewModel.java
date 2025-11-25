@@ -457,11 +457,13 @@ public class EventViewModel extends ViewModel {
      * Start date of range to filter events
      * @param endDate
      * End date of range ot filter events
+     * @param tags
+     * Tags to filter events
      *
      * @return
      * An eventlist which is filtered according to the parameters
      */
-    public ArrayList<Event> getFilteredEventList(Date startDate, Date endDate) {
+    public ArrayList<Event> getFilteredEventList(Date startDate, Date endDate, ArrayList<String> tags) {
         ArrayList<Event> events = eventList.getValue(); // Unfiltered events
         ArrayList<Event> filteredEventList = new ArrayList<>(); // Filtered events to be returned
 
@@ -474,13 +476,11 @@ public class EventViewModel extends ViewModel {
         // Apply add events which conform to filters
         for (Event event : events) {
             Date eventTime = event.getDetails().getEventDateTime();
-
-                // Date Range Filter
-                if (eventTime.after(startDate) && eventTime.before(endDate)) {
+                // Filter -- Date range and Tags
+                if (eventTime.after(startDate) && eventTime.before(endDate)
+                    && event.getDetails().getTags().stream().anyMatch(tags::contains)) {
                     filteredEventList.add(event);
             }
-            // TODO: Add filter for tags
-
         }
         return filteredEventList;
     }
