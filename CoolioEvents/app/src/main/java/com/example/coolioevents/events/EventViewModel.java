@@ -364,16 +364,7 @@ public class EventViewModel extends ViewModel {
                 .addOnFailureListener(e -> {
                     Log.e("ViewModel", "FAILURE: Could not update waitlist for event " + eventId, e);
                 });
-        /*
-        db.collection("events").document(eventId)
-                .update("waitlistEntrants", FieldValue.arrayUnion(userId))
-                .addOnSuccessListener(aVoid -> {
-                Log.d("ViewModel", "SUCCESS: User " + userId + " added to waitlist for event " + eventId);
-                })
-                .addOnFailureListener(e -> {
-                Log.e("ViewModel", "FAILURE: Could not update waitlist for event " + eventId, e);
-            });
-         */
+       
     }
 
     /**
@@ -416,19 +407,6 @@ public class EventViewModel extends ViewModel {
                 .addOnFailureListener(e -> {
                     Log.e("ViewModel", "FAILURE: Could not look for location document", e);
                 });
-
-        /*
-        db.collection("events").document(eventId)
-                .update("waitlistEntrants", FieldValue.arrayRemove(userId))
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("ViewModel", "SUCCESS: User " + userId + " removed from waitlist for event " + eventId);
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("ViewModel", "FAILURE: Could not update waitlist for event " + eventId, e);
-                });
-
-         */
-
 
     }
 
