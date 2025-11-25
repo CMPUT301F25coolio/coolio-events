@@ -277,6 +277,7 @@ public class CreateEventActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) ||
                 TextUtils.isEmpty(registrationPeriod) || TextUtils.isEmpty(entrantLimitStr)) {
             Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+            btnCreate.setEnabled(true);  // allow retry
             return;
         }
 
@@ -285,6 +286,7 @@ public class CreateEventActivity extends AppCompatActivity {
             entrantLimit = Integer.parseInt(entrantLimitStr);
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Entrant limit must be a number", Toast.LENGTH_SHORT).show();
+            btnCreate.setEnabled(true);  // allow retry
             return;
         }
 
@@ -293,6 +295,7 @@ public class CreateEventActivity extends AppCompatActivity {
             eventDateTime = dateTimeFormat.parse(etEventDateTime.getText().toString());
         } catch (Exception e) {
             Toast.makeText(this, "Invalid event date/time format", Toast.LENGTH_SHORT).show();
+            btnCreate.setEnabled(true);  // allow retry
             return;
         }
 
