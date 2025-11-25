@@ -1,5 +1,5 @@
 package com.example.coolioevents.Entrant;
-
+import com.example.coolioevents.events.EventFragment;
 import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SearchEvent;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +23,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.coolioevents.Event;
 import com.example.coolioevents.NotificationData;
 import com.example.coolioevents.NotificationFragment;
@@ -88,6 +86,14 @@ public class EntrantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrant);
+        // Deep link: open event details directly
+        String deepEventId = getIntent().getStringExtra("EVENT_ID");
+        if (deepEventId != null && !deepEventId.isEmpty()) {
+            // Open EventFragment immediately
+            EventFragment fragment = EventFragment.newInstance(deepEventId);
+            SwitchFragment(fragment);
+            return;  // Skip loading the normal home screen
+        }
         homeFragment = new EntrantHomeFragment();
         myEventsFragment = new EntrantMyEventsFragment();
         ProfileFragment = new ProfileFragment();

@@ -16,7 +16,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars"
-        app:shapeAppearance="@style/roundedcornerimageview"/>
+        app:shapeAppearance="@style/roundedcornerimageview"
+        android:scaleType="centerCrop"/>
 
 
     <!-- Title -->
@@ -143,6 +144,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatusLabel" />
 
+    <!-- Tags -->
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/tagsGroup"
+        android:layout_width="355dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="12dp"
+
+        android:clickable="false"
+        android:focusable="false"
+        app:layout_constraintStart_toEndOf="@+id/tagLabel"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewUserStatus">
+
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:id="@+id/tagLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Tags:"
+        android:textSize="17dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventViewUserStatusLabel" />
 
     <TextView
         android:id="@+id/eventViewUserStatus"
@@ -263,19 +289,15 @@
         android:id="@+id/eventWaitlistEntrantCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="144dp"
         android:autoSizeTextType="uniform"
         android:background="@drawable/purplecircularbackground"
         android:gravity="center"
         android:text="0 PEOPLE WAITING IN WAITLIST"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/eventViewJoinWaitListButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-
-
-        android:visibility="gone"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/eventViewUserStatus"
+        android:visibility="gone"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

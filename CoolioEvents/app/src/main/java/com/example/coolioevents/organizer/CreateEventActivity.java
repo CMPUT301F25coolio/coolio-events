@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.coolioevents.Event;
@@ -26,6 +27,8 @@ import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
 import com.example.coolioevents.util.QRCodeUtil;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,13 +41,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 /**
- * Copyright 2025 Aasta Tsai & Parth Mittal
+ * Copyright 2025 Aasta Tsai & Parth Mittal & Ethan Diep
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,13 +68,14 @@ import java.util.Locale;
  * This activity allows organizers to input event details, select or capture a poster image,
  * and upload event information to Firebase Firestore and Storage.
  *
- * @author Aasta Tsai & Parth Mittal
+ * @author Aasta Tsai & Parth Mittal & Ethan Diep
  * @version 1.0
  * @since 2025-11-05
  */
 public class CreateEventActivity extends AppCompatActivity {
 
     private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventDateTime, etEventLocation;
+    private ChipGroup etTags;
     private Button btnCreate, btnPickPoster, btnTakePhoto;
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
@@ -88,6 +93,8 @@ public class CreateEventActivity extends AppCompatActivity {
     private Calendar eventDateTimeCalendar;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
     private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US);
+
+    private ArrayList<String> selectedTags = new ArrayList();
 
     /**
      * ActivityResultLauncher to pick poster image from gallery.
@@ -123,6 +130,8 @@ public class CreateEventActivity extends AppCompatActivity {
         etEntrantLimit = findViewById(R.id.etEntrantLimit);
         etEventDateTime = findViewById(R.id.etEventDateTime);
         etEventLocation = findViewById(R.id.etEventLocation);
+        etTags = findViewById(R.id.etTags);
+
         btnCreate = findViewById(R.id.btnCreate);
         btnBack = findViewById(R.id.organizer_event_back_button);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
@@ -138,6 +147,10 @@ public class CreateEventActivity extends AppCompatActivity {
 
         etEventDateTime.setFocusable(false);
         etEventDateTime.setOnClickListener(v -> showDateTimePicker());
+
+        etTags.setOnCheckedStateChangeListener((chipGroup, checkedTags) -> {
+            updateTags(chipGroup, checkedTags);
+        });
 
         btnCreate.setOnClickListener(v -> createEvent());
     }
@@ -187,6 +200,12 @@ public class CreateEventActivity extends AppCompatActivity {
                                     Toast.makeText(this, "End date cannot be before start date", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+
+                                // Force end time to be 11:59 PM
+                                endDateCalendar.set(Calendar.HOUR_OF_DAY, 23);
+                                endDateCalendar.set(Calendar.MINUTE, 59);
+                                endDateCalendar.set(Calendar.SECOND, 0);
+                                endDateCalendar.set(Calendar.MILLISECOND, 0);
 
                                 String text = dateFormat.format(startDateCalendar.getTime())
                                         + " - " + dateFormat.format(endDateCalendar.getTime());
@@ -248,6 +267,7 @@ public class CreateEventActivity extends AppCompatActivity {
      * This method creates a new event using input fields and uploads the details to Firebase Firestore.
      */
     private void createEvent() {
+        btnCreate.setEnabled(false);  // prevent double click
         String title = etTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
         String registrationPeriod = etRegistrationPeriod.getText().toString().trim();
@@ -257,6 +277,7 @@ public class CreateEventActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) ||
                 TextUtils.isEmpty(registrationPeriod) || TextUtils.isEmpty(entrantLimitStr)) {
             Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+            btnCreate.setEnabled(true);  // allow retry
             return;
         }
 
@@ -265,6 +286,7 @@ public class CreateEventActivity extends AppCompatActivity {
             entrantLimit = Integer.parseInt(entrantLimitStr);
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Entrant limit must be a number", Toast.LENGTH_SHORT).show();
+            btnCreate.setEnabled(true);  // allow retry
             return;
         }
 
@@ -273,6 +295,7 @@ public class CreateEventActivity extends AppCompatActivity {
             eventDateTime = dateTimeFormat.parse(etEventDateTime.getText().toString());
         } catch (Exception e) {
             Toast.makeText(this, "Invalid event date/time format", Toast.LENGTH_SHORT).show();
+            btnCreate.setEnabled(true);  // allow retry
             return;
         }
 
@@ -287,7 +310,8 @@ public class CreateEventActivity extends AppCompatActivity {
                 entrantLimit,
                 eventDateTime,
                 eventLocation,
-                new Date());
+                new Date(),
+                selectedTags);
         if (startDateCalendar != null && endDateCalendar != null) {
             details.setStartDate(startDateCalendar.getTime());
             details.setEndDate(endDateCalendar.getTime());
@@ -307,14 +331,15 @@ public class CreateEventActivity extends AppCompatActivity {
         map.put("acceptedEntrants", new ArrayList<String>());
         map.put("cancelledEntrants", new ArrayList<String>());
         map.put("deepLink", deepLink);
-        map.put("posterUrl", null);
         map.put("promoQrUrl", null);
 
         // 1) Create Firestore doc
         db.collection("events").document(eventId).set(map)
                 .addOnSuccessListener(aVoid -> uploadAssetsAndFinish(eventId, deepLink))
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    btnCreate.setEnabled(true);  // allow retry
+                });
     }
 
     /**
@@ -365,7 +390,7 @@ public class CreateEventActivity extends AppCompatActivity {
             String qrUrl = (String) results.get(1);
 
             Map<String, Object> updates = new HashMap<>();
-            updates.put("posterUrl", posterUrl);
+            updates.put("details.posterUrl", posterUrl);
             updates.put("promoQrUrl", qrUrl);
 
             db.collection("events").document(eventId).update(updates)
@@ -385,4 +410,32 @@ public class CreateEventActivity extends AppCompatActivity {
             finish();
         });
     }
+    /**
+     * This method updates the event's selectedTags list to match what is currently selected
+     * on the selected chips (tags). Limits the amount of selected tags to 3
+     *
+     * @param chipGroup
+     *      Chip group to get selected tags from
+     * @param checkedTags
+     *      List of checkedTags viewIds
+     */
+    private void updateTags(ChipGroup chipGroup, List<Integer> checkedTags) {
+        ArrayList<String> newSelectTags = new ArrayList<>(); // Newly selected tags to be put into selectedTags
+        if (checkedTags.size() < 4)
+            // Limit the number of tags to be 3
+            for (Integer tagId : checkedTags) {
+                Chip tag = chipGroup.findViewById(tagId);
+                newSelectTags.add(tag.getText().toString());
+            }
+        else {
+            // If tag size is currently 3, dont add any tag, instead remove all tags and warn user
+            chipGroup.clearCheck();
+            Toast.makeText(this, "Max of 3 tags allowed - tags reset", Toast.LENGTH_SHORT).show();
+        }
+        selectedTags.clear();
+        selectedTags.addAll(newSelectTags);
+        System.out.println(selectedTags);
+    }
+
+
 }

@@ -1,7 +1,9 @@
 package com.example.coolioevents.repo;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,5 +84,21 @@ public class EntrantsRepository {
                     // if no matching list found, just return empty list to avoid crash
                     return Tasks.forResult(new ArrayList<String>());
                 });
+    }
+
+    //remove entrant from ALL possible lists
+    public Task<Void> removeEntrant(String eventId, String entrantId) {
+        DocumentReference ref = db.collection("events").document(eventId);
+
+        return ref.update(
+                "waitlistEntrants", FieldValue.arrayRemove(entrantId),
+                "waitingEntrants", FieldValue.arrayRemove(entrantId),
+                "chosenEntrants", FieldValue.arrayRemove(entrantId),
+                "invitedEntrants", FieldValue.arrayRemove(entrantId),
+                "selectedEntrants", FieldValue.arrayRemove(entrantId),
+                "acceptedEntrants", FieldValue.arrayRemove(entrantId),
+                "enrolledEntrants", FieldValue.arrayRemove(entrantId),
+                "finalEntrants", FieldValue.arrayRemove(entrantId)
+        );
     }
 }

@@ -17,9 +17,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.coolioevents.Entrant.EntrantHomeFragment;
 import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -77,6 +80,7 @@ public class EventFragment extends Fragment {
     private TextView eventStatusTextView;
     private TextView eventUserStatusView;
     private TextView eventUserStatusRegistrationView;
+    private ChipGroup tagsGroup;
     private TextView eventWaitlistEntrantCount;
     private Button joinLeaveWaitlistButton;
     private Button acceptInviteButton;
@@ -213,6 +217,7 @@ public class EventFragment extends Fragment {
         eventUserStatusView = view.findViewById(R.id.eventViewUserStatus);
         eventWaitlistEntrantCount = view.findViewById(R.id.eventWaitlistEntrantCount);
         eventUserStatusRegistrationView = view.findViewById(R.id.eventViewUserStatusRegistration);
+        tagsGroup = view.findViewById(R.id.tagsGroup);
 
         // Getting ViewModel and displaying event details
         eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
@@ -270,8 +275,14 @@ public class EventFragment extends Fragment {
                             }
                         });
                     }
-
-                    // TODO: eventPosterImageView - how to do
+                    //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
+                    // Set event image with Glide
+                    Glide.with(this)
+                            .load(event.getDetails().getPosterUrl()) // loads poster URL
+                            .placeholder(R.drawable.ic_image_placeholder)
+                            .error(R.drawable.ic_image_error)
+                            .fallback(R.drawable.ic_image_placeholder) // If imageURL is null
+                            .into(eventPosterImageView);
 
                     // Keeping track of current waitlist size in a figure
                     waitlistCount = event.getWaitlistEntrants().size();
@@ -285,6 +296,17 @@ public class EventFragment extends Fragment {
                         // If event closed make text open with red background
                         eventStatusTextView.setText("Closed");
                         eventStatusTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.redshapebackground));
+                    }
+
+                    //Set event tags
+                    if (event.getDetails().getTags() != null){
+                        for (String tagString : event.getDetails().getTags()){
+                            Chip tag = new Chip(getContext());
+                            tag.setText(tagString);
+                            tag.setHeight(40);
+                            tag.setClickable(false);
+                            tagsGroup.addView(tag);
+                        }
                     }
                 }
             }

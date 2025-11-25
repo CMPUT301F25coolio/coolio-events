@@ -204,6 +204,7 @@ public class OrganizerSendNotifications extends AppCompatActivity {
     private void sendNotifications(){
         String message = messageEditText.getText().toString(); // Message of notification
         List<String> sendList = new ArrayList<>(); // List of entrants to send notifications to
+        String type = "";
         if (message.isEmpty()){
             // If message is empty show a toast telling the user they need to put in a message
             Toast.makeText(OrganizerSendNotifications.this,
@@ -213,22 +214,27 @@ public class OrganizerSendNotifications extends AppCompatActivity {
         if (messageRecipient.equals("Waitlist Entrants")){
             // If recipient is waitlist entrants - change sendList to be entrants in waitlist
             sendList = currentEvent.getWaitlistEntrants();
+            type = "organizerToWaitlistEntrants";
         }
         else if (messageRecipient.equals("Chosen Entrants")){
             // If recipient is chosen entrants - change sendList to be entrants that are chosen
             sendList = currentEvent.getChosenEntrants();
+            type = "organizerToChosenEntrants";
         }
         else if (messageRecipient.equals("Cancelled Entrants")){
             // If recipient is cancelled entrants - change sendList to be entrants that are cancelled
             sendList = currentEvent.getCancelledEntrants();
+            type = "organizerToCancelledEntrants";
         }
         else if (messageRecipient.equals("Accepted Entrants")){
             // If recipient is accepted entrants - change sendList to be entrants that are accepted
             sendList = currentEvent.getAcceptedEntrants();
+            type = "organizerToAcceptedEntrants";
         }
 
         // Create notification document on db
-        notificationViewModel.createNotifications(eventId, currentEvent.getDetails().getEventName(), message, sendList);
+        notificationViewModel.createNotifications(currentEvent, message, sendList, type);
+        Toast.makeText(this, "Notification Sent!", Toast.LENGTH_SHORT).show();
     }
 
 

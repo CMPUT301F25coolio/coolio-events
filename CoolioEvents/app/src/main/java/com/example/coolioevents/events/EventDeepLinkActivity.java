@@ -1,10 +1,13 @@
 package com.example.coolioevents.events;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.coolioevents.Entrant.EntrantActivity;
 
 /**
  * Simple deep-link handler.
@@ -25,12 +28,14 @@ public class EventDeepLinkActivity extends AppCompatActivity {
         }
 
         if (eventId != null && !eventId.isEmpty()) {
-            Toast.makeText(this, "Opening event: " + eventId, Toast.LENGTH_SHORT).show();
-            // TODO: launch your EventDetailsActivity if needed
+            Intent i = new Intent(this, EntrantActivity.class);
+            i.putExtra("EVENT_ID", eventId);
+            startActivity(i);
         } else {
             Toast.makeText(this, "Invalid event link", Toast.LENGTH_SHORT).show();
         }
 
-        finish(); // no UI for now
+        // No UI, just hand off to EntrantActivity
+        finish();
     }
 }

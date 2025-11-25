@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
@@ -20,6 +21,8 @@ import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.events.EventViewModelFactory;
 import com.example.coolioevents.services.PoolingService;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.coolioevents.organizer.ListScreenActivity;
 
@@ -75,6 +78,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
     private TextView eventRegistrationPeriodTextView;
     private TextView eventEntrantLimitTextView;
     private TextView eventStatusTextView;
+    private ChipGroup tagsGroup;
     private TextView eventWaitlistEntrantCount;
     private Button viewLists;
     private MaterialButton drawLottery;
@@ -152,6 +156,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
         eventEntrantLimitTextView = findViewById(R.id.eventViewLimit);
         eventWaitlistEntrantCount = findViewById(R.id.eventWaitlistEntrantCount);
         eventStatusTextView = findViewById(R.id.eventViewEventStatus);
+        tagsGroup = findViewById(R.id.tagsGroup);
 
         // Establish ViewModel
         eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
@@ -185,6 +190,16 @@ public class OrganizerEventActivity extends AppCompatActivity {
                         eventStatusTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.redshapebackground));
                     }
 
+                    //Set event tags
+                    if (event.getDetails().getTags() != null){
+                        for (String tagString : event.getDetails().getTags()){
+                            Chip tag = new Chip(this);
+                            tag.setText(tagString);
+                            tag.setHeight(40);
+                            tag.setClickable(false);
+                            tagsGroup.addView(tag);
+                        }
+                    }
 
                     eventNameTextView.setText(details.getEventName());
                     eventDescriptionTextView.setText(String.format("Description: %s", event.getDetails().getEventDescription()));
@@ -219,7 +234,14 @@ public class OrganizerEventActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    // TODO: eventPosterImageView - how to do
+                    //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
+                    // Set event image with Glide
+                    Glide.with(this)
+                            .load(event.getDetails().getPosterUrl()) // loads poster URL
+                            .placeholder(R.drawable.ic_image_placeholder)
+                            .error(R.drawable.ic_image_error)
+                            .fallback(R.drawable.ic_image_placeholder) // If imageURL is null
+                            .into(eventPosterImageView);
                 }
             }
         });
@@ -282,9 +304,21 @@ public class OrganizerEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PoolingService poolingService = new PoolingService();
-                poolingService.drawReplacement(currentEventId);
-                numberInWaitlist--; // Update this local value
-                updateButtonState();
+                poolingService.drawReplacement(currentEventId)
+                        .addOnSuccessListener(uid -> {
+                            Toast.makeText(OrganizerEventActivity.this,
+                                    "Selected replacement: " + uid,
+                                    Toast.LENGTH_SHORT).show();
+
+                            numberInWaitlist--;
+                            updateButtonState();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(OrganizerEventActivity.this,
+                                    "Failed: " + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        });
+
             }
         });
 
