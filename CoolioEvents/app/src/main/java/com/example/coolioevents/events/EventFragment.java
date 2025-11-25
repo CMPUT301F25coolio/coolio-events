@@ -63,7 +63,7 @@ import java.util.List;
  * from a previous fragment.
  *
  * @author Avery Dancocks, Juliane Phan
- * @version 1.0
+ * @version 1.5
  * @since 2025-11-05
  */
 public class EventFragment extends Fragment {
@@ -97,7 +97,13 @@ public class EventFragment extends Fragment {
     private Button unregisterButton;
     private int waitlistCount;
 
-    // https://developer.android.com/develop/sensors-and-location/location/retrieve-current
+    /*
+    Taken From:  https://developer.android.com/develop/sensors-and-location/location/retrieve-current
+        License: http://www.apache.org/licenses/LICENSE-2.0
+        Authored by: Android Developers
+        Taken by: Avery Dancocks
+        Taken on: 11/23/25
+    */
     // Handling Geolocation
     private FusedLocationProviderClient fusedLocationClient;
     private ActivityResultLauncher<String> requestPermissionLauncher;
@@ -118,12 +124,13 @@ public class EventFragment extends Fragment {
     }
 
 
-    /*Taken from: https://stackoverflow.com/questions/48717021/setbackgroundtintlist-for-button-programmatically-with-a-hex-value-colordrawab
-            License: http://www.apache.org/licenses/LICENSE-4.0
-            Authored by: Rejesh Satvara
-            Taken by: Avery Dancocks
-            Taken on: 10/29/25
-        */
+    /*
+    Taken from: https://stackoverflow.com/questions/48717021/setbackgroundtintlist-for-button-programmatically-with-a-hex-value-colordrawab
+        License: https://creativecommons.org/licenses/by-sa/4.0/
+        Authored by: Rejesh Satvara
+        Taken by: Avery Dancocks
+        Taken on: 10/29/25
+    */
     /**
      * This is a helper function to update the state of the UI
      */
@@ -211,9 +218,13 @@ public class EventFragment extends Fragment {
 
         // Geolocation
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
-        // https://stackoverflow.com/questions/62202471/how-to-get-a-permission-request-in-new-activityresult-api-1-3-0-alpha05
-        // ACE - Aug 23, 2020
-        // on nov 23
+        /*
+        Taken from: https://stackoverflow.com/questions/62202471/how-to-get-a-permission-request-in-new-activityresult-api-1-3-0-alpha05
+            License: https://creativecommons.org/licenses/by-sa/4.0/
+            Authored by: ACE
+            Taken by: Avery Dancocks
+            Taken on: 11/23/25
+        */
         requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (isGranted) {
                 // Permission was granted
@@ -307,7 +318,13 @@ public class EventFragment extends Fragment {
                             }
                         });
                     }
-                    //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
+                    /*
+                    Taken from: https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
+                        License: https://creativecommons.org/licenses/by-sa/4.0/
+                        Authored by: Parmesh Bahala
+                        Taken by: Avery Dancocks
+                        Taken on: 11/23/25
+                     */
                     // Set event image with Glide
                     Glide.with(this)
                             .load(event.getDetails().getPosterUrl()) // loads poster URL
@@ -478,7 +495,13 @@ public class EventFragment extends Fragment {
 
         if (currentEvent.isGeolocationVerificationEnabled()) { // Geolocation required
             // Check we have permission
-            // https://developer.android.com/training/permissions/requesting
+            /*
+             Taken from: https://developer.android.com/training/permissions/requesting
+                License: http://www.apache.org/licenses/LICENSE-4.0
+                Authored by: Android Developers
+                Taken by: Avery Dancocks
+                Taken on: 11/23/25
+             */
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 // We have location permission
                 Log.d("Waitlist", "Permission already granted. Fetching location.");
@@ -513,8 +536,13 @@ public class EventFragment extends Fragment {
         //
         fusedLocationClient.getLastLocation().addOnSuccessListener(requireActivity(), location -> {
             if (location != null) { // Location was found
-                // https://stackoverflow.com/questions/11645273/getting-the-user-geopoint
-                // User- Jul 25, 2012
+                /*
+                Taken from: https://stackoverflow.com/questions/11645273/getting-the-user-geopoint
+                    License: https://creativecommons.org/licenses/by-sa/3.0/
+                    Authored by: User
+                    Taken by: Avery Dancocks
+                    Taken on: 11/23/25
+                 */
                 // Getting location of entrant
                 GeoPoint entrantLocation;
                 entrantLocation = new GeoPoint(location.getLatitude(), location.getLongitude());

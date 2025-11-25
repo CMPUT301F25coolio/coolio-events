@@ -16,7 +16,39 @@ import com.example.coolioevents.events.EventImageData;
 
 import java.util.ArrayList;
 
-//https://developer.android.com/develop/ui/views/layout/recyclerview
+/**
+ * Copyright 2025 Avery Dancocks
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class is a grid adapter for the posters to be displayed to the
+ * administrator.
+ *
+ * RATIONALE:
+ * Posters are displayed in a grid with two columns for better user interface.
+ *
+ * @author Avery Dancocks
+ * @version 1.0
+ * @since 2025-11-19
+ */
+/*
+Taken From: https://developer.android.com/develop/ui/views/layout/recyclerview
+    License: http://www.apache.org/licenses/LICENSE-2.0
+    Authored by: Android Developers
+    Taken by: Avery Dancocks
+    Taken on: 11/18/25
+*/
 public class ImagesGridAdapter extends RecyclerView.Adapter<ImagesGridAdapter.ViewHolder>{
     private final ArrayList<EventImageData> imageList;
     private final Context context;
@@ -50,7 +82,13 @@ public class ImagesGridAdapter extends RecyclerView.Adapter<ImagesGridAdapter.Vi
         String imageUrl = data.getEventPoster();
 
 
-        //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
+        /*
+        Taken From: https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
+            License: https://creativecommons.org/licenses/by-sa/3.0/
+            Authored by: Bharath
+            Taken by: Avery Dancocks
+            Taken on: 11/18/25
+         */
         // Set image with Glide
         Glide.with(context)
                 .load(data.getEventPoster()) // loads poster URL

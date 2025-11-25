@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.Profile;
 import com.example.coolioevents.User;

@@ -21,6 +21,30 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Copyright 2025 Avery Dancocks
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class is an array adapter for both the notifications
+ * list views that the administrator has. It displays the notifications
+ * sender, recipient, type, and date it was sent.
+ *
+ * @author Avery Dancocks
+ * @version 1.0
+ * @since 2025-11-19
+ */
 public class NotificationArrayAdapter extends ArrayAdapter<NotificationData> {
     private ArrayList<NotificationData> notificationList;
     private Context context;
@@ -49,8 +73,13 @@ public class NotificationArrayAdapter extends ArrayAdapter<NotificationData> {
         // Set View - Date
         Date notificationDate = notification.getCreatedAt();
 
-        //https://stackoverflow.com/questions/17807777/simpledateformatstring-template-locale-locale-with-for-example-locale-us-for
-        //jasdmystery, july 23, 2013
+        /*
+        Taken From: https://stackoverflow.com/questions/17807777/simpledateformatstring-template-locale-locale-with-for-example-locale-us-for
+            License: https://creativecommons.org/licenses/by-sa/3.0/
+            Authored by: jasdmystery
+            Taken by: Avery Dancocks
+            Taken on: 11/19/25
+         */
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
         String dateString = format.format(notificationDate);

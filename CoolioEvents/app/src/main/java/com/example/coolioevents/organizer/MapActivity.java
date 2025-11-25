@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.coolioevents.R;
+import com.example.coolioevents.User;
 import com.example.coolioevents.WaitlistLocation;
 import com.example.coolioevents.administrator.AdministratorHomeActivity;
 import com.example.coolioevents.events.EventViewModel;
@@ -22,11 +23,39 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+/**
+ * Copyright 2025 Avery Dancocks
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class represents a map activity that displays all the locations for
+ * the entrants that are in the waitlist of specified event.
+ *
+ * RATIONALE:
+ * Utilizes an event view model to retrieve the details of the waitlist locations
+ * from firebase.
+ *
+ * @author Avery Dancocks
+ * @version 1.0
+ * @since 2025-11-24
+ */
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private GoogleMap googleMap;
@@ -86,7 +115,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         addWaitlistMarkers();
     }
 
-
+    /**
+     * This is a helper function designed to add the different Waitlist markers
+     * to the map, displaying the user's username.
+     * It initiates the map camera on the first user in the waitlist locations array for
+     * a given event ID.
+     */
     private void addWaitlistMarkers() {
         if (currentEventId == null || this.googleMap == null) {
             return;
@@ -114,19 +148,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                              */
                             LatLng position = new LatLng(location.getLocation().getLatitude(), location.getLocation().getLongitude());
 
+                            String userId = location.getUserId();
+
                             /*
                             Taken From: https://developers.google.com/codelabs/maps-platform/maps-platform-101-android?_gl=1*1rkqlg5*_up*MQ..*_ga*MTk5NjQ2NjUxOS4xNzY0MDM1NzUy*_ga_NRWSTWS78N*czE3NjQwNDE1NjEkbzIkZzAkdDE3NjQwNDE1NjYkajU1JGwwJGgw*_ga_SM8HXJ53K2*czE3NjQwMzU3NTIkbzEkZzAkdDE3NjQwMzU3NTIkajYwJGwwJGgw#5
                                 License: http://www.apache.org/licenses/LICENSE-2.0
-                                Authored by: Android Studios
+                                Authored by: Google Developers
                                 Taken by: Avery Dancocks
                                 Taken on: 11/24/25
                              */
-                            googleMap.addMarker(
-                                    new MarkerOptions()
-                                            .position(position)
-                                            .title("User: " + location.getUserId())
-                            );
+                            MarkerOptions markerOptions = new MarkerOptions().position(position);
+                            Marker marker = googleMap.addMarker(markerOptions);
 
+                            // Setting User ID
+                            if (userId != null && marker != null) {
+                                eventViewModel.getOrganizerById(userId).observe(MapActivity.this, user -> {
+                                    if (user != null) {
+                                        marker.setTitle("User: " + user.getProfile().getUsername());
+                                    }
+                                    else {
+                                        marker.setTitle("User: Not Found");
+                                    }
+                                });
+                            }
                             // Add location to the bounds builder
                             boundsBuilder.include(position);
                         }
