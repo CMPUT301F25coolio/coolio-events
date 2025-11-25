@@ -1,6 +1,9 @@
 package com.example.coolioevents.events;
 
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,20 +15,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
-import com.example.coolioevents.Entrant.EntrantHomeFragment;
+import com.example.coolioevents.Event;
 import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.List;
 
@@ -55,7 +63,7 @@ import java.util.List;
  * from a previous fragment.
  *
  * @author Avery Dancocks, Juliane Phan
- * @version 1.0
+ * @version 1.5
  * @since 2025-11-05
  */
 public class EventFragment extends Fragment {
@@ -64,6 +72,7 @@ public class EventFragment extends Fragment {
     private EventViewModel eventViewModel;
     private FirebaseUser currentUser;
     private String currentEventId;
+    private Event currentEvent;
     private boolean isUserOnWaitList = false;
     private boolean isUserChosen = false;
     private boolean isUserAccepted = false;
@@ -88,6 +97,17 @@ public class EventFragment extends Fragment {
     private Button unregisterButton;
     private int waitlistCount;
 
+    /*
+    Taken From:  https://developer.android.com/develop/sensors-and-location/location/retrieve-current
+        License: http://www.apache.org/licenses/LICENSE-2.0
+        Authored by: Android Developers
+        Taken by: Avery Dancocks
+        Taken on: 11/23/25
+    */
+    // Handling Geolocation
+    private FusedLocationProviderClient fusedLocationClient;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+
     /**
      * This is a constructor for the Event Fragment
      *
@@ -104,12 +124,13 @@ public class EventFragment extends Fragment {
     }
 
 
-    /*Taken from: https://stackoverflow.com/questions/48717021/setbackgroundtintlist-for-button-programmatically-with-a-hex-value-colordrawab
-            License: http://www.apache.org/licenses/LICENSE-4.0
-            Authored by: Rejesh Satvara
-            Taken by: Avery Dancocks
-            Taken on: 10/29/25
-        */
+    /*
+    Taken from: https://stackoverflow.com/questions/48717021/setbackgroundtintlist-for-button-programmatically-with-a-hex-value-colordrawab
+        License: https://creativecommons.org/licenses/by-sa/4.0/
+        Authored by: Rejesh Satvara
+        Taken by: Avery Dancocks
+        Taken on: 10/29/25
+    */
     /**
      * This is a helper function to update the state of the UI
      */
@@ -194,6 +215,26 @@ public class EventFragment extends Fragment {
         super.onCreate(savedInstanceState);
         currentEventId = getArguments().getString("event_id");
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Geolocation
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        /*
+        Taken from: https://stackoverflow.com/questions/62202471/how-to-get-a-permission-request-in-new-activityresult-api-1-3-0-alpha05
+            License: https://creativecommons.org/licenses/by-sa/4.0/
+            Authored by: ACE
+            Taken by: Avery Dancocks
+            Taken on: 11/23/25
+        */
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                // Permission was granted
+                Log.d("Waitlist", "Permission granted from dialog. Joining waitlist.");
+                joinWaitlistWithGeolocationCheck();
+            } else {
+                // Permission was denied
+                Toast.makeText(getContext(), "Location permission is required to join this waitlist.", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -225,8 +266,10 @@ public class EventFragment extends Fragment {
         //TODO: Implement a check to make sure the event ID exists
         eventViewModel.getEventById(currentEventId).observe(getViewLifecycleOwner(), event -> {
             if (event != null) {
+                currentEvent = event;
                 EventDetails details = event.getDetails();
                 if (details != null) {
+                    currentEvent.setDetails(details);
                     // Determining User Status
                     List<String> waitlist = event.getWaitlistEntrants();
                     List<String> chosenEntrants = event.getChosenEntrants();
@@ -275,7 +318,13 @@ public class EventFragment extends Fragment {
                             }
                         });
                     }
-                    //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
+                    /*
+                    Taken from: https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
+                        License: https://creativecommons.org/licenses/by-sa/4.0/
+                        Authored by: Parmesh Bahala
+                        Taken by: Avery Dancocks
+                        Taken on: 11/23/25
+                     */
                     // Set event image with Glide
                     Glide.with(this)
                             .load(event.getDetails().getPosterUrl()) // loads poster URL
@@ -326,8 +375,7 @@ public class EventFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Add userId to event waitlist
-                eventViewModel.getEventById(currentEventId).observe(getViewLifecycleOwner(), event -> {
-                    if (event != null) {
+                    if (currentEvent != null) {
                         String currentUserId = currentUser.getUid();
 
                         // Look at if user is on waitlist or not to see what the button click did
@@ -338,26 +386,20 @@ public class EventFragment extends Fragment {
                             // Update and display new waitlist count
                             waitlistCount--;
                             eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
+
+                            // Change the User state
+                            isUserOnWaitList = !isUserOnWaitList;
+                            // Change button state
+                            updateButtonState();
                         }
                         else { //User not currently in waiting list
-                            eventViewModel.joinWaitlist(currentEventId, currentUserId);
-                            Toast.makeText(getContext(), "You have been added to the waitlist.", Toast.LENGTH_SHORT).show();
-
-                            // Update and display new waitlist count
-                            waitlistCount++;
-                            eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
+                            joinWaitlistWithGeolocationCheck();
                         }
-
-                        // Change the User state
-                        isUserOnWaitList = !isUserOnWaitList;
-                        // Change button state
-                        updateButtonState();
                     }
                     else {
                         Toast.makeText(getContext(), "You were not added to the waitlist.", Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
+                }
         });
 
         // Accept invite button onclick activity
@@ -447,4 +489,83 @@ public class EventFragment extends Fragment {
             }
         });
     }
+
+    private void joinWaitlistWithGeolocationCheck() {
+        if (currentEvent == null) return;
+
+        if (currentEvent.isGeolocationVerificationEnabled()) { // Geolocation required
+            // Check we have permission
+            /*
+             Taken from: https://developer.android.com/training/permissions/requesting
+                License: http://www.apache.org/licenses/LICENSE-4.0
+                Authored by: Android Developers
+                Taken by: Avery Dancocks
+                Taken on: 11/23/25
+             */
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // We have location permission
+                Log.d("Waitlist", "Permission already granted. Fetching location.");
+                getLocationAndJoin();
+            }
+            else {
+                // We don't have permission, so we will request it
+                Log.d("Waitlist", "Permission not granted. Requesting it now.");
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+        }
+        else { // Geolocation not required
+            String currentUserId = currentUser.getUid();
+            // Add Entrant to Waitlist
+            eventViewModel.joinWaitlist(currentEventId, currentUserId, null); // Pass null for location
+            Toast.makeText(getContext(), "You have been added to the waitlist.", Toast.LENGTH_SHORT).show();
+
+            // Update and display new waitlist count
+            waitlistCount++;
+            eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
+
+            // Change the User state
+            isUserOnWaitList = !isUserOnWaitList;
+
+            // Change button state
+            updateButtonState();
+        }
+    }
+
+    @SuppressLint("MissingPermission") // Only called after checking permission
+    private void getLocationAndJoin() {
+        //
+        fusedLocationClient.getLastLocation().addOnSuccessListener(requireActivity(), location -> {
+            if (location != null) { // Location was found
+                /*
+                Taken from: https://stackoverflow.com/questions/11645273/getting-the-user-geopoint
+                    License: https://creativecommons.org/licenses/by-sa/3.0/
+                    Authored by: User
+                    Taken by: Avery Dancocks
+                    Taken on: 11/23/25
+                 */
+                // Getting location of entrant
+                GeoPoint entrantLocation;
+                entrantLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+                String currentUserId = currentUser.getUid();
+
+                // Add Entrant to Waitlist
+                eventViewModel.joinWaitlist(currentEventId, currentUserId, entrantLocation);
+                Toast.makeText(getContext(), "You have been added to the waitlist.", Toast.LENGTH_SHORT).show();
+
+                // Update and display new waitlist count
+                waitlistCount++;
+                eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
+
+                // Change the User state
+                isUserOnWaitList = !isUserOnWaitList;
+
+                // Change button state
+                updateButtonState();
+            }
+            else { // Location was not found
+                Toast.makeText(getContext(), "Could not get your location. Please enable location tracking and try again.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
+

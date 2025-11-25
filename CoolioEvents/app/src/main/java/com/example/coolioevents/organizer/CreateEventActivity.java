@@ -29,6 +29,7 @@ import com.example.coolioevents.util.QRCodeUtil;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -79,6 +80,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private Button btnCreate, btnPickPoster, btnTakePhoto;
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
+    private SwitchMaterial switchGeolocationVerification;
 
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
@@ -137,6 +139,7 @@ public class CreateEventActivity extends AppCompatActivity {
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
         btnPickPoster = findViewById(R.id.btnPickPoster);
         btnTakePhoto = findViewById(R.id.btnTakePhoto);
+        switchGeolocationVerification = findViewById(R.id.geolocation_switch);
 
         btnBack.setOnClickListener(v -> finish());
         btnPickPoster.setOnClickListener(v -> pickPosterLauncher.launch("image/*"));
@@ -321,6 +324,9 @@ public class CreateEventActivity extends AppCompatActivity {
         details.setPosterUrl(eventPosterPath);
         Event event = new Event(eventId, organizerId, details);
 
+        // Getting Geolocation Verification Boolean
+        boolean geolocationVerificationEnabled = switchGeolocationVerification.isChecked();
+
         Map<String, Object> map = new HashMap<>();
         map.put("eventId", eventId);
         map.put("details", details);
@@ -332,6 +338,7 @@ public class CreateEventActivity extends AppCompatActivity {
         map.put("cancelledEntrants", new ArrayList<String>());
         map.put("deepLink", deepLink);
         map.put("promoQrUrl", null);
+        map.put("geolocationVerificationEnabled", geolocationVerificationEnabled);
 
         // 1) Create Firestore doc
         db.collection("events").document(eventId).set(map)

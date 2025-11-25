@@ -253,6 +253,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
         sendNotifications = findViewById(R.id.sendNotificationsButton);
         ImageButton backButton = findViewById(R.id.organizer_event_back_button);
         ImageButton editButton = findViewById(R.id.organizer_event_edit_button);
+        ImageButton mapButton = findViewById(R.id.organizer_event_map_button);
 
 
         viewLists.setOnClickListener(v -> {
@@ -339,6 +340,29 @@ public class OrganizerEventActivity extends AppCompatActivity {
                 Intent intent = new Intent(OrganizerEventActivity.this, EditEventActivity.class);
                 intent.putExtra("EVENT_ID", currentEventId);
                 startActivity(intent);
+            }
+        });
+
+        // Map Button onclick activity
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (currentEventId == null || currentEventId.isEmpty()) {
+                    Toast.makeText(OrganizerEventActivity.this,
+                            "Error: Event ID missing", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (currentEvent.isGeolocationVerificationEnabled()) {
+                    Intent intent = new Intent(OrganizerEventActivity.this, MapActivity.class);
+                    intent.putExtra("EVENT_ID", currentEventId);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(OrganizerEventActivity.this,
+                            "Enable Geolocation Verification", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

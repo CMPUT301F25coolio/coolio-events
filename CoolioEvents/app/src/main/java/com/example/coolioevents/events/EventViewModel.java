@@ -2,23 +2,30 @@ package com.example.coolioevents.events;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.Profile;
 import com.example.coolioevents.User;
+import com.example.coolioevents.WaitlistLocation;
 import com.example.coolioevents.organizer.Organizer;
 import com.example.coolioevents.services.LotteryResult;
 import com.example.coolioevents.services.LotteryService;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,6 +70,7 @@ public class EventViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Event>> eventList = new MutableLiveData<>(); // List of all events in db
     private final MutableLiveData<ArrayList<User>> organizerList = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<User>> entrantList = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<WaitlistLocation>> locationsList = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<EventImageData>> eventImageList = new MutableLiveData<>();
     private final MutableLiveData<Map<String, Organizer>> organizerMap = new MutableLiveData<Map<String, Organizer>>(); // Map of all organizers in db (key: userid, value: Organizer object)
 
@@ -147,6 +155,33 @@ public class EventViewModel extends ViewModel {
     }
 
     /**
+     * This function returns a LiveData ArrayList of WaitlistLocation objects
+     * that have the eventId matching the eventId parameter passed.
+     *
+     * @param eventId
+     *      The event ID to match in the WaitlistLocation objects
+     * @return
+     *      A MutableLiveData ArrayList of WaitlistLocations
+     */
+    public MutableLiveData<ArrayList<WaitlistLocation>> getWaitlistLocations(String eventId) {
+        ArrayList<WaitlistLocation> locations = new ArrayList<>();
+
+        db.collection("waitlist_locations").whereEqualTo("eventId", eventId).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        WaitlistLocation waitlistLocation = documentSnapshot.toObject(WaitlistLocation.class);
+                        locations.add(waitlistLocation);
+                    }
+                    locationsList.postValue(locations);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "Error getting waitlist locations", e);
+                    locationsList.postValue(null);
+                });
+        return locationsList;
+    }
+
+    /**
      * This function returns a LiveData ArrayList of Users that may be Organizers
      * or Entrants from firebase depending on the "role" parameter provided.
      * @param role
@@ -154,6 +189,11 @@ public class EventViewModel extends ViewModel {
      * @return
      *      A MutableLiveData ArrayList of Users where Users can be either
      *      Organizers or Entrants depending on the provided "role" argument
+     */
+    /*Taken from: Google Gemini
+        Prompt: Best way to return a list of objects from a viewmodel in firebase?
+        Taken by: Avery Dancocks
+        Taken on: 11/19/25
      */
     public MutableLiveData<ArrayList<User>> getUserList(String role) {
         ArrayList<User> users = new ArrayList<>();
@@ -234,7 +274,11 @@ public class EventViewModel extends ViewModel {
 
                         eventImageData.add(newEventImage);
 
-                        // Gemini - How do i get username from user Id to prevent firestore retrieval delay
+                        /*Taken from: Google Gemini
+                            Prompt: How do i get username from user Id to prevent firestore retrieval delay?
+                            Taken by: Avery Dancocks
+                            Taken on: 11/24/25
+                         */
                         // Do a task to look up the username
                         Task<DocumentSnapshot> userTask = db.collection("users").document(organizerId).get();
                         usernameLookupTasks.add(userTask);
@@ -268,34 +312,64 @@ public class EventViewModel extends ViewModel {
     }
 
     /*Taken from: Google Gemini
-                Prompt: How do i update a list on firestore?
-                Taken by: Avery Dancocks
-                Taken on: 10/29/25
+        Prompt: How do i update a list on firestore?
+        Taken by: Avery Dancocks
+        Taken on: 10/29/25
      */
     /**
      * Adds a user to an event's waitlist and updates the firebase.
+     * Also creates a waitlist location document if the location parameter
+     * passed is not null.
      *
      * @param eventId
      *      event that has the waitlist the user will be added to
      * @param userId
      *      the user that will be added to the event waitlist
+     * @param location
+     *      the GeoPoint location that the user is joining the waitlist from
      */
-    public void joinWaitlist(String eventId, String userId) {
+    public void joinWaitlist(String eventId, String userId, @Nullable GeoPoint location) {
         if (eventId == null || userId == null) {
             return;
         }
-        db.collection("events").document(eventId)
-                .update("waitlistEntrants", FieldValue.arrayUnion(userId))
+
+        /* Taken From: https://firebase.google.com/docs/firestore/manage-data/transactions#java_4
+            License: http://www.apache.org/licenses/LICENSE-2.0
+            Authored by: Firebase
+            Taken by: Avery Dancocks
+            Taken on: 11/24/25
+         */
+        WriteBatch batch = db.batch();
+
+        // Update Waitlist - always occurs
+        DocumentReference eventRef = db.collection("events").document(eventId);
+        batch.update(eventRef, "waitlistEntrants", FieldValue.arrayUnion(userId));
+
+        // Save Location - conditional
+        if (location != null) {// If location was provided
+            WaitlistLocation waitlistLocation = new WaitlistLocation(userId, eventId, location);
+
+            // Make a new location document
+            DocumentReference locationRef = db.collection("waitlist_locations").document();
+
+            // Set the new location in the batch
+            batch.set(locationRef, waitlistLocation);
+        }
+
+        // Commiting the batch
+        batch.commit()
                 .addOnSuccessListener(aVoid -> {
-                Log.d("ViewModel", "SUCCESS: User " + userId + " added to waitlist for event " + eventId);
+                    Log.d("ViewModel", "SUCCESS: User " + userId + " added to waitlist for event " + eventId);
                 })
                 .addOnFailureListener(e -> {
-                Log.e("ViewModel", "FAILURE: Could not update waitlist for event " + eventId, e);
-            });
+                    Log.e("ViewModel", "FAILURE: Could not update waitlist for event " + eventId, e);
+                });
+       
     }
 
     /**
      * Removes a user from an event's waitlist and updates the firebase.
+     * Also removes their waitlist location document if it exists.
      *
      * @param eventId
      *      event that has the waitlist the user will be removed from
@@ -306,14 +380,34 @@ public class EventViewModel extends ViewModel {
         if (eventId == null || userId == null) {
             return;
         }
-        db.collection("events").document(eventId)
-                .update("waitlistEntrants", FieldValue.arrayRemove(userId))
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("ViewModel", "SUCCESS: User " + userId + " removed from waitlist for event " + eventId);
+
+        // Update Waitlist - always occurs
+        DocumentReference eventRef = db.collection("events").document(eventId);
+        eventRef.update("waitlistEntrants", FieldValue.arrayRemove(userId));
+
+        // Remove waitlist location - if present
+        db.collection("waitlist_locations")
+                .whereEqualTo("eventId", eventId).whereEqualTo("userId", userId)
+                .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) { // A document was found
+                        DocumentReference locationRef = queryDocumentSnapshots.getDocuments().get(0).getReference();
+
+                        locationRef.delete()
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("ViewModel", "SUCCESS: User location was removed");
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("ViewModel", "FAILURE: Found, but could not delete location", e);
+                            });
+                    }
+                    else { // No document to delete
+                        Log.d("ViewModel", "No location document, nothing to delete");
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("ViewModel", "FAILURE: Could not update waitlist for event " + eventId, e);
+                    Log.e("ViewModel", "FAILURE: Could not look for location document", e);
                 });
+
     }
 
     /**
