@@ -32,7 +32,7 @@
             app:tint="#FFFFFF" />
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="188dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
@@ -42,6 +42,15 @@
             android:textStyle="bold" />
 
         <ImageButton
+            android:id="@+id/organizer_event_map_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Edit Event"
+            android:src="@drawable/ic_map"
+            app:tint="#FFFFFF" />
+
+        <ImageButton
             android:id="@+id/organizer_event_edit_button"
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -49,6 +58,7 @@
             android:contentDescription="Edit Event"
             android:src="@drawable/ic_edit_event"
             app:tint="#FFFFFF" />
+
     </LinearLayout>
 
     <!-- Poster -->

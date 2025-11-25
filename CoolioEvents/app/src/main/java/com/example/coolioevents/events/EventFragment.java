@@ -26,6 +26,8 @@ import com.bumptech.glide.Glide;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -356,8 +358,7 @@ public class EventFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Add userId to event waitlist
-                eventViewModel.getEventById(currentEventId).observe(getViewLifecycleOwner(), event -> {
-                    if (event != null) {
+                    if (currentEvent != null) {
                         String currentUserId = currentUser.getUid();
 
                         // Look at if user is on waitlist or not to see what the button click did
@@ -368,29 +369,20 @@ public class EventFragment extends Fragment {
                             // Update and display new waitlist count
                             waitlistCount--;
                             eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
+
+                            // Change the User state
+                            isUserOnWaitList = !isUserOnWaitList;
+                            // Change button state
+                            updateButtonState();
                         }
                         else { //User not currently in waiting list
-                            /**
-                            eventViewModel.joinWaitlist(currentEventId, currentUserId);
-                            Toast.makeText(getContext(), "You have been added to the waitlist.", Toast.LENGTH_SHORT).show();
-
-                            // Update and display new waitlist count
-                            waitlistCount++;
-                            eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
-                            */
-                            joinWaitListWithGeolocationCheck();
+                            joinWaitlistWithGeolocationCheck();
                         }
-
-                        // Change the User state
-                        isUserOnWaitList = !isUserOnWaitList;
-                        // Change button state
-                        updateButtonState();
                     }
                     else {
                         Toast.makeText(getContext(), "You were not added to the waitlist.", Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
+                }
         });
 
         // Accept invite button onclick activity

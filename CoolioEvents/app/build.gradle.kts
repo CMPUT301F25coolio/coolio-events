@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -58,6 +59,12 @@ dependencies {
 
     // Recycler View
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+
+    // Location
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
+    // Maps SDK for Android
+    implementation(libs.play.services.maps)
 
     //  Testing
     testImplementation(libs.junit)
