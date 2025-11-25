@@ -201,6 +201,12 @@ public class CreateEventActivity extends AppCompatActivity {
                                     return;
                                 }
 
+                                // Force end time to be 11:59 PM
+                                endDateCalendar.set(Calendar.HOUR_OF_DAY, 23);
+                                endDateCalendar.set(Calendar.MINUTE, 59);
+                                endDateCalendar.set(Calendar.SECOND, 0);
+                                endDateCalendar.set(Calendar.MILLISECOND, 0);
+
                                 String text = dateFormat.format(startDateCalendar.getTime())
                                         + " - " + dateFormat.format(endDateCalendar.getTime());
                                 etRegistrationPeriod.setText(text);
@@ -261,6 +267,7 @@ public class CreateEventActivity extends AppCompatActivity {
      * This method creates a new event using input fields and uploads the details to Firebase Firestore.
      */
     private void createEvent() {
+        btnCreate.setEnabled(false);  // prevent double click
         String title = etTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
         String registrationPeriod = etRegistrationPeriod.getText().toString().trim();
@@ -270,6 +277,7 @@ public class CreateEventActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) ||
                 TextUtils.isEmpty(registrationPeriod) || TextUtils.isEmpty(entrantLimitStr)) {
             Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+            btnCreate.setEnabled(true);  // allow retry
             return;
         }
 
@@ -278,6 +286,7 @@ public class CreateEventActivity extends AppCompatActivity {
             entrantLimit = Integer.parseInt(entrantLimitStr);
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Entrant limit must be a number", Toast.LENGTH_SHORT).show();
+            btnCreate.setEnabled(true);  // allow retry
             return;
         }
 
@@ -286,6 +295,7 @@ public class CreateEventActivity extends AppCompatActivity {
             eventDateTime = dateTimeFormat.parse(etEventDateTime.getText().toString());
         } catch (Exception e) {
             Toast.makeText(this, "Invalid event date/time format", Toast.LENGTH_SHORT).show();
+            btnCreate.setEnabled(true);  // allow retry
             return;
         }
 
@@ -326,8 +336,10 @@ public class CreateEventActivity extends AppCompatActivity {
         // 1) Create Firestore doc
         db.collection("events").document(eventId).set(map)
                 .addOnSuccessListener(aVoid -> uploadAssetsAndFinish(eventId, deepLink))
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to create event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    btnCreate.setEnabled(true);  // allow retry
+                });
     }
 
     /**

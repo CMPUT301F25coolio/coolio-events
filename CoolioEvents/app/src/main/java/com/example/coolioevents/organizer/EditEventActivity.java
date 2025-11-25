@@ -51,6 +51,28 @@ import java.util.Locale;
  * EditEventActivity: lets the organizer tweak an existing event.
  * Same vibe as CreateEventActivity, but we prefill fields and update
  * the Firestore doc instead of making a new one.
+ * Copyright 2025 Aasta Tsai
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This class if for editing an event's event Details.
+ * It has the same behaviour as CreateEventActivity but pre-fills fields
+ * and updates the existing Firestore document instead of creating a new one.
+ *
+ * @author Aasta Tsai
+ * @version 1.0
+ * @since 2025-11-16
  */
 public class EditEventActivity extends AppCompatActivity {
 
@@ -277,6 +299,11 @@ public class EditEventActivity extends AppCompatActivity {
                                     Toast.makeText(this, "End date cannot be before start date", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+                                // Force end time to be 11:59 PM
+                                endDateCalendar.set(Calendar.HOUR_OF_DAY, 23);
+                                endDateCalendar.set(Calendar.MINUTE, 59);
+                                endDateCalendar.set(Calendar.SECOND, 0);
+                                endDateCalendar.set(Calendar.MILLISECOND, 0);
 
                                 String text = dateFormat.format(startDateCalendar.getTime())
                                         + " - " + dateFormat.format(endDateCalendar.getTime());
@@ -325,6 +352,7 @@ public class EditEventActivity extends AppCompatActivity {
      * Save updated fields and then upload poster / QR if needed.
      */
     private void saveChanges() {
+        btnSave.setEnabled(false);  // prevent double click
         String title = etTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
         String registrationPeriod = etRegistrationPeriod.getText().toString().trim();

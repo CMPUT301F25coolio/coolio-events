@@ -23,6 +23,15 @@ public class EntrantStatusAdapter extends RecyclerView.Adapter<EntrantStatusAdap
     private final List<String> entrantIds = new ArrayList<>();
     private final List<String> registeredValues = new ArrayList<>();
 
+    public interface OnItemClickListener {
+        void onItemClick(String entrantId, boolean isRegistered);
+    }
+
+    private OnItemClickListener listener;
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public void update(List<String> ids, boolean registeredYes) {
         entrantIds.clear();
         registeredValues.clear();
@@ -46,8 +55,19 @@ public class EntrantStatusAdapter extends RecyclerView.Adapter<EntrantStatusAdap
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
+        String id = entrantIds.get(position);
+        String registerStatus = registeredValues.get(position);
+
         holder.uidText.setText(entrantIds.get(position));
         holder.statusText.setText(registeredValues.get(position));
+
+        boolean isRegistered = registerStatus.equals("Yes");
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(id, isRegistered);
+            }
+        });
     }
 
     @Override
