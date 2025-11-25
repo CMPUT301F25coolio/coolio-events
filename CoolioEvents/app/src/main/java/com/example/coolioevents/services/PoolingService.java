@@ -68,8 +68,9 @@ public class PoolingService {
             if (wait.isEmpty()) {
                 throw new IllegalStateException("No one in waitlist");
             }
-            // popfront then push and simple queue semantics
-            String promoted = wait.remove(0);
+            // pick a random entrant from the waitlist instead of always index 0
+            int randomIndex = new java.util.Random().nextInt(wait.size());
+            String promoted = wait.remove(randomIndex);
             chosen.add(promoted);
             // write both arrays back within the same transaction
             transaction.update(eventRef, "waitlistEntrants", wait);
