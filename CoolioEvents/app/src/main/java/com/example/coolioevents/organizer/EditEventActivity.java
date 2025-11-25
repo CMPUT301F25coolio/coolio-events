@@ -29,12 +29,11 @@ import com.example.coolioevents.util.QRCodeUtil;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.zxing.WriterException;      // for QR generation errors
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,14 +48,20 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * EditEventActivity: same behaviour as CreateEventActivity but pre-fills fields
- * and updates the existing Firestore document instead of creating a new one.
+ * EditEventActivity: lets the organizer tweak an existing event.
+ * Same vibe as CreateEventActivity, but we prefill fields and update
+ * the Firestore doc instead of making a new one.
  */
 public class EditEventActivity extends AppCompatActivity {
 
     private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventDateTime, etEventLocation;
     private ChipGroup etTags;
     private Button btnSave, btnPickPoster, btnTakePhoto;
+
+    // new: button + image for QR on the edit screen
+    private Button btnGenerateQr;
+    private ImageView imgQrPreview;
+
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
 
@@ -76,7 +81,7 @@ public class EditEventActivity extends AppCompatActivity {
     private String eventId; // event being edited
 
     /**
-     * ActivityResultLauncher to pick poster image from gallery.
+     * Launcher for picking a poster from gallery.
      */
     private final ActivityResultLauncher<String> pickPosterLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
@@ -103,11 +108,16 @@ public class EditEventActivity extends AppCompatActivity {
         etEventDateTime = findViewById(R.id.etEventDateTime);
         etEventLocation = findViewById(R.id.etEventLocation);
         etTags = findViewById(R.id.etTags);
+
         btnSave = findViewById(R.id.btnSave);
         btnBack = findViewById(R.id.btnBack);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
         btnPickPoster = findViewById(R.id.btnPickPoster);
         btnTakePhoto = findViewById(R.id.btnTakePhoto);
+
+        // new QR views from XML
+        btnGenerateQr = findViewById(R.id.btnGenerateQr);
+        imgQrPreview = findViewById(R.id.imgQrPreview);
 
         btnBack.setOnClickListener(v -> finish());
         btnPickPoster.setOnClickListener(v -> pickPosterLauncher.launch("image/*"));
@@ -118,11 +128,12 @@ public class EditEventActivity extends AppCompatActivity {
 
         etEventDateTime.setFocusable(false);
         etEventDateTime.setOnClickListener(v -> showDateTimePicker());
+
         etTags.setOnCheckedStateChangeListener((chipGroup, checkedTags) -> {
             updateTags(chipGroup, checkedTags);
         });
 
-        // get event id from intent
+        // grab event id from the intent that launched this screen
         Intent intent = getIntent();
         eventId = intent.getStringExtra("EVENT_ID");
 
@@ -134,19 +145,41 @@ public class EditEventActivity extends AppCompatActivity {
             return;
         }
 
+        // save button keeps same behaviour
         btnSave.setOnClickListener(v -> saveChanges());
+
+        // when organizer taps this, we build a QR for this event and show it
+        btnGenerateQr.setOnClickListener(v -> generateAndShowQr());
+    }
+
+    /**
+     * Build a QR bitmap for this event and show it in the preview box.
+     * Content is our deep link: coolioevents://event/<eventId>
+     */
+    private void generateAndShowQr() {
+        if (eventId == null || eventId.isEmpty()) {
+            Toast.makeText(this, "Missing event id, can’t make QR", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String deepLink = "coolioevents://event/" + eventId;
+
+        try {
+            Bitmap qrBitmap = QRCodeUtil.generateQRCode(deepLink);
+            imgQrPreview.setImageBitmap(qrBitmap);
+        } catch (WriterException e) {
+            Toast.makeText(this, "Failed to make QR: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadEventAndPrefill(String eventId) {
         db.collection("events").document(eventId).get()
                 .addOnSuccessListener((DocumentSnapshot doc) -> {
                     if (doc.exists()) {
-                        // attempt to convert to Event if your Event class exists
                         Event event = doc.toObject(Event.class);
                         if (event != null && event.getDetails() != null) {
                             EventDetails details = event.getDetails();
 
-                            // prefill text fields
                             etTitle.setText(details.getEventName());
                             etDescription.setText(details.getEventDescription());
                             if (details.getRegistrationPeriod() != null) {
@@ -168,29 +201,23 @@ public class EditEventActivity extends AppCompatActivity {
                                 endDateCalendar = Calendar.getInstance();
                                 endDateCalendar.setTime(details.getEndDate());
                             }
+
+                            // debug: see tags in log if needed
                             for (String tag : event.getDetails().getTags()){
                                 System.out.println(tag);
                             }
-                            // Pre"check" already selected tags for the event
-                                    /*Taken from: Google Gemini
-                                    Prompt: how to check all chips in a chipgroup java android stuydio
-                                    Taken by: Ethan Diep
-                                    Taken on: 11/22/25
-                                         */
-                                for (int i=0; i < etTags.getChildCount(); i++){
-                                    View child = etTags.getChildAt(i);
-                                    if (child instanceof Chip){
-                                        if (event.getDetails().getTags().contains(((Chip) child).getText().toString())){
-                                            etTags.check(child.getId());
-                                        }
+
+                            // pre-check any tags this event already has
+                            for (int i = 0; i < etTags.getChildCount(); i++) {
+                                View child = etTags.getChildAt(i);
+                                if (child instanceof Chip) {
+                                    if (event.getDetails().getTags().contains(((Chip) child).getText().toString())) {
+                                        etTags.check(child.getId());
                                     }
                                 }
+                            }
 
-
-
-
-                            // if posterUrl is a local path you could attempt to show it.
-                            // We leave poster preview alone for remote URLs (Firebase Storage).
+                            // if posterUrl is a local file path, try to show it
                             if (details.getPosterUrl() != null && details.getPosterUrl().startsWith("file")) {
                                 try {
                                     Uri u = Uri.parse(details.getPosterUrl());
@@ -215,7 +242,6 @@ public class EditEventActivity extends AppCompatActivity {
                     eventDateTimeCalendar.set(Calendar.MONTH, month);
                     eventDateTimeCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                    // Now show time picker
                     TimePickerDialog timePicker = new TimePickerDialog(this,
                             (timeView, hourOfDay, minute) -> {
                                 eventDateTimeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -274,7 +300,7 @@ public class EditEventActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             if (requestCode == Camera.REQUEST_IMAGE_CAPTURE) {
-                // Picture taken with camera
+                // camera poster
                 eventPosterPath = camera.getCurrentPhotoPath();
                 if (eventPosterPath != null) {
                     File file = new File(eventPosterPath);
@@ -284,7 +310,7 @@ public class EditEventActivity extends AppCompatActivity {
                 }
             }
             else if (requestCode == Camera.REQUEST_IMAGE_PICK && data != null) {
-                // Image picked from gallery
+                // gallery poster
                 Uri selectedImageUri = data.getData();
                 if (selectedImageUri != null) {
                     posterUri = selectedImageUri;
@@ -296,7 +322,7 @@ public class EditEventActivity extends AppCompatActivity {
     }
 
     /**
-     * Save changes to existing event document and upload assets if needed.
+     * Save updated fields and then upload poster / QR if needed.
      */
     private void saveChanges() {
         String title = etTitle.getText().toString().trim();
@@ -330,7 +356,6 @@ public class EditEventActivity extends AppCompatActivity {
             return;
         }
 
-        // Read the existing details object and update fields
         db.collection("events").document(eventId).get()
                 .addOnSuccessListener(doc -> {
                     if (!doc.exists()) {
@@ -343,7 +368,6 @@ public class EditEventActivity extends AppCompatActivity {
                     if (event != null && event.getDetails() != null) {
                         details = event.getDetails();
                     } else {
-                        // fallback: build new details if mapping failed
                         details = new EventDetails();
                     }
 
@@ -356,15 +380,14 @@ public class EditEventActivity extends AppCompatActivity {
                     if (eventDateTimeCalendar != null) details.setEventDateTime(eventDateTimeCalendar.getTime());
                     if (startDateCalendar != null) details.setStartDate(startDateCalendar.getTime());
                     if (endDateCalendar != null) details.setEndDate(endDateCalendar.getTime());
-                    // posterUrl will be updated after poster upload (if any)
-                    // write updated details back to doc (other fields remain)
+
                     Map<String, Object> updates = new HashMap<>();
                     updates.put("details", details);
 
                     db.collection("events").document(eventId)
                             .update(updates)
                             .addOnSuccessListener(aVoid -> {
-                                // Now upload assets (poster + QR) same as create
+                                // same deep link format as everywhere else
                                 uploadAssetsAndFinish(eventId, "coolioevents://event/" + eventId);
                             })
                             .addOnFailureListener(e1 -> Toast.makeText(EditEventActivity.this, "Failed to save details: " + e1.getMessage(), Toast.LENGTH_LONG).show());
@@ -373,14 +396,14 @@ public class EditEventActivity extends AppCompatActivity {
     }
 
     /**
-     * Upload poster if selected and generate + upload QR; then update posterUrl/promoQrUrl fields.
-     * Reused (with minimal changes) from CreateEventActivity.
+     * Uploads poster (if changed) and a QR image to Firebase Storage,
+     * then stores the URLs back onto the event doc.
      */
     private void uploadAssetsAndFinish(String eventId, String deepLink) {
         StorageReference postersRef = storage.getReference().child("posters/" + eventId + ".jpg");
         StorageReference qrRef = storage.getReference().child("qrcodes/" + eventId + ".png");
 
-        // Poster upload task
+        // Poster upload task (optional)
         var posterTask = Tasks.forResult((String) null);
         if (posterUri != null) {
             try {
@@ -434,24 +457,16 @@ public class EditEventActivity extends AppCompatActivity {
     }
 
     /**
-     * This method updates the event's selectedTags list to match what is currently selected
-     * on the selected chips (tags). Limits the amount of selected tags to 3
-     *
-     * @param chipGroup
-     *      Chip group to get selected tags from
-     * @param checkedTags
-     *      List of checkedTags viewIds
+     * Syncs selected tags list with checked chips (max 3 tags).
      */
     private void updateTags(ChipGroup chipGroup, List<Integer> checkedTags) {
-        ArrayList<String> newSelectTags = new ArrayList<>(); // Newly selected tags to be put into selectedTags
-        if (checkedTags.size() < 4)
-            // Limit the number of tags to be 3
+        ArrayList<String> newSelectTags = new ArrayList<>();
+        if (checkedTags.size() < 4) {
             for (Integer tagId : checkedTags) {
                 Chip tag = chipGroup.findViewById(tagId);
                 newSelectTags.add(tag.getText().toString());
             }
-        else {
-            // If tag size is currently 3, dont add any tag, instead remove all tags and warn user
+        } else {
             chipGroup.clearCheck();
             Toast.makeText(this, "Max of 3 tags allowed - tags reset", Toast.LENGTH_SHORT).show();
         }
@@ -460,5 +475,3 @@ public class EditEventActivity extends AppCompatActivity {
         System.out.println(selectedTags);
     }
 }
-
-

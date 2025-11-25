@@ -304,9 +304,21 @@ public class OrganizerEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PoolingService poolingService = new PoolingService();
-                poolingService.drawReplacement(currentEventId);
-                numberInWaitlist--; // Update this local value
-                updateButtonState();
+                poolingService.drawReplacement(currentEventId)
+                        .addOnSuccessListener(uid -> {
+                            Toast.makeText(OrganizerEventActivity.this,
+                                    "Selected replacement: " + uid,
+                                    Toast.LENGTH_SHORT).show();
+
+                            numberInWaitlist--;
+                            updateButtonState();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(OrganizerEventActivity.this,
+                                    "Failed: " + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        });
+
             }
         });
 
