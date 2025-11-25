@@ -49,5 +49,12 @@
             android:layout_height="wrap_content"
             android:text="Edit" />
 
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="184dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#E60404"
+            android:text="Logout" />
+
     </LinearLayout>
 </ScrollView>

@@ -27,6 +27,7 @@ package com.example.coolioevents;
  * @since 2025-11-07
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.coolioevents.authentication.WelcomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -60,8 +62,11 @@ public class ProfileFragment extends Fragment {
 //    TextView displaying the user's email address
     private TextView textEmail;
 
-//    Button allowing the user to navigate to the UpdateProfileFragment
+//    Button allowing the user to logout
     private Button btnEditProfile;
+
+//    Button allowing the user to navigate to the UpdateProfileFragment
+    private Button logoutButton;
 
 //    Firebase Authentication instance used to identify the logged-in user
     private FirebaseAuth auth;
@@ -93,6 +98,7 @@ public class ProfileFragment extends Fragment {
         textName = view.findViewById(R.id.text_name);
         textEmail = view.findViewById(R.id.text_email);
         btnEditProfile = view.findViewById(R.id.btn_edit_profile);
+        logoutButton = view.findViewById(R.id.logoutButton);
 
         // Initialize Firebase services
         auth = FirebaseAuth.getInstance();
@@ -108,6 +114,11 @@ public class ProfileFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
+
+        logoutButton.setOnClickListener(v -> {
+            logout(); // If logout button pressed - perform logout
+        }
+        );
 
         return view;
     }
@@ -150,5 +161,17 @@ public class ProfileFragment extends Fragment {
                     Log.e("ProfileFragment", "Error fetching profile", e);
                     Toast.makeText(getContext(), "Error loading profile", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    /**
+     * This method signs the user out of their account - it
+     * signs out of the current user in mAuth, and
+     * sends user back to the welcome screen
+     */
+    private void logout(){
+        Intent intent = new Intent(requireActivity(), WelcomeActivity.class);
+        auth.signOut();
+        startActivity(intent);
+        requireActivity().finish();
     }
 }

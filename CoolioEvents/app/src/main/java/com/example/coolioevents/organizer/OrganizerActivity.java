@@ -3,9 +3,12 @@ package com.example.coolioevents.organizer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.coolioevents.R;
+import com.example.coolioevents.authentication.WelcomeActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Copyright 2025 Aasta Tsai
@@ -38,7 +41,7 @@ import com.example.coolioevents.R;
  */
 
 public class OrganizerActivity extends AppCompatActivity {
-
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +52,7 @@ public class OrganizerActivity extends AppCompatActivity {
         View optMyEvents = findViewById(R.id.optMyEvents);
         View optMyProfile = findViewById(R.id.optMyProfile);
         View optSendNotification = findViewById(R.id.optSendNotification);
+        Button logoutButton = findViewById(R.id.logoutButton);
 
         // Click actions
         if (optMakeEvent != null) {
@@ -67,5 +71,21 @@ public class OrganizerActivity extends AppCompatActivity {
             optSendNotification.setOnClickListener(v ->
                     Toast.makeText(this, "Send Notification: coming soon", Toast.LENGTH_SHORT).show());
         }
+
+        logoutButton.setOnClickListener(v -> {
+            logout(); // If logout button pressed - perform logout
+        });
+    }
+
+    /**
+     * This method signs the user out of their account - it
+     * signs out of the current user in mAuth, and
+     * sends user back to the welcome screen
+     */
+    private void logout(){
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        mAuth.signOut();
+        startActivity(intent);
+        finish();
     }
 }
