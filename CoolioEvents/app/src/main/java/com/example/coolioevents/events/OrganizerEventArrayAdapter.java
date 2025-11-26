@@ -79,6 +79,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
         TextView eventLocation = view.findViewById(R.id.eventLocation);
         TextView eventRegPrd = view.findViewById(R.id.eventRegPeriod);
         TextView eventMaxEntrees = view.findViewById(R.id.eventmaxEntrees);
+        TextView eventMaxWaiting = view.findViewById(R.id.waitlistLimit);
         TextView eventStatus = view.findViewById(R.id.eventStatus);
         ChipGroup tagsChipGroup = view.findViewById(R.id.tagsGroup);
 
@@ -90,6 +91,7 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
         eventDescription.setText(String.format("Description: %s", event.getDetails().getEventDescription())); // Sets event description text
         eventRegPrd.setText(String.format("Registration Period: %s", event.getDetails().getRegistrationPeriod())); // Sets event registration period text
         eventMaxEntrees.setText(String.format("Entrant Limit: %s", String.valueOf(event.getDetails().getEntrantLimit()))); // Sets entrant limit organizer text
+        eventMaxWaiting.setText(String.format("Waiting List Limit: %s", String.valueOf(event.getDetails().getWaitingListLimit()))); // Sets waiting list limit organizer text);
 
         //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
         // Set event image with Glide

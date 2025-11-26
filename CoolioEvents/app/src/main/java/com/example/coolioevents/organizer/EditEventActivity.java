@@ -1,8 +1,5 @@
 package com.example.coolioevents.organizer;
 
-import com.example.coolioevents.organizer.Camera;
-import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -79,9 +76,9 @@ import java.util.Locale;
  */
 public class EditEventActivity extends AppCompatActivity {
 
-    private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventDateTime, etEventLocation;
+    private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etWaitingListLimit, etEventDateTime, etEventLocation;
     private ChipGroup etTags;
-    private Button btnSave, btnPickPoster, btnTakePhoto;
+    private Button btnSave, btnPickPoster;
 
     // new: button + image for QR on the edit screen
     private Button btnGenerateQr;
@@ -95,7 +92,6 @@ public class EditEventActivity extends AppCompatActivity {
     private FirebaseStorage storage;
 
     private Uri posterUri = null;
-    private Camera camera;
     private String eventPosterPath;
 
     private Calendar startDateCalendar;
@@ -125,12 +121,11 @@ public class EditEventActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        camera = new Camera(this);
-
         etTitle = findViewById(R.id.etEventTitle);
         etDescription = findViewById(R.id.etEventDescription);
         etRegistrationPeriod = findViewById(R.id.etRegistrationPeriod);
         etEntrantLimit = findViewById(R.id.etEntrantLimit);
+        etWaitingListLimit = findViewById(R.id.etWaitingListLimit);
         etEventDateTime = findViewById(R.id.etEventDateTime);
         etEventLocation = findViewById(R.id.etEventLocation);
         etTags = findViewById(R.id.etTags);
@@ -139,7 +134,6 @@ public class EditEventActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
         btnPickPoster = findViewById(R.id.btnPickPoster);
-        btnTakePhoto = findViewById(R.id.btnTakePhoto);
         switchGeolocationVerification = findViewById(R.id.geolocation_switch);
 
         // new QR views from XML
@@ -148,7 +142,6 @@ public class EditEventActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
         btnPickPoster.setOnClickListener(v -> pickPosterLauncher.launch("image/*"));
-        btnTakePhoto.setOnClickListener(v -> camera.takePicture(this));
 
         etRegistrationPeriod.setFocusable(false);
         etRegistrationPeriod.setOnClickListener(v -> showDateRangePicker());
@@ -219,6 +212,9 @@ public class EditEventActivity extends AppCompatActivity {
                                 etRegistrationPeriod.setText(details.getRegistrationPeriod());
                             }
                             etEntrantLimit.setText(String.valueOf(details.getEntrantLimit()));
+                            if (details.getWaitingListLimit() != null){
+                                etWaitingListLimit.setText(details.getWaitingListLimit());
+                            }
                             if (details.getEventDateTime() != null) {
                                 eventDateTimeCalendar = Calendar.getInstance();
                                 eventDateTimeCalendar.setTime(details.getEventDateTime());
@@ -345,25 +341,13 @@ public class EditEventActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == Camera.REQUEST_IMAGE_CAPTURE) {
-                // Picture taken with camera
-                eventPosterPath = camera.getCurrentPhotoPath();
-                if (eventPosterPath != null) {
-                    File file = new File(eventPosterPath);
-                    posterUri = Uri.fromFile(file);
-                    Bitmap bitmap = BitmapFactory.decodeFile(eventPosterPath);
-                    imgPosterPreview.setImageBitmap(bitmap);
-                }
-            }
-            else if (requestCode == Camera.REQUEST_IMAGE_PICK && data != null) {
+        if (requestCode == 101 && resultCode == RESULT_OK && data != null) {
                 // Image picked from gallery
                 Uri selectedImageUri = data.getData();
                 if (selectedImageUri != null) {
                     posterUri = selectedImageUri;
                     imgPosterPreview.setImageURI(posterUri);
                 }
-            }
             Toast.makeText(this, "Poster photo added successfully", Toast.LENGTH_SHORT).show();
         }
     }
@@ -377,6 +361,7 @@ public class EditEventActivity extends AppCompatActivity {
         String description = etDescription.getText().toString().trim();
         String registrationPeriod = etRegistrationPeriod.getText().toString().trim();
         String entrantLimitStr = etEntrantLimit.getText().toString().trim();
+        String waitingLimitStr = etWaitingListLimit.getText().toString().trim();
         String eventLocation = etEventLocation.getText().toString().trim();
 
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) ||
@@ -392,6 +377,26 @@ public class EditEventActivity extends AppCompatActivity {
             Toast.makeText(this, "Entrant limit must be a number", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // optional waitlist limit (parse first)
+        Integer waitingListLimit = null;
+        if (!waitingLimitStr.isEmpty()) {
+            try {
+                waitingListLimit = Integer.parseInt(waitingLimitStr);
+                if (waitingListLimit <= 0) {
+                    Toast.makeText(this, "Waiting list limit must be greater than 0", Toast.LENGTH_SHORT).show();
+                    btnSave.setEnabled(true);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Waiting list limit must be a number", Toast.LENGTH_SHORT).show();
+                btnSave.setEnabled(true);
+                return;
+            }
+        }
+
+        // make a final copy so lambda can capture it
+        final Integer waitingListLimitFinal = waitingListLimit;
 
         Date eventDateTime = null;
         try {
@@ -425,6 +430,10 @@ public class EditEventActivity extends AppCompatActivity {
                     details.setEventDescription(description);
                     details.setRegistrationPeriod(registrationPeriod);
                     details.setEntrantLimit(entrantLimit);
+                    // only overwrite waitingListLimit if user provided a positive number
+                    if (waitingListLimitFinal != null) {
+                        details.setWaitingListLimit(waitingListLimitFinal);
+                    }
                     details.setEventLocation(eventLocation);
                     details.setTags(selectedTags);
                     if (eventDateTimeCalendar != null) details.setEventDateTime(eventDateTimeCalendar.getTime());
