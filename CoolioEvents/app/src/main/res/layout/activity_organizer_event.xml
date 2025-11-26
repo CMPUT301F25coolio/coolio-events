@@ -61,283 +61,313 @@
 
     </LinearLayout>
 
-    <!-- Poster -->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/eventViewPoster"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:shapeAppearance="@style/roundedcornerimageview"
-        tools:srcCompat="@tools:sample/avatars"
-        android:scaleType="centerCrop"/>
-
-    <!-- Title -->
-    <TextView
-        android:id="@+id/eventViewName"
-        android:layout_width="280dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:autoSizeTextType="uniform"
-        android:text="Event Title"
-        app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-    <!-- Organizer (poster) -->
-    <TextView
-        android:id="@+id/eventViewOrganizer"
-        android:layout_width="280dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="5dp"
-        android:autoSizeTextType="uniform"
-        android:text="Posted By: Organizer"
-        app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewName" />
-
-    <!-- Description -->
-    <TextView
-        android:id="@+id/eventViewDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:lineSpacingExtra="4dp"
-        android:text="This is the event description. This describes what the event is about, isn't that crazy? Pretty amazing event description right here if you ask me. Wow"
-        android:textColor="#424242"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewPoster" />
-
-    <!-- Event Details Section -->
-    <TextView
-        android:id="@+id/eventViewTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:drawablePadding="8dp"
-        android:text="Time: Month Day Year | Time"
-        android:textColor="#212121"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewDescription" />
-
-    <TextView
-        android:id="@+id/eventViewLocation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:drawablePadding="8dp"
-        android:text="Location: 123 Address, 567 231"
-        android:textColor="#212121"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewTime" />
-
-    <TextView
-        android:id="@+id/eventViewRegistrationPeriod"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:drawablePadding="8dp"
-        android:text="Registration Period: Month/Day/Year - Month/Day/Year"
-        android:textColor="#212121"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewLocation" />
-
-    <TextView
-        android:id="@+id/eventViewLimit"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:drawablePadding="8dp"
-        android:text="Max Entrees: 0"
-        android:textColor="#212121"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewRegistrationPeriod" />
-
-    <!-- Event Status -->
-    <TextView
-        android:id="@+id/eventViewEventStatusLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:drawablePadding="8dp"
-        android:text="Event Status: "
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
-
-    <!-- User Status -->
-
-    <TextView
-        android:id="@+id/eventViewEventStatus"
-        android:layout_width="100dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/greenshapebackground"
-        android:gravity="center"
-        android:text="Open"
-        android:textColor="@color/white"
-        android:textSize="17sp"
-        app:layout_constraintStart_toEndOf="@+id/eventViewEventStatusLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
-
-    <!-- Tags -->
-
-    <!-- Number of people in waitlist -->
-
-    <!-- Organizer Action Buttons -->
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/tagsGroup"
-        android:layout_width="350dp"
-        android:layout_height="40dp"
-
-        android:layout_marginStart="2dp"
-        android:clickable="false"
-        android:focusable="false"
-        app:layout_constraintStart_toEndOf="@+id/tagLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatus">
-
-
-    </com.google.android.material.chip.ChipGroup>
-
-    <TextView
-        android:id="@+id/tagLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Tags:"
-        android:textSize="17dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatusLabel" />
-
-    <Button
-        android:id="@+id/sendNotificationsButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="40dp"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:text="Send Notifications"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="#2962FF"
-        app:cornerRadius="8dp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/draw_new_user_button"
-        app:layout_constraintVertical_bias="0.027" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-    <TextView
-        android:id="@+id/eventWaitlistEntrantCount"
-        android:layout_width="180dp"
-        android:layout_height="20dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp">
 
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="212dp"
-        android:autoSizeTextType="uniform"
-        android:background="@drawable/purplecircularbackground"
+            <!-- Poster -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/eventViewPoster"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearance="@style/roundedcornerimageview"
+                tools:srcCompat="@tools:sample/avatars" />
 
-        android:fontFamily="@font/clearsans_bold"
-        android:gravity="center"
-        android:text="0 PEOPLE IN WAITLIST"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatusLabel" />
+            <!-- Title -->
+            <TextView
+                android:id="@+id/eventViewName"
+                android:layout_width="280dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:autoSizeTextType="uniform"
+                android:text="Event Title"
+                app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/view_lists_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="40dp"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:text="View Event Lists"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="#2962FF"
-        app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatus" />
+            <!-- Organizer (poster) -->
+            <TextView
+                android:id="@+id/eventViewOrganizer"
+                android:layout_width="280dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="5dp"
+                android:autoSizeTextType="uniform"
+                android:text="Posted By: Organizer"
+                app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewName" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/draw_new_user_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="40dp"
-        android:enabled="false"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:text="Draw New User"
-        android:textAllCaps="false"
-        android:textColor="#A9A9A9"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="#FFFFFF"
-        app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/draw_lottery_button"
-        app:strokeColor="#A9A9A9"
-        app:strokeWidth="2dp" />
+            <!-- Description -->
+            <TextView
+                android:id="@+id/eventViewDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:lineSpacingExtra="4dp"
+                android:text="This is the event description. This describes what the event is about, isn't that crazy? Pretty amazing event description right here if you ask me. Wow"
+                android:textColor="#424242"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewPoster" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/draw_lottery_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
-        android:enabled="false"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:text="Draw From Lottery"
-        android:textAllCaps="false"
-        android:textColor="#A9A9A9"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="#FFFFFF"
-        app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_lists_button"
-        app:strokeColor="#A9A9A9"
-        app:strokeWidth="2dp" />
+            <!-- Event Details Section -->
+            <TextView
+                android:id="@+id/eventViewTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:drawablePadding="8dp"
+                android:text="Time: Month Day Year | Time"
+                android:textColor="#212121"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewDescription" />
+
+            <TextView
+                android:id="@+id/eventViewLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:drawablePadding="8dp"
+                android:text="Location: 123 Address, 567 231"
+                android:textColor="#212121"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewTime" />
+
+            <TextView
+                android:id="@+id/eventViewRegistrationPeriod"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:drawablePadding="8dp"
+                android:text="Registration Period: Month/Day/Year - Month/Day/Year"
+                android:textColor="#212121"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewLocation" />
+
+            <TextView
+                android:id="@+id/eventViewLimit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:drawablePadding="8dp"
+                android:text="Max Entrees: 0"
+                android:textColor="#212121"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewRegistrationPeriod" />
+
+            <TextView
+                android:id="@+id/eventViewWaitlistLimit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:drawablePadding="8dp"
+                android:text="Waitlist Limit: 0"
+                android:textColor="#212121"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
+
+            <!-- Event Status -->
+            <TextView
+                android:id="@+id/eventViewEventStatusLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:drawablePadding="8dp"
+                android:text="Event Status: "
+                android:textSize="17sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewWaitlistLimit" />
+
+            <!-- User Status -->
+
+            <TextView
+                android:id="@+id/eventViewEventStatus"
+                android:layout_width="100dp"
+                android:layout_height="22dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/greenshapebackground"
+                android:gravity="center"
+                android:text="Open"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintStart_toEndOf="@+id/eventViewEventStatusLabel"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewWaitlistLimit" />
+
+            <!-- Tags -->
+
+            <!-- Number of people in waitlist -->
+
+            <!-- Organizer Action Buttons -->
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/tagsGroup"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+
+                android:layout_marginStart="2dp"
+                android:clickable="false"
+                android:focusable="false"
+                app:layout_constraintStart_toEndOf="@+id/tagLabel"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatus">
+
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/tagLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Tags:"
+                android:textSize="17dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatusLabel" />
+
+            <Button
+                android:id="@+id/sendNotificationsButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="40dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="Send Notifications"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:backgroundTint="#2962FF"
+                app:cornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/draw_new_user_button" />
+
+            <TextView
+                android:id="@+id/eventWaitlistEntrantCount"
+                android:layout_width="180dp"
+                android:layout_height="20dp"
+
+                android:layout_marginTop="48dp"
+                android:layout_marginEnd="212dp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/purplecircularbackground"
+
+                android:fontFamily="@font/clearsans_bold"
+                android:gravity="center"
+                android:text="0 PEOPLE IN WAITLIST"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatusLabel" />
+
+            <Button
+                android:id="@+id/view_lists_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="80dp"
+                android:layout_marginEnd="40dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="View Event Lists"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:backgroundTint="#2962FF"
+                app:cornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatus" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/draw_new_user_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="40dp"
+                android:enabled="false"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="Draw New User"
+                android:textAllCaps="false"
+                android:textColor="#A9A9A9"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:backgroundTint="#FFFFFF"
+                app:cornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/draw_lottery_button"
+                app:strokeColor="#A9A9A9"
+                app:strokeWidth="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/draw_lottery_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="40dp"
+                android:enabled="false"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="Draw From Lottery"
+                android:textAllCaps="false"
+                android:textColor="#A9A9A9"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:backgroundTint="#FFFFFF"
+                app:cornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_lists_button"
+                app:strokeColor="#A9A9A9"
+                app:strokeWidth="2dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,6 +36,8 @@ public class EventDetails {
     private String eventLocation;
     private String registrationPeriod; // string for display only, e.g. "2025/10/28 - 2025/11/11"
     private int entrantLimit;
+    private Integer waitingListLimit;
+    private int currentWaiting;
 
     private Date eventDateTime; // actual event date and time
     private Date postedDate;
@@ -50,22 +52,7 @@ public class EventDetails {
     }
 
 
-    public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, Date eventDateTime, String eventLocation,
-                         Date postedDate) {
-        this.eventName = eventName;
-        this.eventDescription = eventDescription;
-        this.eventDateTime = eventDateTime;
-        this.eventLocation = eventLocation;
-        this.registrationPeriod = registrationPeriod;
-        this.entrantLimit = entrantLimit;
-
-        this.postedDate = postedDate;
-
-        parseRegistrationPeriod();  // Convert to date objects
-    }
-
-
-    public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, Date eventDateTime, String eventLocation,
+    public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, Integer waitingListLimit, Date eventDateTime, String eventLocation,
                         Date postedDate, ArrayList<String> tags) {
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -73,6 +60,7 @@ public class EventDetails {
         this.eventLocation = eventLocation;
         this.registrationPeriod = registrationPeriod;
         this.entrantLimit = entrantLimit;
+        this.waitingListLimit = waitingListLimit;
         this.postedDate = postedDate;
         this.tags = tags;
 
@@ -124,6 +112,20 @@ public class EventDetails {
     public int getEntrantLimit() { return entrantLimit; }
 
     /**
+     * This method gets the entrant limit of the waiting list.
+     * @return
+     *      The entrant limit of the waiting list
+     */
+    public Integer getWaitingListLimit() { return waitingListLimit; }
+
+    /**
+     * This method gets the current entrants in the waiting list.
+     * @return
+     *      The current entrants in the waiting list
+     */
+    public int getCurrentWaiting() { return currentWaiting; }
+
+    /**
      * This method gets the status of the event.
      * @return
      *      The status of the event
@@ -134,12 +136,18 @@ public class EventDetails {
         }
 
         Date now = new Date();
-        if (now.after(startDate) && now.before(endDate)) {
+        boolean inRegistrationPeriod = now.after(startDate) && now.before(endDate);
+
+        // waiting list limit check
+        boolean waitingSpaceAvailable =
+                waitingListLimit == null || currentWaiting < waitingListLimit;
+
+        if (inRegistrationPeriod && waitingSpaceAvailable) {
             return "open";
-        } else {
-            return "closed";
         }
-        }
+
+        return "closed";
+    }
 
     /**
      * This method gets the date the the event was posted.
@@ -215,6 +223,20 @@ public class EventDetails {
      *      The limit of entrants in the event
      */
     public void setEntrantLimit(int entrantLimit) { this.entrantLimit = entrantLimit; }
+
+    /**
+     * This method sets the waiting list limit of the event to waitingListLimit
+     * @param waitingListLimit
+     *      The limit of entrants in the event
+     */
+    public void setWaitingListLimit(Integer waitingListLimit) { this.waitingListLimit = waitingListLimit; }
+
+    /**
+     * This method sets the current entrants in waiting list event to currentWaiting
+     * @param currentWaiting
+     *      The current entrants in the event waiting list
+     */
+    public void setCurrentWaiting(int currentWaiting) { this.currentWaiting = currentWaiting; }
 
     /**
      * This method sets the poster's Url of the event to posterUrl

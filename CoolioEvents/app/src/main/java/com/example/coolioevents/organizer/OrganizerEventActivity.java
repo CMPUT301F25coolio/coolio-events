@@ -77,6 +77,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
     private TextView eventLocationTextView;
     private TextView eventRegistrationPeriodTextView;
     private TextView eventEntrantLimitTextView;
+    private TextView eventWaitlistLimitTextView;
     private TextView eventStatusTextView;
     private ChipGroup tagsGroup;
     private TextView eventWaitlistEntrantCount;
@@ -154,6 +155,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
         eventLocationTextView = findViewById(R.id.eventViewLocation);
         eventRegistrationPeriodTextView = findViewById(R.id.eventViewRegistrationPeriod);
         eventEntrantLimitTextView = findViewById(R.id.eventViewLimit);
+        eventWaitlistLimitTextView = findViewById(R.id.eventViewWaitlistLimit);
         eventWaitlistEntrantCount = findViewById(R.id.eventWaitlistEntrantCount);
         eventStatusTextView = findViewById(R.id.eventViewEventStatus);
         tagsGroup = findViewById(R.id.tagsGroup);
