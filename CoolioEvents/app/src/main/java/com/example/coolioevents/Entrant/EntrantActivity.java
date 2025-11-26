@@ -75,6 +75,7 @@ public class EntrantActivity extends AppCompatActivity {
     private Fragment homeFragment; // Fragment for home screen
     private Fragment myEventsFragment; // Fragment for home screen
     private Fragment ProfileFragment; // Fragment for profile screen
+    private Fragment SearchFragment;
     private BottomNavigationView bottomNavView; // Bottom navigation bar
     private NotificationManager notificationManager; // Notification manager to handle notifications
     private NotificationViewModel notificationViewModel; // Notification viewmodel to access DB
@@ -97,6 +98,7 @@ public class EntrantActivity extends AppCompatActivity {
         homeFragment = new EntrantHomeFragment();
         myEventsFragment = new EntrantMyEventsFragment();
         ProfileFragment = new ProfileFragment();
+        SearchFragment = new EntrantSearchFragment();
 
         SwitchFragment(homeFragment); // Default fragment is home
 
@@ -141,10 +143,9 @@ public class EntrantActivity extends AppCompatActivity {
                 // If myevents item is selected in nav bar switch to home fragment
                 SwitchFragment(ProfileFragment);
             }
-//           else if (menuItem.getItemId() == R.id.search) {
-//                // TODO
-//                SwitchFragment(SearchEvent);
-//            }
+              else if (menuItem.getItemId() == R.id.search) {
+                  SwitchFragment(SearchFragment);
+              }
             return true;
         });
     }
