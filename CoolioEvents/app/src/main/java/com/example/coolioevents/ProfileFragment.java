@@ -41,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.coolioevents.Entrant.EntrantSettingsFragment;
 import com.example.coolioevents.authentication.WelcomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -64,6 +65,7 @@ public class ProfileFragment extends Fragment {
 
 //    Button allowing the user to logout
     private Button btnEditProfile;
+    private Button settingsButton;
 
 //    Button allowing the user to navigate to the UpdateProfileFragment
     private Button logoutButton;
@@ -98,6 +100,7 @@ public class ProfileFragment extends Fragment {
         textName = view.findViewById(R.id.text_name);
         textEmail = view.findViewById(R.id.text_email);
         btnEditProfile = view.findViewById(R.id.btn_edit_profile);
+        settingsButton = view.findViewById(R.id.btn_settings);
         logoutButton = view.findViewById(R.id.logoutButton);
 
         // Initialize Firebase services
@@ -119,6 +122,15 @@ public class ProfileFragment extends Fragment {
             logout(); // If logout button pressed - perform logout
         }
         );
+
+        // Navigate to settings
+        settingsButton.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new EntrantSettingsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
 
         return view;
     }
