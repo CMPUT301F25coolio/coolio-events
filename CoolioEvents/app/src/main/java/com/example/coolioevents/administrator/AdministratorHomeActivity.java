@@ -3,6 +3,7 @@ package com.example.coolioevents.administrator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +12,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.coolioevents.R;
+import com.example.coolioevents.authentication.WelcomeActivity;
 import com.example.coolioevents.organizer.CreateEventActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Copyright 2025 Juliane Phan
@@ -43,7 +46,7 @@ import com.example.coolioevents.organizer.CreateEventActivity;
  */
 
 public class AdministratorHomeActivity extends AppCompatActivity {
-
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,7 @@ public class AdministratorHomeActivity extends AppCompatActivity {
         View entrantsOption = findViewById(R.id.optAdminEntrants);
         View organizersOption = findViewById(R.id.optAdminOrganizers);
         View notificationsOption = findViewById(R.id.optAdminNotifications);
+        Button logoutButton = findViewById(R.id.logoutButton);
 
         // Events option onclick activity --> Leads to Events activity
         if (eventsOption != null) {
@@ -87,5 +91,21 @@ public class AdministratorHomeActivity extends AppCompatActivity {
                     startActivity(new Intent(this, AdministratorNotificationsActivity.class)));
         }
 
+        // If logout button pressed - perform logout
+        logoutButton.setOnClickListener(v -> {
+            logout();
+        });
+
+    }
+    /**
+     * This method signs the user out of their account - it
+     * signs out of the current user in mAuth, and
+     * sends user back to the welcome screen
+     */
+    private void logout(){
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        mAuth.signOut();
+        startActivity(intent);
+        finish();
     }
 }

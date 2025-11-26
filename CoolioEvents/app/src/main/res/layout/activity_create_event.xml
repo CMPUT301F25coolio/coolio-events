@@ -160,6 +160,29 @@
                 android:textColor="#212121"
                 android:textColorHint="#9E9E9E" />
 
+            <!-- Waiting list Limit -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Waiting list limit (optional)"
+                android:textColor="#212121"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/etWaitingListLimit"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/edittextbackground"
+                android:hint="Maximum entrants allowed in waiting list"
+                android:inputType="number"
+                android:maxLines="1"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="#212121"
+                android:textColorHint="#9E9E9E" />
+
             <!-- Event Date and Time -->
             <TextView
                 android:layout_width="wrap_content"
@@ -341,16 +364,6 @@
                 android:text="Choose Poster Image"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/btnTakePhoto"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/createbutton"
-                android:text="Take Photo"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"/>
 
         </LinearLayout>
 

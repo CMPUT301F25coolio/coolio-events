@@ -1,8 +1,5 @@
 package com.example.coolioevents.organizer;
 
-import com.example.coolioevents.organizer.Camera;
-import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -75,9 +72,9 @@ import java.util.Locale;
  */
 public class CreateEventActivity extends AppCompatActivity {
 
-    private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etEventDateTime, etEventLocation;
+    private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etWaitingListLimit, etEventDateTime, etEventLocation;
     private ChipGroup etTags;
-    private Button btnCreate, btnPickPoster, btnTakePhoto;
+    private Button btnCreate, btnPickPoster;
     private ImageButton btnBack;
     private ImageView imgPosterPreview;
     private SwitchMaterial switchGeolocationVerification;
@@ -87,7 +84,6 @@ public class CreateEventActivity extends AppCompatActivity {
     private FirebaseStorage storage;
 
     private Uri posterUri = null;
-    private Camera camera;
     private String eventPosterPath;
 
     private Calendar startDateCalendar;
@@ -124,12 +120,11 @@ public class CreateEventActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        camera = new Camera(this);
-
         etTitle = findViewById(R.id.etEventTitle);
         etDescription = findViewById(R.id.etEventDescription);
         etRegistrationPeriod = findViewById(R.id.etRegistrationPeriod);
         etEntrantLimit = findViewById(R.id.etEntrantLimit);
+        etWaitingListLimit = findViewById(R.id.etWaitingListLimit);
         etEventDateTime = findViewById(R.id.etEventDateTime);
         etEventLocation = findViewById(R.id.etEventLocation);
         etTags = findViewById(R.id.etTags);
@@ -138,12 +133,10 @@ public class CreateEventActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.organizer_event_back_button);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
         btnPickPoster = findViewById(R.id.btnPickPoster);
-        btnTakePhoto = findViewById(R.id.btnTakePhoto);
         switchGeolocationVerification = findViewById(R.id.geolocation_switch);
 
         btnBack.setOnClickListener(v -> finish());
         btnPickPoster.setOnClickListener(v -> pickPosterLauncher.launch("image/*"));
-        btnTakePhoto.setOnClickListener(v -> camera.takePicture(this));
 
         etRegistrationPeriod.setFocusable(false);
         etRegistrationPeriod.setOnClickListener(v -> showDateRangePicker());
@@ -241,25 +234,13 @@ public class CreateEventActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == Camera.REQUEST_IMAGE_CAPTURE) {
-                // Picture taken with camera
-                eventPosterPath = camera.getCurrentPhotoPath();
-                if (eventPosterPath != null) {
-                    File file = new File(eventPosterPath);
-                    posterUri = Uri.fromFile(file);
-                    Bitmap bitmap = BitmapFactory.decodeFile(eventPosterPath);
-                    imgPosterPreview.setImageBitmap(bitmap);
-                }
-            }
-            else if (requestCode == Camera.REQUEST_IMAGE_PICK && data != null) {
+        if (requestCode == 101 && resultCode == RESULT_OK && data != null) {
                 // Image picked from gallery
                 Uri selectedImageUri = data.getData();
                 if (selectedImageUri != null) {
                     posterUri = selectedImageUri;
                     imgPosterPreview.setImageURI(posterUri);
                 }
-            }
             Toast.makeText(this, "Poster photo added successfully", Toast.LENGTH_SHORT).show();
         }
     }
@@ -275,6 +256,7 @@ public class CreateEventActivity extends AppCompatActivity {
         String description = etDescription.getText().toString().trim();
         String registrationPeriod = etRegistrationPeriod.getText().toString().trim();
         String entrantLimitStr = etEntrantLimit.getText().toString().trim();
+        String waitingLimitStr = etWaitingListLimit.getText().toString().trim();
         String eventLocation = etEventLocation.getText().toString().trim();
 
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) ||
@@ -291,6 +273,24 @@ public class CreateEventActivity extends AppCompatActivity {
             Toast.makeText(this, "Entrant limit must be a number", Toast.LENGTH_SHORT).show();
             btnCreate.setEnabled(true);  // allow retry
             return;
+        }
+
+        //optional waitlist limit
+        Integer waitingListLimit = null;
+        if (!waitingLimitStr.isEmpty()) {
+            try {
+                int parsed = Integer.parseInt(waitingLimitStr);
+                if (parsed <= 0) {
+                    Toast.makeText(this, "Waiting list limit must be greater than 0", Toast.LENGTH_SHORT).show();
+                    btnCreate.setEnabled(true);
+                    return;
+                }
+                waitingListLimit = parsed;
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Waiting list limit must be a number", Toast.LENGTH_SHORT).show();
+                btnCreate.setEnabled(true);
+                return;
+            }
         }
 
         Date eventDateTime = null;
@@ -311,6 +311,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 description,
                 registrationPeriod,
                 entrantLimit,
+                waitingListLimit,
                 eventDateTime,
                 eventLocation,
                 new Date(),
@@ -320,7 +321,6 @@ public class CreateEventActivity extends AppCompatActivity {
             details.setEndDate(endDateCalendar.getTime());
         }
 
-        details.setPosterUrl(eventPosterPath);
         details.setPosterUrl(eventPosterPath);
         Event event = new Event(eventId, organizerId, details);
 
