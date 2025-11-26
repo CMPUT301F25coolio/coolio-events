@@ -67,6 +67,35 @@ public class EventDetails {
         parseRegistrationPeriod();  // Convert to date objects
     }
 
+    public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, Date eventDateTime, String eventLocation,
+                        Date postedDate) {
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventDateTime = eventDateTime;
+        this.eventLocation = eventLocation;
+        this.registrationPeriod = registrationPeriod;
+        this.entrantLimit = entrantLimit;
+
+        this.postedDate = postedDate;
+
+        parseRegistrationPeriod();  // Convert to date objects
+    }
+
+
+    public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, Date eventDateTime, String eventLocation,
+                        Date postedDate, ArrayList<String> tags) {
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventDateTime = eventDateTime;
+        this.eventLocation = eventLocation;
+        this.registrationPeriod = registrationPeriod;
+        this.entrantLimit = entrantLimit;
+        this.postedDate = postedDate;
+        this.tags = tags;
+
+        parseRegistrationPeriod();  // Convert to date objects
+    }
+
     // Getters
 
     /**
