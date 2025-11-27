@@ -49,6 +49,12 @@ Taken From: https://developer.android.com/develop/ui/views/layout/recyclerview
     Taken by: Avery Dancocks
     Taken on: 11/18/25
 */
+
+/*Taken from: Google Gemini
+    Prompt: How to implement onclick activity for a recycler view?
+    Taken by: Juliane Phan
+    Taken on: 11/20/2025
+*/
 public class ImagesGridAdapter extends RecyclerView.Adapter<ImagesGridAdapter.ViewHolder>{
     private final ArrayList<EventImageData> imageList;
     private final Context context;

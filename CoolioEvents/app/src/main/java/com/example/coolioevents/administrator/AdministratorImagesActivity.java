@@ -47,6 +47,12 @@ import java.util.ArrayList;
  * @since 2025-11-19
  */
 
+/*Taken from: Google Gemini
+    Prompt: How to implement onclick activity for a recycler view?
+    Taken by: Juliane Phan
+    Taken on: 11/20/2025
+*/
+
 public class AdministratorImagesActivity extends AppCompatActivity implements ImagesGridAdapter.OnItemClickListener {
     private EventViewModel eventViewModel;
     private RecyclerView imagesRecyclerView;
