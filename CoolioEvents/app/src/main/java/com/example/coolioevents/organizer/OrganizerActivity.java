@@ -65,7 +65,7 @@ public class OrganizerActivity extends AppCompatActivity {
         }
         if (optMyProfile != null) {
             optMyProfile.setOnClickListener(v ->
-                    Toast.makeText(this, "My Profile: coming soon", Toast.LENGTH_SHORT).show());
+                    startActivity(new Intent(this, OrganizerProfileActivity.class)));
         }
         if (optSendNotification != null) {
             optSendNotification.setOnClickListener(v ->

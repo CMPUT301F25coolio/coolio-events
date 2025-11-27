@@ -15,5 +15,23 @@
     <color name="thumb_geolocation_on">#4CBB17</color>
     <color name="track_geolocation_off">#80D22B2B</color>
     <color name="track_geolocation_on">#804CBB17</color>
+    <color name="light_purple">#CADFFF</color>
+    <color name="medium_purple">#9FBEEF</color>
+    <color name="dark_purple">#7699cf</color>
+    <color name="light_yellow">#FFFAD0</color>
+    <color name="medium_yellow">#EEE39E</color>
+    <color name="dark_yellow">#bdaf6a</color>
+    <color name="light_green">#C9FFCF</color>
+    <color name="medium_green">#90E79C</color>
+    <color name="dark_green">#63b86f</color>
+    <color name="light_blue">#B9FFFF</color>
+    <color name="medium_blue">#8AF7F4</color>
+    <color name="dark_blue">#70cfcb</color>
+    <color name="light_red">#FF746C</color>
+    <color name="light_grey">#EEEEEE</color>
+    <color name="dark_grey">#787878</color>
+
+
+
 
 </resources>

@@ -1,53 +1,17 @@
-package com.example.coolioevents;
+package com.example.coolioevents.organizer;
 
-/**
- * Copyright 2025 Niharika Rawat
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * PURPOSE:
- * This fragment provides a simple interface for editing and updating a user's
- * profile information (username, name, and email). It can be connected to Firebase,
- * SQLite, or other storage systems to persist profile updates.
- *
- * Once the profile is saved, the fragment navigates back to the previous screen.
- *
- * @author Niharika Rawat
- * @version 1.0
- * @since 2025-11-07
- */
-
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.example.coolioevents.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,63 +19,32 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * A fragment that allows users to edit their profile details.
- * This includes username, name, and email.
- * The data can later be saved to a database or cloud service such as Firebase.
- */
-public class UpdateProfileFragment extends Fragment {
-
-    // TextView displaying the user's profile
+public class OrganizerUpdateProfileActivity extends AppCompatActivity {
     private TextView profileText;
-
-    // ImageView for profile circle
     private ImageView profileCircle;
-
-    // Input field for editing the user's username
     private EditText editUsername;
-
-    // Input field for editing the user's full name
     private EditText editName;
-
-    // Input field for editing the user's email address
     private EditText editEmail;
-
-    // Button to save the updated profile information
     private Button btnSave;
-
-    // Back Button to go back instead of saving
     private Button btnBack;
-
-    // Initializing firebase
     private FirebaseAuth auth;
     private FirebaseFirestore db;
 
-    /**
-     * Called to create and return the view hierarchy associated with the fragment.
-     * This method inflates the fragment layout, initializes input fields,
-     * and sets up the save button logic.
-     *
-     * @param inflater LayoutInflater used to inflate the fragment layout
-     * @param container Optional parent view that the fragment UI attaches to
-     * @param savedInstanceState Previously saved state, if any
-     * @return The created View for this fragment
-     */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_update_profile, container, false);
+        setContentView(R.layout.activity_organizer_update_profile);
+
 
         // Initialize input fields and button
-        profileCircle = view.findViewById(R.id.update_profile_circle);
-        profileText = view.findViewById(R.id.icon_text);
-        editUsername = view.findViewById(R.id.edit_username);
-        editName = view.findViewById(R.id.edit_name);
-        editEmail = view.findViewById(R.id.edit_email);
-        btnSave = view.findViewById(R.id.btn_save_profile);
-        btnBack = view.findViewById(R.id.btn_back_profile);
+        profileCircle = findViewById(R.id.update_profile_circle);
+        profileText = findViewById(R.id.icon_text);
+        editUsername = findViewById(R.id.edit_username);
+        editName = findViewById(R.id.edit_name);
+        editEmail = findViewById(R.id.edit_email);
+        btnSave = findViewById(R.id.btn_save_profile);
+        btnBack = findViewById(R.id.btn_back_profile);
 
         // Initialize Firebase services
         auth = FirebaseAuth.getInstance();
@@ -131,26 +64,18 @@ public class UpdateProfileFragment extends Fragment {
 
             updateUserprofile(username, name, email);
 
-            // Navigate back to the previous fragment (ProfileFragment)
-            requireActivity().getSupportFragmentManager().popBackStack();
+            // Navigate back to the previous activity (OrganizerProfileActivity)
+            finish();
         });
 
         btnBack.setOnClickListener(v -> {
-            getParentFragmentManager().popBackStack();
+            finish();
         });
-
-        return view;
     }
 
-    /**
-     * Fetches the logged-in user's profile data from Firestore.
-     * If successful, it updates the EditViews with username, name, and email.
-     * If the user is not logged in or the document doesn't exist,
-     * appropriate error messages are displayed.
-     */
     private void loadEditText() {
         if (auth.getCurrentUser() == null) {
-            Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -159,7 +84,7 @@ public class UpdateProfileFragment extends Fragment {
 
         // Setting profile color
         int colourId = getColour(userId);
-        int userColour = ContextCompat.getColor(getContext(), colourId);
+        int userColour = ContextCompat.getColor(this, colourId);
         profileCircle.getBackground().setTint(userColour);
 
         // Reference the user's document in Firestore
@@ -182,12 +107,12 @@ public class UpdateProfileFragment extends Fragment {
                         editName.setText((name != null ? name : ""));
                         editEmail.setText((email != null ? email : ""));
                     } else {
-                        Toast.makeText(getContext(), "Profile not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Profile not found", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e("ProfileFragment", "Error fetching profile", e);
-                    Toast.makeText(getContext(), "Error loading profile", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error loading profile", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -270,7 +195,7 @@ public class UpdateProfileFragment extends Fragment {
      */
     public void updateUserprofile(String username, String name, String email) {
         if (auth.getCurrentUser() == null) {
-            Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -291,29 +216,29 @@ public class UpdateProfileFragment extends Fragment {
 
         // Actually do the update
         userRef.update(updates)
-                .addOnSuccessListener(aVoid -> {
-                    /*
-                    Taken From: Google Gemini
-                        Prompt: why am I getting a NullPointerException?
-                        Taken By: Avery Dancocks
-                        Taken On: 11/26/25
-                     */
-                    if (getContext() == null || !isAdded()) {
-                        return; // Prevent crash if fragment is detached
-                    }
-                    Toast.makeText(getContext(), "Profile updated successfully!", Toast.LENGTH_SHORT).show();
-                    // Go back to profile
-                    getParentFragmentManager().popBackStack();
-                })
-                .addOnFailureListener((e -> {
-                    if (getContext() == null || !isAdded()) {
-                        return; // Prevent crash if fragment is detached
-                    }
+            .addOnSuccessListener(aVoid -> {
+                /*
+                Taken From: Google Gemini
+                    Prompt: why am I getting a NullPointerException?
+                    Taken By: Avery Dancocks
+                    Taken On: 11/26/25
+                 */
+                if (isFinishing() || isDestroyed()) {
+                    return; // Stop execution if the Activity is no longer valid.
+                }
+                Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                // Go back to profile
+                //TODO getParentFragmentManager().popBackStack();
+            })
+            .addOnFailureListener((e -> {
+                if (isFinishing() || isDestroyed()) {
+                    return; // Stop execution if the Activity is no longer valid.
+                }
 
-                    Log.e("UpdateProfileFragment", "Error updating profile", e);
-                    Toast.makeText(getContext(), "Could not update profile, please try again.", Toast.LENGTH_SHORT).show();
-                    // Make save button pressable again so user can try again
-                    btnSave.setEnabled(true);
-                }));
+                Log.e("UpdateProfileFragment", "Error updating profile", e);
+                Toast.makeText(this, "Could not update profile, please try again.", Toast.LENGTH_SHORT).show();
+                // Make save button pressable again so user can try again
+                btnSave.setEnabled(true);
+            }));
     }
 }
