@@ -59,8 +59,16 @@
             android:id="@+id/logoutButton"
             android:layout_width="184dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="#E60404"
+            android:backgroundTint="#66A5E9"
             android:text="Logout" />
+        <Button
+            android:id="@+id/btn_delete_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Account"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="12dp"/>
 
     </LinearLayout>
 </ScrollView>

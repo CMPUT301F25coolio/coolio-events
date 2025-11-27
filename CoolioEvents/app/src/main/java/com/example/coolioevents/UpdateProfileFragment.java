@@ -28,6 +28,7 @@ package com.example.coolioevents;
  */
 
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A fragment that allows users to edit their profile details.
@@ -54,6 +62,8 @@ public class UpdateProfileFragment extends Fragment {
 
 //    Button to save the updated profile information
     private Button btnSave;
+    private FirebaseAuth auth;
+    private FirebaseFirestore db;
 
     /**
      * Called to create and return the view hierarchy associated with the fragment.
@@ -77,30 +87,76 @@ public class UpdateProfileFragment extends Fragment {
         editName = view.findViewById(R.id.edit_name);
         editEmail = view.findViewById(R.id.edit_email);
         btnSave = view.findViewById(R.id.btn_save_profile);
+        // Firebase
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        // (Optional) Preload current user information if available
-        // Example:
-        // editUsername.setText("coolio_user");
-        // editName.setText("John Doe");
-        // editEmail.setText("john.doe@example.com");
+        // Load existing user data
+        loadCurrentUserProfile();
 
-        /**
-         * Handles the save button click event.
-         * Retrieves input field values, displays a confirmation toast,
-         * and navigates back to the previous fragment.
-         */
-        btnSave.setOnClickListener(v -> {
-            String username = editUsername.getText().toString().trim();
-            String name = editName.getText().toString().trim();
-            String email = editEmail.getText().toString().trim();
+        // Save updates
+        btnSave.setOnClickListener(v -> saveProfileChanges());
 
-            // TODO: Save updated info to Firebase/SQLite/etc.
-            Toast.makeText(getContext(), "Profile updated successfully!", Toast.LENGTH_SHORT).show();
-
-            // Navigate back to the previous fragment (ProfileFragment)
-            requireActivity().getSupportFragmentManager().popBackStack();
-        });
+//        /**
+//         * Handles the save button click event.
+//         * Retrieves input field values, displays a confirmation toast,
+//         * and navigates back to the previous fragment.
+//         */
+//        btnSave.setOnClickListener(v -> {
+//            String username = editUsername.getText().toString().trim();
+//            String name = editName.getText().toString().trim();
+//            String email = editEmail.getText().toString().trim();
+//
+//            // TODO: Save updated info to Firebase/SQLite/etc.
+//            Toast.makeText(getContext(), "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+//
+//            // Navigate back to the previous fragment (ProfileFragment)
+//            requireActivity().getSupportFragmentManager().popBackStack();
+//        });
 
         return view;
     }
+
+    private void loadCurrentUserProfile() {
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(getContext(), "User not logged in.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = auth.getCurrentUser().getUid();
+        DocumentReference userRef = db.collection("users").document(userId);
+
+        userRef.get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                editUsername.setText(doc.getString("username"));
+                editName.setText(doc.getString("name"));
+                editEmail.setText(doc.getString("email"));
+            }
+        });
+    }
+
+    private void saveProfileChanges() {
+        if (auth.getCurrentUser() == null) return;
+
+        String userId = auth.getCurrentUser().getUid();
+        DocumentReference userRef = db.collection("users").document(userId);
+
+        String username = editUsername.getText().toString().trim();
+        String name = editName.getText().toString().trim();
+        String email = editEmail.getText().toString().trim();
+
+        Map<String, Object> updated = new HashMap<>();
+        updated.put("username", username);
+        updated.put("name", name);
+        updated.put("email", email);
+
+        userRef.update(updated)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(getContext(), "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
 }
+

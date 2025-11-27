@@ -27,6 +27,7 @@ package com.example.coolioevents;
  * @since 2025-11-07
  */
 
+import androidx.appcompat.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -69,6 +70,7 @@ public class ProfileFragment extends Fragment {
 
 //    Button allowing the user to navigate to the UpdateProfileFragment
     private Button logoutButton;
+    private Button deleteAccountButton;
 
 //    Firebase Authentication instance used to identify the logged-in user
     private FirebaseAuth auth;
@@ -102,6 +104,8 @@ public class ProfileFragment extends Fragment {
         btnEditProfile = view.findViewById(R.id.btn_edit_profile);
         settingsButton = view.findViewById(R.id.btn_settings);
         logoutButton = view.findViewById(R.id.logoutButton);
+        deleteAccountButton = view.findViewById(R.id.btn_delete_account);
+
 
         // Initialize Firebase services
         auth = FirebaseAuth.getInstance();
@@ -130,7 +134,7 @@ public class ProfileFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
-
+        deleteAccountButton.setOnClickListener(v -> showDeleteConfirmationDialog());
 
         return view;
     }
@@ -185,5 +189,38 @@ public class ProfileFragment extends Fragment {
         auth.signOut();
         startActivity(intent);
         requireActivity().finish();
+    }
+    private void showDeleteConfirmationDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete Account")
+                .setMessage("Are you sure you want to delete your account? This cannot be undone.")
+                .setPositiveButton("Delete", (dialog, which) -> deleteAccount())
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void deleteAccount() {
+        if (auth.getCurrentUser() == null) return;
+
+        String uid = auth.getCurrentUser().getUid();
+
+        // 1. Delete Firestore user document
+        db.collection("users").document(uid).delete()
+                .addOnSuccessListener(unused -> {
+                    // 2. Delete FirebaseAuth user
+                    auth.getCurrentUser().delete()
+                            .addOnSuccessListener(unused2 -> {
+                                Toast.makeText(getContext(), "Account deleted", Toast.LENGTH_SHORT).show();
+
+                                // 3. Log out and go to WelcomeActivity
+                                Intent intent = new Intent(requireActivity(), WelcomeActivity.class);
+                                startActivity(intent);
+                                requireActivity().finish();
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }
