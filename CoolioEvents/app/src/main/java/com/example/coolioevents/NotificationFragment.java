@@ -6,12 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,6 +44,92 @@ public class NotificationFragment extends Fragment {
 
         adapter = new NotificationAdapter(notificationList);
         recyclerView.setAdapter(adapter);
+        //adding the delete notification feature
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback =
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder,
+                                          @NonNull RecyclerView.ViewHolder target) {
+                        return false; // no drag & drop
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        int position = viewHolder.getAdapterPosition();
+                        NotificationData notif = notificationList.get(position);
+
+                        if (direction == ItemTouchHelper.LEFT) {
+                            // 🔴 DELETE from Firestore + list
+                            db.collection("notifications")
+                                    .document(notif.getNotifId())
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(getContext(), "Notification deleted", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(getContext(), "Error deleting", Toast.LENGTH_SHORT).show();
+                                    });
+
+                            notificationList.remove(position);
+                            adapter.notifyItemRemoved(position);
+
+                        } else if (direction == ItemTouchHelper.RIGHT) {
+                            // ✅ Optional: swipe right = mark as read
+                            db.collection("notifications")
+                                    .document(notif.getNotifId())
+                                    .update("shown", true)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(getContext(), "Marked as read", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(getContext(), "Error updating", Toast.LENGTH_SHORT).show();
+                                    });
+
+                            // put it back visually (we didn't remove it)
+                            adapter.notifyItemChanged(position);
+                        }
+                    }
+
+                    @Override
+                    public void onChildDraw(@NonNull Canvas c,
+                                            @NonNull RecyclerView recyclerView,
+                                            @NonNull RecyclerView.ViewHolder viewHolder,
+                                            float dX, float dY,
+                                            int actionState,
+                                            boolean isCurrentlyActive) {
+
+                        View itemView = viewHolder.itemView;
+                        Paint paint = new Paint();
+
+                        if (dX < 0) {
+                            // 🔴 Swiping LEFT → red delete background
+                            paint.setColor(Color.parseColor("#FF756C"));
+                            RectF background = new RectF(
+                                    itemView.getRight() + dX,  // follow finger
+                                    itemView.getTop(),
+                                    itemView.getRight(),
+                                    itemView.getBottom()
+                            );
+                            c.drawRect(background, paint);
+
+                        } else if (dX > 0) {
+                            // 🟢 Swiping RIGHT →  "mark as read" color
+                            paint.setColor(Color.parseColor("#90E79C")); // light green
+                            RectF background = new RectF(
+                                    itemView.getLeft(),
+                                    itemView.getTop(),
+                                    itemView.getLeft() + dX,
+                                    itemView.getBottom()
+                            );
+                            c.drawRect(background, paint);
+                        }
+
+                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                    }
+                };
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         db = FirebaseFirestore.getInstance();
 
@@ -83,7 +174,7 @@ public class NotificationFragment extends Fragment {
 
                     // *** CRUCIAL DEBUGGING STEP ***
                     // This toast confirms how many items were retrieved from the database
-                    Toast.makeText(getContext(), "Notifications loaded: " + notificationList.size() + " items.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "Notifications loaded: " + notificationList.size() + " items.", Toast.LENGTH_SHORT).show();
 
                     adapter.notifyDataSetChanged();
                 });
