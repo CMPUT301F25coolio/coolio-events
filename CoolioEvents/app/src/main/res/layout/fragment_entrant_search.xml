@@ -1,89 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Entrant.EntrantSearchFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context=".Entrant.EntrantSearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
+    <!-- 1) WAVE HEADER WITH TITLE -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/homeHeader"
         android:layout_width="match_parent"
-        android:layout_height="133dp"
-        android:background="@drawable/bluebackground"
-        android:elevation="4dp"
-        android:gravity="center">
+        android:layout_height="140dp"
+        android:background="@drawable/top_banner"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/clearsans_regular"
-            android:gravity="center"
             android:text="SEARCH"
-            android:textColor="#FFFFFF"
-            android:textSize="40sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/searchBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            android:textSize="40sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/poppins_bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <Button
-            android:id="@+id/filterButton"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="@color/white"
-            android:contentDescription="Filter Button"
-            android:text="Filter"
-            android:textColor="#250CF6"
-            app:layout_constraintBottom_toTopOf="@+id/searchBar"
             app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- 2) SEARCH ROW (CLEAR / SEARCH BAR / FILTER) BELOW BANNER -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/searchRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <!-- CLEAR BUTTON (LEFT) -->
         <Button
             android:id="@+id/clearFilterButton"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:text="Clear"
+            android:textColor="#FF746C"
+            android:backgroundTint="#FFDBCC"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/searchBar" />
 
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="@color/white"
-            android:contentDescription="Filter Button"
-            android:text="Clear Filters"
-            android:textColor="#C11ED9"
-            app:layout_constraintBottom_toTopOf="@+id/searchBar"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <SearchView
-            android:id="@+id/searchBar"
-            android:layout_width="400dp"
-            android:layout_height="46dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/edittextbackground"
+        <!-- FILTER BUTTON (RIGHT) -->
+        <Button
+            android:id="@+id/filterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Filter"
+            android:textColor="#51B462"
+            android:backgroundTint="#DDF4BF"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.454"
-            app:layout_constraintStart_toStartOf="parent"
-            android:queryHint="Search For An Event"
+            app:layout_constraintStart_toEndOf="@id/searchBar" />
+
+        <!-- SEARCH BAR (MIDDLE) -->
+        <SearchView
+            android:id="@+id/searchBar"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:background="@drawable/searchbar_background"
             android:iconifiedByDefault="false"
-            />
+            android:queryHint="Search"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/clearFilterButton"
+            app:layout_constraintEnd_toStartOf="@id/filterButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- 3) EVENT LIST TAKES THE REST -->
     <ListView
         android:id="@+id/eventList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#DEDEDE"
-        android:descendantFocusability="beforeDescendants"
-        android:divider="#DEDEDE"
-        android:dividerHeight="5dp"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"></ListView>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:divider="#E0E0E0"
+        android:dividerHeight="6dp" />
+
 </LinearLayout>
