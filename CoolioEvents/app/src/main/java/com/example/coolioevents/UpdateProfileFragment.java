@@ -34,6 +34,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -46,6 +47,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,13 +87,12 @@ public class UpdateProfileFragment extends Fragment {
 
     // Button to save the updated profile information
     private Button btnSave;
+    private FirebaseAuth auth;
+    private FirebaseFirestore db;
 
     // Back Button to go back instead of saving
     private Button btnBack;
 
-    // Initializing firebase
-    private FirebaseAuth auth;
-    private FirebaseFirestore db;
 
     /**
      * Called to create and return the view hierarchy associated with the fragment.
