@@ -15,6 +15,8 @@
     <color name="thumb_geolocation_on">#4CBB17</color>
     <color name="track_geolocation_off">#80D22B2B</color>
     <color name="track_geolocation_on">#804CBB17</color>
+    <color name="delete">#D22B2B</color>
+
     <color name="light_purple">#CADFFF</color>
     <color name="medium_purple">#9FBEEF</color>
     <color name="dark_purple">#7699cf</color>

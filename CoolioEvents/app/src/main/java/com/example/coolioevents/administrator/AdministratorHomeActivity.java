@@ -3,17 +3,11 @@ package com.example.coolioevents.administrator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.coolioevents.R;
 import com.example.coolioevents.authentication.WelcomeActivity;
-import com.example.coolioevents.organizer.CreateEventActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
@@ -58,7 +52,7 @@ public class AdministratorHomeActivity extends AppCompatActivity {
         View entrantsOption = findViewById(R.id.optAdminEntrants);
         View organizersOption = findViewById(R.id.optAdminOrganizers);
         View notificationsOption = findViewById(R.id.optAdminNotifications);
-        Button logoutButton = findViewById(R.id.logoutButton);
+        View logoutOption = findViewById(R.id.optAdminLogout);
 
         // Events option onclick activity --> Leads to Events activity
         if (eventsOption != null) {
@@ -91,10 +85,12 @@ public class AdministratorHomeActivity extends AppCompatActivity {
                     startActivity(new Intent(this, AdministratorNotificationsActivity.class)));
         }
 
-        // If logout button pressed - perform logout
-        logoutButton.setOnClickListener(v -> {
-            logout();
-        });
+        // Logout option onclick activity --> Signs user out of their account
+        if (logoutOption != null) {
+            logoutOption.setOnClickListener(v -> {
+                logout();
+            });
+        }
 
     }
     /**

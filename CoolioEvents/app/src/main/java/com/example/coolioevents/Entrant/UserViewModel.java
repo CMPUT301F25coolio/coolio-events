@@ -1,5 +1,7 @@
 package com.example.coolioevents.Entrant;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -16,7 +18,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.HashMap;
 import java.util.Map;
 /**
- * Copyright 2025 Ethan Diep
+ * Copyright 2025 Ethan Diep & Juliane Phan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +41,7 @@ import java.util.Map;
  * This class was designed to allow users to browse events they may be
  * interested in.
  *
- * @author Ethan Diep
+ * @author Ethan Diep & Juliane Phan
  * @version 1.5
  * @since 2025-11-20
  */
@@ -94,6 +96,36 @@ public class UserViewModel extends ViewModel {
                 userMap.setValue(newUserMap); // Sets userMap to updated userMap
             }
         });
+    }
+
+    /**
+     * Returns a map of all users in the database
+     * @return The map of all users in the database
+     */
+    public MutableLiveData<Map<String, User>> getUserMap(){
+        return userMap;
+    }
+
+    /**
+     * This is called when an administrator chooses to delete a user (entrant/organizer).
+     * Deletes the specific user from the firebase
+     *
+     * @param userId
+     *      event that the administrator wishes to delete
+     */
+    public void deleteUser(String userId) {
+        if (userId == null) {
+            return;
+        }
+
+        db.collection("users").document(userId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("ViewModel", "SUCCESS: User " + userId + " deleted");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "FAILURE: Could not delete user " + userId, e);
+                });
     }
 
 }

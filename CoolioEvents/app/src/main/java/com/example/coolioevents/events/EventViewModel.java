@@ -272,6 +272,11 @@ public class EventViewModel extends ViewModel {
                         newEventImage.setOrganizerId(organizerId);
                         newEventImage.setEventPoster(imageURL);
 
+                        // Skip events that don't have an image
+                        if (imageURL == null) {
+                            continue;
+                        }
+
                         eventImageData.add(newEventImage);
 
                         /*Taken from: Google Gemini
@@ -610,4 +615,87 @@ public class EventViewModel extends ViewModel {
                     Log.e("ViewModel", "FAILURE: Could not update acceptedEntrants for event " + eventId, e);
                 });
     }
+
+    /**
+     * This is called when an administrator chooses to delete an event.
+     * Deletes the specific event from the firebase
+     *
+     * @param eventId
+     *      event that the administrator wishes to delete
+     */
+    public void deleteEvent(String eventId) {
+        if (eventId == null) {
+            return;
+        }
+
+        db.collection("events").document(eventId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("ViewModel", "SUCCESS: Event " + eventId + " deleted");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "FAILURE: Could not delete event " + eventId, e);
+                });
+    }
+
+    /**
+     * Returns the organizer that uploaded a poster with a specific image URL.
+     * @param imageURL
+     *      The image URL of the poster
+     * @return
+     *      Returns a single organizer of the type MutableLiveData
+     */
+    public MutableLiveData<Organizer> getOrganizerByImageURL(String imageURL) {
+        MutableLiveData<Organizer> singleOrganizerData = new MutableLiveData<>();
+        String organizerId = null;
+
+        // Loop through eventImageList and retrieve the organizer who uploaded the poster imageURL
+        for (EventImageData imageData : eventImageList.getValue()) {
+            if (imageData.getEventPoster().equals(imageURL)) {
+                organizerId = imageData.getOrganizerId();
+                break;
+            }
+        }
+
+        return getOrganizerById(organizerId);
+    }
+
+    /**
+     * This is called when an administrator chooses to delete a poster for an event.
+     * Sets the posterUrl to null in the database.
+     * @param imageURL
+     *      URL associated with the poster which will be deleted (set to null)
+     */
+    public void deletePoster(String imageURL) {
+        if (imageURL == null) {
+            Log.e("ViewModel", "Poster URL is null");
+            return;
+        }
+
+        db.collection("events").whereEqualTo("details.posterUrl", imageURL).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        Log.e("ViewModel", "No event found with poster URL: " + imageURL);
+                        return;
+                    }
+
+                    String eventId = queryDocumentSnapshots.getDocuments().get(0).getId();
+
+                    // Set posterUrl to null
+                    db.collection("events").document(eventId)
+                            .update("details.posterUrl", null)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("ViewModel", "SUCCESS: Poster for event " + eventId + " deleted");
+                                getEventImages();
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("ViewModel", "FAILURE: Could not delete poster for event " + eventId, e);
+                            });
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "FAILURE: Could not delete poster for event", e);
+                });
+    }
+
 }
