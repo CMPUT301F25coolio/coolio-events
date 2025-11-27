@@ -53,9 +53,6 @@
         <activity
             android:name=".administrator.AdministratorNotificationsActivity"
             android:exported="false" />
-        <activity
-            android:name=".organizer.MapActivity"
-            android:exported="false" />
 
 
         <!-- Organizer side -->
@@ -83,6 +80,15 @@
         <activity
             android:name=".organizer.OrganizerSendNotifications"
             android:exported="false" />
+        <activity
+            android:name=".organizer.MapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".organizer.OrganizerProfileActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".organizer.OrganizerUpdateProfileActivity"
+            android:exported="false"/>
         <!-- Organizer list screens -->
         <activity
             android:name=".organizer.ListScreenActivity"

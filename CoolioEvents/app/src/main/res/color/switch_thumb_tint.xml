@@ -5,6 +5,9 @@
     <!-- Taken by: Avery Dancocks                              -->
     <!-- Taken on: 09/30/25                                    -->
 
+    <!-- Color when switch is disabled -->
+    <item android:state_enabled="false"
+        android:color="@color/dark_grey" />
     <!-- Color when switch is ON -->
     <item android:color="@color/thumb_geolocation_on" android:state_checked="true" />
 

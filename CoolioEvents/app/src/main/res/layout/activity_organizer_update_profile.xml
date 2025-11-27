@@ -249,68 +249,6 @@
                 android:paddingBottom="8dp">
 
                 <TextView
-                    android:id="@+id/notifications_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Notifications"
-                    android:textSize="25sp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:paddingLeft="10dp"
-                    android:textColor="#000000"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/ic_notification"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="5dp"/>
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/notificationSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Push Notifications"
-                    android:textColor="#212121"
-                    android:textSize="20sp"
-                    android:paddingLeft="10dp"
-                    android:fontFamily="@font/poppins_regular"
-                    app:switchPadding="50dp"
-                    android:enabled="false"
-                    app:thumbTint="@color/switch_thumb_tint"
-                    app:trackTint="@color/switch_track_tint" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_border"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:orientation="vertical"
-            android:layout_marginBottom="20dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <TextView
                     android:id="@+id/account_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
