@@ -3,98 +3,135 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="330dp"
+    android:layout_height="300sp"
     android:background="@drawable/whitebackground"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+>
 
     <TextView
         android:id="@+id/eventName"
-        android:layout_width="280dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:autoSizeTextType="uniform"
         android:layout_marginStart="10dp"
-
+        android:textSize="25sp"
+        android:textColor="@color/black"
         android:text="Event Title"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent"
-        android:fontFamily="@font/clearsans_bold"/>
+        android:fontFamily="@font/poppins_bold"/>
 
     <TextView
         android:id="@+id/eventOrganizer"
         android:layout_width="280dp"
         android:layout_height="25dp"
         android:autoSizeTextType="uniform"
-
+        android:textColor="@color/black"
         android:text="Posted By: Organizer"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/eventName"
         android:layout_marginStart="10dp"
-        android:fontFamily="@font/clearsans_bold"/>
+        android:fontFamily="@font/poppins_bold"/>
 
     <TextView
         android:id="@+id/eventDescription"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:text="Description: This is the event discription. This describes what the events is about, isn't that crazy? Pretty amazing event description right here if you ask me. Wow"
-
+        android:textColor="@color/black"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/eventOrganizer"
         android:layout_marginStart="10dp"
-        android:fontFamily="@font/clearsans_regular"/>
+        android:fontFamily="@font/poppins_regular"/>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_calendar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        android:layout_marginTop="3dp"/>
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_map"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_calendar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <TextView
         android:id="@+id/eventTime"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/poppins_regular"
         android:text="Time: Month Day Year | Time"
-        android:textSize="15dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventDescription"
-        android:fontFamily="@font/clearsans_regular"/>
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
         android:id="@+id/eventLocation"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
+        android:fontFamily="@font/poppins_regular"
         android:text="Location: 123 Address, 567 231"
+        android:textColor="@color/black"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="5dp"
         android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventTime"
-        android:fontFamily="@font/clearsans_regular" />
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/eventTime" />
 
     <TextView
         android:id="@+id/eventRegPeriod"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
-
+        android:fontFamily="@font/poppins_regular"
         android:text="Registration Period: Month/Day/Year - Month/Day/Year"
+        android:textColor="@color/black"
+        android:layout_marginStart="3dp"
         android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventLocation" />
+        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintTop_toBottomOf="@+id/eventLocation"
+        android:layout_marginTop="5dp"/>
 
     <TextView
         android:id="@+id/eventmaxEntrees"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
-
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/poppins_regular"
         android:text="Max Entrees: 0"
+        android:textColor="@color/black"
         android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView5"
         app:layout_constraintTop_toBottomOf="@+id/eventRegPeriod" />
-
-    <TextView
-        android:id="@+id/eventStatusLabel"
-        android:layout_width="90dp"
-        android:layout_height="20dp"
-
-        android:text="Event Status: "
-        android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventmaxEntrees"
-        android:fontFamily="@font/clearsans_regular"
-        />
 
     <TextView
         android:id="@+id/eventStatus"
@@ -102,27 +139,28 @@
         android:layout_height="20dp"
 
         android:background="@drawable/greenshapebackground"
-        android:fontFamily="@font/clearsans_bold"
+
+        android:fontFamily="@font/poppins_bold"
         android:gravity="center"
         android:text="Open"
         android:textColor="@color/white"
         android:textSize="15sp"
-        app:layout_constraintStart_toEndOf="@+id/eventStatusLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventmaxEntrees" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/eventWaitingCount"
-        android:layout_width="180dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
-
+        android:layout_marginStart="4sp"
         android:autoSizeTextType="uniform"
         android:background="@drawable/purplecircularbackground"
-        android:fontFamily="@font/clearsans_bold"
+        android:fontFamily="@font/poppins_bold"
         android:gravity="center"
         android:text="0 PEOPLE IN WAITLIST"
-        android:textColor="@color/white"
+        android:textColor="@color/dark_purple"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/eventuserStatus" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView"
@@ -133,35 +171,24 @@
         tools:srcCompat="@tools:sample/avatars"
         android:scaleType="centerCrop"
         app:shapeAppearance="@style/roundedcornerimageview"
+        android:textColor="@color/black"
         />
-
-    <TextView
-        android:id="@+id/userStatusLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:fontFamily="@font/clearsans_regular"
-        android:text="User Status:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventStatusLabel" />
 
     <TextView
         android:id="@+id/eventuserStatus"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-
-        android:layout_marginTop="5dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="4sp"
         android:background="@drawable/greybackground"
-        android:fontFamily="@font/clearsans_bold"
+        android:fontFamily="@font/poppins_bold"
         android:gravity="center"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:text="Not In Waiting List"
         android:textColor="@color/white"
-        android:textSize="15sp"
-        app:layout_constraintStart_toEndOf="@+id/userStatusLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventStatus" />
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/eventStatus" />
 
     <TextView
         android:id="@+id/eventUserStatusRegistration"
@@ -183,12 +210,14 @@
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/tagsGroup"
-        android:layout_width="355dp"
-        android:layout_height="40dp"
-        app:layout_constraintStart_toEndOf="@+id/tagLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventuserStatus"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
         android:clickable="false"
-        android:focusable="false">
+        android:focusable="false"
+        app:layout_constraintStart_toEndOf="@+id/tagLabel"
+        app:layout_constraintTop_toBottomOf="@+id/eventmaxEntrees">
 
 
     </com.google.android.material.chip.ChipGroup>
@@ -198,9 +227,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/clearsans_regular"
+        android:fontFamily="@font/poppins_regular"
         android:text="Tags:"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/eventStatus"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userStatusLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/eventmaxEntrees" />
 </androidx.constraintlayout.widget.ConstraintLayout>

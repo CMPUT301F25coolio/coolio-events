@@ -148,7 +148,7 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
 
             // If the current user is not in the waitlist, display an indicator that user is  not in the waiting list
             eventUserStatus.setText("Not In Waiting List");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greybuttonbackground));
+            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greybackground));
         }
         if (isUserChosen) {
             // Set Visibility of registration status

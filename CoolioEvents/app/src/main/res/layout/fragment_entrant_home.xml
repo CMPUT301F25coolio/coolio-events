@@ -81,8 +81,8 @@
         android:dividerHeight="5dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
-        android:divider="#DEDEDE"
-        android:background="#DEDEDE"
+        android:divider="@color/white"
+        android:background="@color/white"
         android:descendantFocusability="beforeDescendants"
         >
     </ListView>
