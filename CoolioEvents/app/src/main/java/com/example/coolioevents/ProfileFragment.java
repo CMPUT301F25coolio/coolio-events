@@ -29,7 +29,6 @@ package com.example.coolioevents;
 
 import androidx.appcompat.app.AlertDialog;
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -130,7 +129,7 @@ public class ProfileFragment extends Fragment {
         textEmail = view.findViewById(R.id.text_email);
         btnEditProfile = view.findViewById(R.id.btn_edit_profile);
         logoutButton = view.findViewById(R.id.logoutButton);
-        deleteAccountButton = view.findViewById(R.id.btn_delete_account);
+        deleteAccountButton = view.findViewById(R.id.deleteAccountButton);
 
         notificationSwitch = view.findViewById(R.id.notificationSwitch);
 
@@ -176,7 +175,7 @@ public class ProfileFragment extends Fragment {
             logout(); // If logout button pressed - perform logout
         }
         );
-
+        deleteAccountButton.setOnClickListener(v -> showDeleteConfirmationDialog());
         return view;
     }
 
