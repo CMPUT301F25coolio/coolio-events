@@ -1,7 +1,7 @@
 package com.example.coolioevents;
 
 /**
- * Copyright 2025 Niharika Rawat
+ * Copyright 2025 Niharika Rawat, Avery Dancocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ package com.example.coolioevents;
  *
  * Once the profile is saved, the fragment navigates back to the previous screen.
  *
- * @author Niharika Rawat
- * @version 1.0
+ * @author Niharika Rawat, Avery Dancocks
+ * @version 1.5
  * @since 2025-11-07
  */
 

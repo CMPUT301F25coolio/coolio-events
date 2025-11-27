@@ -82,7 +82,8 @@ public class OrganizerEventActivity extends AppCompatActivity {
     private ChipGroup tagsGroup;
     private TextView eventWaitlistEntrantCount;
     private Button viewLists;
-    private MaterialButton drawLottery;
+
+    //private MaterialButton drawLottery;
     private MaterialButton drawNewEntrant;
     private Button sendNotifications;
 
@@ -92,11 +93,13 @@ public class OrganizerEventActivity extends AppCompatActivity {
     private void updateButtonState() {
         // Lottery has already been drawn
         if (lotteryDone && eventStatus.equals("closed")) {
+            /*
             drawLottery.setEnabled(false);
             // Set UI
             drawLottery.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
             drawLottery.setTextColor(ContextCompat.getColor(this, R.color.grey));
             drawLottery.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey)));
+             */
             // Someone left the chosen list, and there is still people in the waitlist
             if ((numberOfChosenEntrants < maxEntrants) && (numberInWaitlist >= 1)) {
                 drawNewEntrant.setEnabled(true);
@@ -121,17 +124,20 @@ public class OrganizerEventActivity extends AppCompatActivity {
                 drawNewEntrant.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey)));
             }
         }
+        /*
         // Lottery has not been drawn
         if (!lotteryDone && eventStatus.equals("closed")) {
+
             drawLottery.setEnabled(true);
             // Set UI
             drawLottery.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.drawfromlottery)));
             drawLottery.setTextColor(ContextCompat.getColor(this, R.color.white));
             drawLottery.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
         }
+         */
         // Event is still open
         if (eventStatus.equals("open")) {
-            drawLottery.setEnabled(false);
+            //drawLottery.setEnabled(false);
             drawNewEntrant.setEnabled(false);
         }
     }
@@ -250,7 +256,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
 
         // Establishing Buttons
         viewLists = findViewById(R.id.view_lists_button);
-        drawLottery = findViewById(R.id.draw_lottery_button);
+        //drawLottery = findViewById(R.id.draw_lottery_button);
         drawNewEntrant = findViewById(R.id.draw_new_user_button);
         sendNotifications = findViewById(R.id.sendNotificationsButton);
         ImageButton backButton = findViewById(R.id.organizer_event_back_button);
@@ -272,7 +278,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
 
         });
 
-
+        /*
         // Draw lottery button calls function to draw lottery
         drawLottery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,6 +295,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
                 }
             }
         });
+         */
 
         // Send Notifications button to go to an activity to send notifications to entrants
         sendNotifications.setOnClickListener(new View.OnClickListener() {

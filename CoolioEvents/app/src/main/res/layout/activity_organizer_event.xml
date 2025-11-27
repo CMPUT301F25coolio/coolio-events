@@ -339,33 +339,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/draw_lottery_button"
-                app:strokeColor="#A9A9A9"
-                app:strokeWidth="2dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/draw_lottery_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="40dp"
-                android:enabled="false"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
-                android:text="Draw From Lottery"
-                android:textAllCaps="false"
-                android:textColor="#A9A9A9"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:backgroundTint="#FFFFFF"
-                app:cornerRadius="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_lists_button"
                 app:strokeColor="#A9A9A9"
                 app:strokeWidth="2dp" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

@@ -1,7 +1,7 @@
 package com.example.coolioevents;
 
 /**
- * Copyright 2025 Niharika Rawat
+ * Copyright 2025 Niharika Rawat, Avery Dancocks, Ethan Diep
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,8 @@ package com.example.coolioevents;
  * username, name, and email. It fetches the user data from Firebase Firestore
  * and allows navigation to an update screen for editing profile details.
  *
- * The fragment works for both Entrants and Organizers within the CoolioEvents app.
- *
- * @author Niharika Rawat
- * @version 1.0
+ * @author Niharika Rawat, Avery Dancocks, Ethan Diep
+ * @version 1.5
  * @since 2025-11-07
  */
 
