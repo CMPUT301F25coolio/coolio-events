@@ -1,6 +1,8 @@
 package com.example.coolioevents.events;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.nfc.Tag;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +24,11 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Copyright 2025 Ethan Diep & Avery Dancocks & Juliane Phan
@@ -78,6 +83,9 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
         TextView eventOrganizer = view.findViewById(R.id.eventOrganizer);
         TextView eventDescription = view.findViewById(R.id.eventDescription);
         TextView eventTime = view.findViewById(R.id.eventTime);
+        TextView dateDay = view.findViewById(R.id.dateDay);
+        TextView dateMonth = view.findViewById(R.id.dateMonth);
+        TextView dateTime = view.findViewById(R.id.dateTime);
         TextView eventLocation = view.findViewById(R.id.eventLocation);
         TextView eventRegPrd = view.findViewById(R.id.eventRegPeriod);
         TextView eventMaxEntrees = view.findViewById(R.id.eventmaxEntrees);
@@ -107,17 +115,37 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
         if (event.getDetails().getEventLocation() != null){
             eventLocation.setText(String.format("Event Location: %s",event.getDetails().getEventLocation())); // Sets event location if not null
         }
+
+        // Setting Event Date
         if (event.getDetails().getEventDateTime() != null){
+            Calendar calendar = Calendar.getInstance(); // Make new calender object based on date and Time
+            calendar.setTime(event.getDetails().getEventDateTime());
+
+
+            SimpleDateFormat monthAbrv = new SimpleDateFormat("MMM", Locale.ENGLISH); // Converts calender to 3 month format
+            SimpleDateFormat dayAbrv = new SimpleDateFormat("dd", Locale.ENGLISH); // Converts calender to day format
+            SimpleDateFormat timeAbrv = new SimpleDateFormat("hh:mm a", Locale.ENGLISH); // Converts calender to time format
+
+            dateMonth.setText(monthAbrv.format(calendar.getTime()).toUpperCase());
+            dateDay.setText(dayAbrv.format(calendar.getTime()));
+            dateTime.setText(timeAbrv.format(calendar.getTime()));
+
             eventTime.setText(String.format("Time: %s",event.getDetails().getEventDateTime())); // Sets event time if not null
+
+
         }
+
+
 
         // Setting event status text
         if (event.getDetails().getStatus().equals("open")) {
             // If event open make text open with green background
             eventStatus.setText("Open");
             eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
-        }
-        else{
+        } else if (event.getDetails().getStatus().equals("closed")) {
+            eventStatus.setText("Closed");
+            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
+        } else {
             // If event closed make text open with red background
             eventStatus.setText(event.getDetails().getStatus());
             eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
@@ -179,7 +207,8 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
                 Chip tag = new Chip(context);
                 final float scale = getContext().getResources().getDisplayMetrics().density;
                 tag.setText(tagString);
-                tag.setHeight(40);
+                tag.setChipStrokeWidth(0);
+                tag.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.white)));
                 tag.setClickable(false);
                 tagsChipGroup.addView(tag);
             }
