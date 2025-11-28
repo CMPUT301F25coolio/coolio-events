@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NotificationFragment extends Fragment {
@@ -170,6 +171,7 @@ public class NotificationFragment extends Fragment {
                             notif.setNotifId(doc.getId()); // Set the document ID
                             notificationList.add(notif);
                         }
+                        Collections.sort(notificationList); // Sorts notifications based on date sent
                     }
 
                     // *** CRUCIAL DEBUGGING STEP ***
