@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 
 import com.example.coolioevents.Event;
 import com.example.coolioevents.EventDetails;
@@ -79,6 +80,9 @@ public class EditEventActivity extends AppCompatActivity {
     private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etWaitingListLimit, etEventDateTime, etEventLocation;
     private ChipGroup etTags;
     private Button btnSave, btnPickPoster;
+    private boolean qrRequested = false;
+    private boolean hasExistingQr = false;    // event already has a QR in Firestore
+
 
     // new: button + image for QR on the edit screen
     private Button btnGenerateQr;
@@ -171,26 +175,31 @@ public class EditEventActivity extends AppCompatActivity {
         // when organizer taps this, we build a QR for this event and show it
         btnGenerateQr.setOnClickListener(v -> generateAndShowQr());
     }
-
     /**
      * Build a QR bitmap for this event and show it in the preview box.
      * Content is our deep link: coolioevents://event/<eventId>
      */
     private void generateAndShowQr() {
+        //Block if QR already exists or was generated this session
+        if (hasExistingQr || qrRequested) {
+            Toast.makeText(this, "QR code is already generated for this event.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (eventId == null || eventId.isEmpty()) {
             Toast.makeText(this, "Missing event id, can’t make QR", Toast.LENGTH_SHORT).show();
             return;
         }
-
         String deepLink = "coolioevents://event/" + eventId;
-
         try {
             Bitmap qrBitmap = QRCodeUtil.generateQRCode(deepLink);
             imgQrPreview.setImageBitmap(qrBitmap);
+            qrRequested = true;  // made a new QR this session
         } catch (WriterException e) {
             Toast.makeText(this, "Failed to make QR: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     private void loadEventAndPrefill(String eventId) {
         db.collection("events").document(eventId).get()
@@ -263,9 +272,21 @@ public class EditEventActivity extends AppCompatActivity {
                                 } catch (Exception ignored) {}
                             }
                         }
+                        //load QR image if already created
+                        String qrUrl = doc.getString("promoQrUrl");
+                        if (!TextUtils.isEmpty(qrUrl)) {
+                            hasExistingQr = true;   // this event already has a QR
+                            Glide.with(EditEventActivity.this)
+                                    .load(qrUrl)
+                                    .into(imgQrPreview);
+                        }
+
+
                     }
                 })
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load event: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Failed to load event: " + e.getMessage(),
+                                Toast.LENGTH_LONG).show());
     }
 
     private void showDateTimePicker() {
@@ -466,7 +487,6 @@ public class EditEventActivity extends AppCompatActivity {
     private void uploadAssetsAndFinish(String eventId, String deepLink) {
         StorageReference postersRef = storage.getReference().child("posters/" + eventId + ".jpg");
         StorageReference qrRef = storage.getReference().child("qrcodes/" + eventId + ".png");
-
         // Poster upload task (optional)
         var posterTask = Tasks.forResult((String) null);
         if (posterUri != null) {
@@ -483,28 +503,41 @@ public class EditEventActivity extends AppCompatActivity {
                 posterTask = Tasks.forResult((String) null);
             }
         }
-
-        // QR generation + upload
-        var qrTask = Tasks.call(() -> {
-            Bitmap qr = QRCodeUtil.generateQRCode(deepLink);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            qr.compress(Bitmap.CompressFormat.PNG, 100, bos);
-            return bos.toByteArray();
-        }).onSuccessTask(bytes -> qrRef.putBytes(bytes)
-        ).continueWithTask(t -> qrRef.getDownloadUrl()
-        ).continueWith(t -> t.getResult() != null ? t.getResult().toString() : null);
-
+        // QR upload is optional only if user pressed Generate this session
+        var qrTask = Tasks.forResult((String) null);
+        if (qrRequested) {
+            qrTask = Tasks.call(() -> {
+                        Bitmap qr = QRCodeUtil.generateQRCode(deepLink);
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        qr.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                        return bos.toByteArray();
+                    })
+                    .onSuccessTask(bytes -> qrRef.putBytes(bytes))
+                    .continueWithTask(t -> qrRef.getDownloadUrl())
+                    .continueWith(t -> t.getResult() != null ? t.getResult().toString() : null);
+        }
         Tasks.whenAllSuccess(posterTask, qrTask).addOnSuccessListener(results -> {
             String posterUrl = (String) results.get(0);
-            String qrUrl = (String) results.get(1);
-
+            String qrUrl     = (String) results.get(1);   // may be null if qrRequested == false
             Map<String, Object> updates = new HashMap<>();
-            updates.put("posterUrl", posterUrl);
-            updates.put("promoQrUrl", qrUrl);
-
+            // only update posterUrl if we actually uploaded one
+            if (posterUrl != null) {
+                updates.put("posterUrl", posterUrl);
+            }
+            // only write promoQrUrl if user asked for QR AND upload succeeded
+            if (qrRequested && qrUrl != null) {
+                updates.put("promoQrUrl", qrUrl);
+            }
+            // if neither poster nor qr were changed, just finish
+            if (updates.isEmpty()) {
+                Toast.makeText(this, "Event saved!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(EditEventActivity.this, OrganizerActivity.class));
+                finish();
+                return;
+            }
             db.collection("events").document(eventId).update(updates)
                     .addOnSuccessListener(x -> {
-                        Toast.makeText(this, "Event saved! Poster/QR saved.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Event saved!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(EditEventActivity.this, OrganizerActivity.class));
                         finish();
                     })

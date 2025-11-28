@@ -36,10 +36,6 @@ import java.util.List;
  * without affecting the main organizer flow. Also helps confirm
  * Firestore data structure and adapter behavior.
  *
- * OUTSTANDING ISSUES:
- * No progress indicator or empty-state message yet.
- * Errors only appear as short toasts and aren’t very descriptive.
- *
  * @author Parth Mittal
  * @version 1.0
  * @since 2025-11-07

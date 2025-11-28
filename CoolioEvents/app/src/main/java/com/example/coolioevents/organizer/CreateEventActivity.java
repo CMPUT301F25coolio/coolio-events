@@ -1,6 +1,6 @@
 package com.example.coolioevents.organizer;
-
 import android.app.DatePickerDialog;
+import com.google.zxing.WriterException;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,12 +13,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.coolioevents.Event;
 import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
@@ -32,7 +30,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -45,6 +42,7 @@ import java.util.UUID;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
 /**
  * Copyright 2025 Aasta Tsai & Parth Mittal & Ethan Diep
  *
@@ -52,7 +50,7 @@ import java.util.Locale;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -74,9 +72,9 @@ public class CreateEventActivity extends AppCompatActivity {
 
     private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etWaitingListLimit, etEventDateTime, etEventLocation;
     private ChipGroup etTags;
-    private Button btnCreate, btnPickPoster;
+    private Button btnCreate, btnPickPoster, btnGenerateQr;
     private ImageButton btnBack;
-    private ImageView imgPosterPreview;
+    private ImageView imgPosterPreview, imgQrPreview;
     private SwitchMaterial switchGeolocationVerification;
 
     private FirebaseFirestore db;
@@ -92,7 +90,11 @@ public class CreateEventActivity extends AppCompatActivity {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
     private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US);
 
-    private ArrayList<String> selectedTags = new ArrayList();
+    private ArrayList<String> selectedTags = new ArrayList<>();
+
+    // QR-related
+    private boolean qrRequested = false;
+    private String eventId;
 
     /**
      * ActivityResultLauncher to pick poster image from gallery.
@@ -120,6 +122,9 @@ public class CreateEventActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        // generate a stable eventId for this create session
+        eventId = UUID.randomUUID().toString();
+
         etTitle = findViewById(R.id.etEventTitle);
         etDescription = findViewById(R.id.etEventDescription);
         etRegistrationPeriod = findViewById(R.id.etRegistrationPeriod);
@@ -135,6 +140,10 @@ public class CreateEventActivity extends AppCompatActivity {
         btnPickPoster = findViewById(R.id.btnPickPoster);
         switchGeolocationVerification = findViewById(R.id.geolocation_switch);
 
+        // new QR views
+        btnGenerateQr = findViewById(R.id.btnGenerateQr);
+        imgQrPreview = findViewById(R.id.imgQrPreview);
+
         btnBack.setOnClickListener(v -> finish());
         btnPickPoster.setOnClickListener(v -> pickPosterLauncher.launch("image/*"));
 
@@ -149,6 +158,9 @@ public class CreateEventActivity extends AppCompatActivity {
         });
 
         btnCreate.setOnClickListener(v -> createEvent());
+
+        // generate + show QR on this create screen
+        btnGenerateQr.setOnClickListener(v -> generateAndShowQr());
     }
 
     private void showDateTimePicker() {
@@ -219,7 +231,6 @@ public class CreateEventActivity extends AppCompatActivity {
         startPicker.show();
     }
 
-
     /**
      * This method handles results from camera and gallery activities for poster image selection.
      *
@@ -235,16 +246,39 @@ public class CreateEventActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 101 && resultCode == RESULT_OK && data != null) {
-                // Image picked from gallery
-                Uri selectedImageUri = data.getData();
-                if (selectedImageUri != null) {
-                    posterUri = selectedImageUri;
-                    imgPosterPreview.setImageURI(posterUri);
-                }
+            // Image picked from gallery
+            Uri selectedImageUri = data.getData();
+            if (selectedImageUri != null) {
+                posterUri = selectedImageUri;
+                imgPosterPreview.setImageURI(posterUri);
+            }
             Toast.makeText(this, "Poster photo added successfully", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Builds a QR bitmap for this event's deep link and shows it.
+     * Only marks qrRequested = true if generation worked.
+     */
+    private void generateAndShowQr() {
+        // Block if QR already generated in this session
+        if (qrRequested) {
+            Toast.makeText(this, "QR code is already generated for this event.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(eventId)) {
+            Toast.makeText(this, "Missing event id, can’t make QR", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String deepLink = "coolioevents://event/" + eventId;
+        try {
+            Bitmap qrBitmap = QRCodeUtil.generateQRCode(deepLink);
+            imgQrPreview.setImageBitmap(qrBitmap);
+            qrRequested = true;   // remember that user wants QR saved on Create
+        } catch (WriterException e) {
+            Toast.makeText(this, "Failed to make QR: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     /**
@@ -275,7 +309,7 @@ public class CreateEventActivity extends AppCompatActivity {
             return;
         }
 
-        //optional waitlist limit
+        // optional waitlist limit
         Integer waitingListLimit = null;
         if (!waitingLimitStr.isEmpty()) {
             try {
@@ -303,7 +337,11 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         String organizerId = currentUser != null ? currentUser.getUid() : "unknown";
-        String eventId = UUID.randomUUID().toString();
+
+        // use the eventId we generated in onCreate so QR + event match
+        if (TextUtils.isEmpty(eventId)) {
+            eventId = UUID.randomUUID().toString();
+        }
         String deepLink = "coolioevents://event/" + eventId;
 
         EventDetails details = new EventDetails(
@@ -358,7 +396,7 @@ public class CreateEventActivity extends AppCompatActivity {
      *      Deep link URL for the event QR code
      */
     private void uploadAssetsAndFinish(String eventId, String deepLink) {
-        // 2) Upload poster (if selected) AND upload QR image, then update Firestore with URLs
+        // 2) Upload poster (if selected) AND optionally upload QR image, then update Firestore with URLs
 
         StorageReference postersRef = storage.getReference().child("posters/" + eventId + ".jpg");
         StorageReference qrRef = storage.getReference().child("qrcodes/" + eventId + ".png");
@@ -381,28 +419,45 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         }
 
-        // Task B: QR bitmap -> upload -> URL
-        var qrTask = Tasks.call(() -> {
-            Bitmap qr = QRCodeUtil.generateQRCode(deepLink);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            qr.compress(Bitmap.CompressFormat.PNG, 100, bos);
-            return bos.toByteArray();
-        }).onSuccessTask(bytes -> qrRef.putBytes(bytes)
-        ).continueWithTask(t -> qrRef.getDownloadUrl()
-        ).continueWith(t -> t.getResult() != null ? t.getResult().toString() : null);
+        // Task B: QR bitmap -> upload -> URL (only if user requested QR)
+        var qrTask = Tasks.forResult((String) null);
+        if (qrRequested) {
+            qrTask = Tasks.call(() -> {
+                        Bitmap qr = QRCodeUtil.generateQRCode(deepLink);
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        qr.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                        return bos.toByteArray();
+                    })
+                    .onSuccessTask(bytes -> qrRef.putBytes(bytes))
+                    .continueWithTask(t -> qrRef.getDownloadUrl())
+                    .continueWith(t -> t.getResult() != null ? t.getResult().toString() : null);
+        }
 
         // When both finish, update doc
         Tasks.whenAllSuccess(posterTask, qrTask).addOnSuccessListener(results -> {
             String posterUrl = (String) results.get(0);
-            String qrUrl = (String) results.get(1);
+            String qrUrl = (String) results.get(1);  // may be null if qrRequested == false
 
             Map<String, Object> updates = new HashMap<>();
-            updates.put("details.posterUrl", posterUrl);
-            updates.put("promoQrUrl", qrUrl);
+
+            if (posterUrl != null) {
+                updates.put("details.posterUrl", posterUrl);
+            }
+            if (qrRequested && qrUrl != null) {
+                updates.put("promoQrUrl", qrUrl);
+            }
+
+            // If no poster/QR uploads, just finish
+            if (updates.isEmpty()) {
+                Toast.makeText(this, "Event created!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(CreateEventActivity.this, OrganizerActivity.class));
+                finish();
+                return;
+            }
 
             db.collection("events").document(eventId).update(updates)
                     .addOnSuccessListener(x -> {
-                        Toast.makeText(this, "Event created! Poster/QR saved.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Event created!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(CreateEventActivity.this, OrganizerActivity.class));
                         finish();
                     })
@@ -417,6 +472,7 @@ public class CreateEventActivity extends AppCompatActivity {
             finish();
         });
     }
+
     /**
      * This method updates the event's selectedTags list to match what is currently selected
      * on the selected chips (tags). Limits the amount of selected tags to 3
@@ -443,6 +499,4 @@ public class CreateEventActivity extends AppCompatActivity {
         selectedTags.addAll(newSelectTags);
         System.out.println(selectedTags);
     }
-
-
 }

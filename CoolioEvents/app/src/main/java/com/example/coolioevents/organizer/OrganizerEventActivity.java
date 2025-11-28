@@ -1,14 +1,21 @@
 package com.example.coolioevents.organizer;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -20,11 +27,15 @@ import com.example.coolioevents.R;
 import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.events.EventViewModelFactory;
 import com.example.coolioevents.services.PoolingService;
+import com.example.coolioevents.util.QRCodeUtil;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.example.coolioevents.organizer.ListScreenActivity;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Copyright 2025 Avery Dancocks
@@ -85,6 +96,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
     private MaterialButton drawLottery;
     private MaterialButton drawNewEntrant;
     private Button sendNotifications;
+    private Button saveQrButton;
 
     /**
      * This is a helper function to assist in changing the state of the UI
@@ -143,7 +155,6 @@ public class OrganizerEventActivity extends AppCompatActivity {
 
         // Get intent from previous fragment
         Intent intent = getIntent();
-        //Get city name
         String currentEventId = intent.getStringExtra("EVENT_ID");
 
         // Establishing UI components
@@ -178,23 +189,27 @@ public class OrganizerEventActivity extends AppCompatActivity {
                     // Change button based on event status
                     updateButtonState();
                     System.out.println("WE MADE IT HERE");
-                    // Updating UI components to match clicked event
 
+                    // Updating UI components to match clicked event
 
                     if (event.getDetails().getStatus().equals("open")) {
                         // If event open make text open with green background
-                        eventStatusTextView.setText("Open");
-                        eventStatusTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.greenshapebackground));
-                    }
-                    else{
+                        if (eventStatusTextView != null) {
+                            eventStatusTextView.setText("Open");
+                            eventStatusTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.greenshapebackground));
+                        }
+                    } else {
                         // If event closed make text open with red background
-                        eventStatusTextView.setText("Closed");
-                        eventStatusTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.redshapebackground));
+                        if (eventStatusTextView != null) {
+                            eventStatusTextView.setText("Closed");
+                            eventStatusTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.redshapebackground));
+                        }
                     }
 
-                    //Set event tags
-                    if (event.getDetails().getTags() != null){
-                        for (String tagString : event.getDetails().getTags()){
+                    // Set event tags
+                    if (tagsGroup != null && event.getDetails().getTags() != null) {
+                        tagsGroup.removeAllViews();
+                        for (String tagString : event.getDetails().getTags()) {
                             Chip tag = new Chip(this);
                             tag.setText(tagString);
                             tag.setHeight(40);
@@ -203,23 +218,50 @@ public class OrganizerEventActivity extends AppCompatActivity {
                         }
                     }
 
-                    eventNameTextView.setText(details.getEventName());
-                    eventDescriptionTextView.setText(String.format("Description: %s", event.getDetails().getEventDescription()));
-                    if (event.getDetails().getEventLocation() != null){
-                        eventLocationTextView.setText(String.format("Event Location: %s",event.getDetails().getEventLocation())); // Sets event location if not null
+                    if (eventNameTextView != null) {
+                        eventNameTextView.setText(details.getEventName());
                     }
-                    else {
-                        eventLocationTextView.setText("Event Location: Not Available"); // Sets event location if  null
+
+                    if (eventDescriptionTextView != null) {
+                        eventDescriptionTextView.setText(String.format("Description: %s", event.getDetails().getEventDescription()));
                     }
-                    if (event.getDetails().getEventDateTime() != null){
-                        eventTimeTextView.setText(String.format("Time: %s",event.getDetails().getEventDateTime())); // Sets event time if not null
+
+                    if (eventLocationTextView != null) {
+                        if (event.getDetails().getEventLocation() != null) {
+                            eventLocationTextView.setText(String.format("Event Location: %s", event.getDetails().getEventLocation()));
+                        } else {
+                            eventLocationTextView.setText("Event Location: Not Available");
+                        }
                     }
-                    else {
-                        eventTimeTextView.setText("Time: Not Available"); // Sets event time if  null
+
+                    if (eventTimeTextView != null) {
+                        if (event.getDetails().getEventDateTime() != null) {
+                            eventTimeTextView.setText(String.format("Time: %s", event.getDetails().getEventDateTime()));
+                        } else {
+                            eventTimeTextView.setText("Time: Not Available");
+                        }
                     }
-                    eventRegistrationPeriodTextView.setText(String.format("Registration Period: %s", String.valueOf(details.getRegistrationPeriod())));
-                    eventEntrantLimitTextView.setText(String.format("Max Entrees: %s", String.valueOf(details.getEntrantLimit())));
-                    eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(event.getWaitlistEntrants().size())));
+
+                    if (eventRegistrationPeriodTextView != null) {
+                        eventRegistrationPeriodTextView.setText(String.format("Registration Period: %s", String.valueOf(details.getRegistrationPeriod())));
+                    }
+
+                    if (eventEntrantLimitTextView != null) {
+                        eventEntrantLimitTextView.setText(String.format("Max Entrees: %s", String.valueOf(details.getEntrantLimit())));
+                    }
+
+                    if (eventWaitlistLimitTextView != null) {
+                        Integer waitlistLimit = details.getWaitingListLimit();
+                        if (waitlistLimit != null) {
+                            eventWaitlistLimitTextView.setText(String.format("Waitlist Limit: %s", String.valueOf(waitlistLimit)));
+                        } else {
+                            eventWaitlistLimitTextView.setText("Waitlist Limit: Not Set");
+                        }
+                    }
+
+                    if (eventWaitlistEntrantCount != null) {
+                        eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITLIST", String.valueOf(event.getWaitlistEntrants().size())));
+                    }
 
                     // UI set up specifically for organizer
                     String organizerId = event.getOrganizerId();
@@ -227,23 +269,26 @@ public class OrganizerEventActivity extends AppCompatActivity {
                         eventViewModel.getOrganizerById(organizerId).observe(this, organizer -> {
                             if (organizer != null && organizer.getProfile() != null) {
                                 String username = organizer.getProfile().getUsername();
-                                if (username != null) { // Organizer has a username
-                                    eventOrganizerTextView.setText(String.format("Posted By: %s", username)); // Set the text for organizer
-                                }
-                                else {
-                                    eventOrganizerTextView.setText("Posted By: Unknown");
+                                if (eventOrganizerTextView != null) {
+                                    if (username != null) {
+                                        eventOrganizerTextView.setText(String.format("Posted By: %s", username));
+                                    } else {
+                                        eventOrganizerTextView.setText("Posted By: Unknown");
+                                    }
                                 }
                             }
                         });
                     }
-                    //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
+
                     // Set event image with Glide
-                    Glide.with(this)
-                            .load(event.getDetails().getPosterUrl()) // loads poster URL
-                            .placeholder(R.drawable.ic_image_placeholder)
-                            .error(R.drawable.ic_image_error)
-                            .fallback(R.drawable.ic_image_placeholder) // If imageURL is null
-                            .into(eventPosterImageView);
+                    if (eventPosterImageView != null) {
+                        Glide.with(this)
+                                .load(event.getDetails().getPosterUrl())
+                                .placeholder(R.drawable.ic_image_placeholder)
+                                .error(R.drawable.ic_image_error)
+                                .fallback(R.drawable.ic_image_placeholder)
+                                .into(eventPosterImageView);
+                    }
                 }
             }
         });
@@ -253,13 +298,12 @@ public class OrganizerEventActivity extends AppCompatActivity {
         drawLottery = findViewById(R.id.draw_lottery_button);
         drawNewEntrant = findViewById(R.id.draw_new_user_button);
         sendNotifications = findViewById(R.id.sendNotificationsButton);
+        saveQrButton = findViewById(R.id.save_qr_button);
         ImageButton backButton = findViewById(R.id.organizer_event_back_button);
         ImageButton editButton = findViewById(R.id.organizer_event_edit_button);
         ImageButton mapButton = findViewById(R.id.organizer_event_map_button);
 
-
         viewLists.setOnClickListener(v -> {
-            // use the EVENT_ID that was passed into this Activity
             if (currentEventId == null || currentEventId.isEmpty()) {
                 Toast.makeText(OrganizerEventActivity.this,
                         "Error: Event ID missing", Toast.LENGTH_SHORT).show();
@@ -272,17 +316,13 @@ public class OrganizerEventActivity extends AppCompatActivity {
 
         });
 
-
-        // Draw lottery button calls function to draw lottery
+        // Draw lottery button
         drawLottery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (currentEvent != null && !lotteryDone) {
                     eventViewModel.runLottery(currentEvent);
-
                     Toast.makeText(OrganizerEventActivity.this, "Running lottery...", Toast.LENGTH_SHORT).show();
-
-                    // Change state of lottery done
                     currentEvent.setLotteryDone(true);
                     lotteryDone = true;
                     updateButtonState();
@@ -290,7 +330,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
             }
         });
 
-        // Send Notifications button to go to an activity to send notifications to entrants
+        // Send Notifications button
         sendNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -302,7 +342,17 @@ public class OrganizerEventActivity extends AppCompatActivity {
             }
         });
 
-        // Draw new entrant button onclick activity
+        // Save QR button
+        saveQrButton.setOnClickListener(v -> {
+            if (currentEventId == null || currentEventId.isEmpty()) {
+                Toast.makeText(OrganizerEventActivity.this,
+                        "Error: Event ID missing", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            saveQrToGallery(currentEventId);
+        });
+
+        // Draw new entrant button
         drawNewEntrant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -325,10 +375,10 @@ public class OrganizerEventActivity extends AppCompatActivity {
             }
         });
 
-        // Back button onclick activity
+        // Back button
         backButton.setOnClickListener(v -> finish());
 
-        // Edit button onclick activity
+        // Edit button
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -345,7 +395,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
             }
         });
 
-        // Map Button onclick activity
+        // Map Button
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -356,16 +406,88 @@ public class OrganizerEventActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (currentEvent.isGeolocationVerificationEnabled()) {
+                if (currentEvent != null && currentEvent.isGeolocationVerificationEnabled()) {
                     Intent intent = new Intent(OrganizerEventActivity.this, MapActivity.class);
                     intent.putExtra("EVENT_ID", currentEventId);
                     startActivity(intent);
-                }
-                else {
+                } else {
                     Toast.makeText(OrganizerEventActivity.this,
                             "Enable Geolocation Verification", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    /**
+     * Generates the QR for this event's deep link and saves it into
+     * Pictures/CoolioEvents using MediaStore.
+     */
+    private void saveQrToGallery(String eventId) {
+        new Thread(() -> {
+            String qrContent = "coolioevents://event/" + eventId;
+
+            Bitmap bmp;
+            try {
+                bmp = QRCodeUtil.make(qrContent, 1024);
+            } catch (Exception e) {
+                runOnUiThread(() ->
+                        Toast.makeText(OrganizerEventActivity.this,
+                                "Failed to generate QR: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
+                return;
+            }
+
+            String fileName = "QR_" + eventId + ".png";
+
+            File picturesDir = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES
+            );
+            File coolioDir = new File(picturesDir, "CoolioEvents");
+            if (!coolioDir.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                coolioDir.mkdirs();
+            }
+
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CoolioEvents");
+            } else {
+                File outFile = new File(coolioDir, fileName);
+                values.put(MediaStore.Images.Media.DATA, outFile.getAbsolutePath());
+            }
+
+            try {
+                Uri uri = getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        values
+                );
+                if (uri == null) {
+                    throw new IOException("Failed to create MediaStore entry");
+                }
+
+                try (OutputStream os = getContentResolver().openOutputStream(uri)) {
+                    if (os == null) {
+                        throw new IOException("Failed to open output stream");
+                    }
+                    boolean ok = bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
+                    if (!ok) {
+                        throw new IOException("Failed to write QR image");
+                    }
+                }
+                runOnUiThread(() ->
+                        Toast.makeText(OrganizerEventActivity.this,
+                                "QR code saved to gallery.",
+                                Toast.LENGTH_SHORT).show());
+
+            } catch (IOException e) {
+                runOnUiThread(() ->
+                        Toast.makeText(OrganizerEventActivity.this,
+                                "Failed to save QR: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
+            }
+        }).start();
     }
 }
