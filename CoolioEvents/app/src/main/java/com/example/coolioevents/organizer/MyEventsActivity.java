@@ -30,10 +30,6 @@ import com.example.coolioevents.services.PoolingService;
  * This was built mainly as a simple test screen for pooling logic.
  * Keeping it separate avoids breaking other teammates’ flows and makes debugging easier.
  *
- * OUTSTANDING ISSUES:
- * Currently, there’s no check for invalid event IDs or detailed error display.
- * Could later add clearer messages or auto-fill valid event IDs from Firestore.
- *
  * @author Parth Mittal
  * @version 1.0
  * @since 2025-11-07

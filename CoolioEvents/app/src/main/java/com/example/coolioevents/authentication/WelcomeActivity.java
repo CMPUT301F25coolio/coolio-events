@@ -1,15 +1,11 @@
 package com.example.coolioevents.authentication;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,8 +14,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.coolioevents.Entrant.EntrantActivity;
 import com.example.coolioevents.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Copyright 2025 Ethan Diep
@@ -39,19 +41,19 @@ import com.google.firebase.auth.FirebaseAuth;
  * PURPOSE:
  * This class represents the Welcome Activity
  * It displays a screen which welcomes the user into the app, along with
- * 2 buttons options - login and signup
+ * 3 options: login, sign up, or continue as an entrant identified by device.
  *
  * RATIONALE:
  * This class was designed to welcome users into the app and have them
- * choose to login or sign up.
+ * choose to login, sign up, or use device-based entrant identification.
  *
  * @author Ethan Diep
- * @version 1.0
+ * @version 1.1
  * @since 2025-11-06
  */
 public class WelcomeActivity extends AppCompatActivity {
 
-    private Button loginButton, signupButton;
+    private Button loginButton, signupButton, entrantDeviceButton;
     private FirebaseAuth mAuth;
 
     @Override
@@ -68,22 +70,84 @@ public class WelcomeActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        // Force logout so app always asks to sign in (good for testing)
-        // Delete this line later if you want auto-login behavior.
-        mAuth.signOut();
+        loginButton         = findViewById(R.id.loginButton);
+        signupButton        = findViewById(R.id.signupButton);
+        entrantDeviceButton = findViewById(R.id.entrantDeviceButton);
 
-        loginButton  = findViewById(R.id.loginButton);
-        signupButton = findViewById(R.id.signupButton);
-
+        // Existing flows
         loginButton.setOnClickListener(v ->
                 startActivity(new Intent(WelcomeActivity.this, LoginActivity.class)));
         signupButton.setOnClickListener(v ->
                 startActivity(new Intent(WelcomeActivity.this, SignupActivity.class)));
 
+        //entrant identified by this device (no username/password)
+        entrantDeviceButton.setOnClickListener(v -> startEntrantByDevice());
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // Ask user for permission to recieve notifications if they have not allowed it yet
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
         }
+    }
+
+    /**
+     * Starts an entrant session that is identified by this device only.
+     * Uses Firebase anonymous authentication and ensures there is a user
+     * document with role "Entrant" for this UID.
+     */
+    private void startEntrantByDevice() {
+        FirebaseUser current = mAuth.getCurrentUser();
+
+        // If we already have an anonymous user on this device, reuse it.
+        if (current != null && current.isAnonymous()) {
+            startActivity(new Intent(WelcomeActivity.this, EntrantActivity.class));
+            finish();
+            return;
+        }
+
+        // If a non-anonymous user is logged in (organizer/admin), sign them out
+        // and start an anonymous entrant session instead.
+        if (current != null && !current.isAnonymous()) {
+            mAuth.signOut();
+        }
+
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(this, task -> {
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(WelcomeActivity.this,
+                                "Could not start entrant session.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    FirebaseUser anonUser = mAuth.getCurrentUser();
+                    if (anonUser == null) {
+                        Toast.makeText(WelcomeActivity.this,
+                                "Could not load entrant user.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    String uid = anonUser.getUid();
+
+                    db.collection("users").document(uid).get()
+                            .addOnSuccessListener(doc -> {
+                                if (!doc.exists()) {
+                                    // First time this device is used as an entrant – create user doc.
+                                    Map<String, Object> usermap = new HashMap<>();
+                                    usermap.put("role", "Entrant");
+                                    usermap.put("name", "Device Entrant");
+                                    usermap.put("username", "entrant_" + uid.substring(0, 8));
+                                    usermap.put("email", null);
+
+                                    db.collection("users").document(uid).set(usermap);
+                                }
+
+                                startActivity(new Intent(WelcomeActivity.this, EntrantActivity.class));
+                                finish();
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(WelcomeActivity.this,
+                                            "Error creating entrant: " + e.getMessage(),
+                                            Toast.LENGTH_SHORT).show());
+                });
     }
 
     /**
@@ -93,8 +157,4 @@ public class WelcomeActivity extends AppCompatActivity {
     public void setmAuth(FirebaseAuth mAuth) {
         this.mAuth = mAuth;
     }
-
-
-
-    // No onStart auto-redirect. User must tap Login/Sign Up.
 }

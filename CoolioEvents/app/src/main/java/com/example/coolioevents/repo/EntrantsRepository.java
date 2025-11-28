@@ -2,12 +2,12 @@ package com.example.coolioevents.repo;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FieldValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 /**
  * Copyright 2025 Parth Mittal
  *
@@ -24,54 +24,56 @@ import java.util.List;
  * limitations under the License.
  *
  * PURPOSE:
- * Handles fetching entrant lists (waitlist, chosen, and final) for a given event
- * from Firestore. Lets activities grab entrant data without touching Firestore
- * logic directly.
+ * Handles getting entrant lists (waitlist, chosen, enrolled, cancelled)
+ * for a given event from Firestore. Lets activities get entrant data
+ * without touching Firestore logic directly.
  *
  * RATIONALE:
  * Having a small data helper like this keeps Firestore code in one place and
  * avoids repeating the same query logic in multiple activities. Also supports
- * different field names used by teammates for better compatibility.
- *
- * OUTSTANDING ISSUES:
- * Firestore reads happen every time — no caching or live updates yet.
- * Future improvement could be using listeners so UI auto-refreshes when lists change.
+ * different field names used by teammates for better understanding.
  *
  * @author Parth Mittal
- * @version 1.0
+ * @version 1.1
  * @since 2025-11-07
  */
-/*
-  Purpose to Handles reading entrant lists waitlist, chosen, final for a given event
-  Works as a tiny data helper so activities dont need to talk to Firestore directly
-  Each list might have slightly different field names so I keep a small list of fallbacks.
-  If nothing found, I just return an empty list instead of throwing.*/
 public class EntrantsRepository {
-    // single firestore reference that this repo will reuse
+    // Single Firestore reference that this repo will reuse
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     // Fetches people who are still waiting for the event.
     public Task<List<String>> getWaitlist(String eventId) {
         // some teams called it waitingEntrants instead of waitlistEntrants
-        return fetchEntrantArray(eventId, Arrays.asList("waitlistEntrants", "waitingEntrants"));
+        return fetchEntrantArray(eventId,
+                Arrays.asList("waitlistEntrants", "waitingEntrants"));
     }
     // Fetches the ones who were selected or invited
     public Task<List<String>> getChosen(String eventId) {
         // different versions of the field names across groups
-        return fetchEntrantArray(eventId, Arrays.asList("chosenEntrants", "invitedEntrants", "selectedEntrants"));
+        return fetchEntrantArray(eventId,
+                Arrays.asList("chosenEntrants", "invitedEntrants", "selectedEntrants"));
     }
     // Fetches people that actually enrolled or got accepted in the end
     public Task<List<String>> getFinalEnrolled(String eventId) {
-        return fetchEntrantArray(eventId, Arrays.asList("acceptedEntrants", "enrolledEntrants", "finalEntrants"));
+        return fetchEntrantArray(eventId,
+                Arrays.asList("acceptedEntrants", "enrolledEntrants", "finalEntrants"));
+    }
+    // Fetches people that were cancelled / removed from the event
+    public Task<List<String>> getCancelled(String eventId) {
+        return fetchEntrantArray(eventId,
+                Arrays.asList("canceledEntrants", "cancelledEntrants"));
     }
     /*
       Common helper to check multiple possible field names.
-      I wrote this way so I don't have to duplicate the same Firestore call*/
+      I wrote this way so I don't have to duplicate the same Firestore call.
+     */
     private Task<List<String>> fetchEntrantArray(String eventId, List<String> possibleFields) {
         return db.collection("events").document(eventId).get()
                 .onSuccessTask(snapshot -> {
                     // quick null check in case document missing
                     if (snapshot == null || !snapshot.exists()) {
-                        return Tasks.forException(new IllegalStateException("Event not found in Firestore"));
+                        return Tasks.forException(
+                                new IllegalStateException("Event not found in Firestore"));
                     }
                     // try to find whichever list field exists first
                     for (String field : possibleFields) {
@@ -85,11 +87,11 @@ public class EntrantsRepository {
                     return Tasks.forResult(new ArrayList<String>());
                 });
     }
-
-    //remove entrant from ALL possible lists
+    /**
+     * Removes an entrant from ALL possible lists (waitlist, chosen, enrolled, cancelled).
+     */
     public Task<Void> removeEntrant(String eventId, String entrantId) {
         DocumentReference ref = db.collection("events").document(eventId);
-
         return ref.update(
                 "waitlistEntrants", FieldValue.arrayRemove(entrantId),
                 "waitingEntrants", FieldValue.arrayRemove(entrantId),
@@ -98,7 +100,9 @@ public class EntrantsRepository {
                 "selectedEntrants", FieldValue.arrayRemove(entrantId),
                 "acceptedEntrants", FieldValue.arrayRemove(entrantId),
                 "enrolledEntrants", FieldValue.arrayRemove(entrantId),
-                "finalEntrants", FieldValue.arrayRemove(entrantId)
+                "finalEntrants", FieldValue.arrayRemove(entrantId),
+                "canceledEntrants", FieldValue.arrayRemove(entrantId),
+                "cancelledEntrants", FieldValue.arrayRemove(entrantId)
         );
     }
 }

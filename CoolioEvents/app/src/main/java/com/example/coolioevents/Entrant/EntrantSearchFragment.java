@@ -4,9 +4,10 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.app.Dialog;
-import android.nfc.Tag;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -20,15 +21,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
 import com.example.coolioevents.events.EntrantEventArrayAdapter;
-import com.example.coolioevents.NotificationFragment;
 import com.example.coolioevents.events.EventFragment;
 import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.events.EventViewModelFactory;
@@ -36,14 +36,18 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import com.google.zxing.Result;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -79,20 +83,23 @@ import java.util.TimeZone;
  */
 public class EntrantSearchFragment extends Fragment {
     EventViewModel eventViewModel; // View Model with eventList up to date with database
-    ArrayList<Event> eventsList; // Home specific arraylist for array adapter ()
-    ArrayList<Event> eventsSearchList ; // Search list
+    ArrayList<Event> eventsList; // Home specific arraylist for array adapter
+    ArrayList<Event> eventsSearchList; // Search list
     EntrantEventArrayAdapter eventAdapter; // Array adapter for events
 
     SearchView searchBar;
     ListView eventsListView; // ListView on home fragment screen
     Button filterButton; // Button to filter events
     Button clearFilterButton; // Button to clear filter
+    FloatingActionButton scanQrButton; // Scan QR button
 
     Pair<Date, Date> dateRange; // dateRange to apply
     ArrayList<String> selectedTags; // tags to apply
     Boolean filterApplied = false; // Boolean checking if filter is applied or not
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    // ZXing scanner launcher
+    private ActivityResultLauncher<ScanOptions> scanQrLauncher;
 
     public EntrantSearchFragment() {
         // Required empty public constructor
@@ -107,13 +114,7 @@ public class EntrantSearchFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
-
-        // Source - https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
-        // Posted by mlykotom
-        // Retrieved by Juliane Phan on 2025-11-06, License - CC BY-SA 4.0
-        // Used to instantiate the EventViewModel which uses the EventViewModel Factory class
-        // Modifications made: Used our own class and parameter names
+        // Instantiate the EventViewModel using the factory
         eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
 
         eventsList = new ArrayList<>();
@@ -124,9 +125,29 @@ public class EntrantSearchFragment extends Fragment {
             @Override
             public void onChanged(ArrayList<Event> events) {
                 updateEventList();
-            }});
+            }
+        });
 
+        // ZXing scanner setup
+        scanQrLauncher = registerForActivityResult(
+                new ScanContract(),
+                result -> {
+                    if (result.getContents() == null) {
+                        // User cancelled
+                        return;
+                    }
+
+                    String text = result.getContents();
+                    if (text != null && text.startsWith("coolioevents://event/")) {
+                        String eventId = text.substring("coolioevents://event/".length());
+                        openEventFromId(eventId);
+                    } else {
+                        Toast.makeText(requireContext(), "Unrecognized QR code", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -141,8 +162,9 @@ public class EntrantSearchFragment extends Fragment {
         eventsListView = view.findViewById(R.id.eventList); // Listview in search
         filterButton = view.findViewById(R.id.filterButton); // Filter button in search
         clearFilterButton = view.findViewById(R.id.clearFilterButton); // Clear Filter button in search
-        eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList); // Make new event adapter linked to eventList
+        scanQrButton = view.findViewById(R.id.scanQrFab); // Scan QR FAB in search
 
+        eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList); // Make new event adapter linked to eventList
         eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsSearchList);
         eventsListView.setAdapter(eventAdapter);
 
@@ -151,12 +173,10 @@ public class EntrantSearchFragment extends Fragment {
             clearFilterButton.setVisibility(VISIBLE);
         }
         else {
-            clearFilterButton.setVisibility(GONE);}
+            clearFilterButton.setVisibility(GONE);
+        }
 
-
-
-
-        // Navigating to Event Fragment
+        // Navigating to Event Fragment when clicking on list item
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -194,6 +214,9 @@ public class EntrantSearchFragment extends Fragment {
             }
         });
 
+        // Scan QR button -> open ZXing scanner
+        scanQrButton.setOnClickListener(v -> startQrScan());
+
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -215,12 +238,13 @@ public class EntrantSearchFragment extends Fragment {
             }
         });
     }
+
     /**
      * This method updates eventList and updates eventAdapter to be up to date with
      * the database and apply any filters/searches.
      */
     private void updateEventList(){
-        ArrayList<Event> events; // events to iteratre over to set eventList to
+        ArrayList<Event> events; // events to iterate over to set eventList to
 
         if (filterApplied) {
             // If filter applied apply filters and set events to filtered event list
@@ -233,10 +257,12 @@ public class EntrantSearchFragment extends Fragment {
 
         eventsList.clear();
         System.out.println("CHANGED OMG");
-        for (Event event : events){
-            if (event.getDetails().getStatus().equals("open")){
-                // Only add events that are currently open
-                eventsList.add(event);
+        if (events != null) {
+            for (Event event : events){
+                if (event.getDetails().getStatus().equals("open")){
+                    // Only add events that are currently open
+                    eventsList.add(event);
+                }
             }
             Collections.sort(eventsList);
         }
@@ -266,7 +292,6 @@ public class EntrantSearchFragment extends Fragment {
             }
         });
 
-        // Source Help: https://www.youtube.com/watch?v=JqGtrQOL4tc
         // Make Date Range Picker
         final Date[] DateRange = new Date[2]; // Holds date range (0-startDate, 1-endDate)
         MaterialDatePicker<Pair<Long, Long>> picker = MaterialDatePicker.Builder.dateRangePicker()
@@ -311,7 +336,7 @@ public class EntrantSearchFragment extends Fragment {
     /**
      * Converts Long millisecond time to Date type
      * @param millis
-     *      Time im milliseconds
+     *      Time in milliseconds
      * @return
      *       Time in Date format
      */
@@ -321,6 +346,35 @@ public class EntrantSearchFragment extends Fragment {
         Date date = UTC.getTime();
         SimpleDateFormat SDF = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
         return UTC.getTime();
+    }
 
+    /**
+     * Starts ZXing's built-in scanner Activity.
+     */
+    private void startQrScan() {
+        ScanOptions options = new ScanOptions();
+        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+        options.setPrompt("Scan the event QR code");
+        options.setBeepEnabled(false);
+        options.setOrientationLocked(true);
+        scanQrLauncher.launch(options);
+    }
+
+    /**
+     * Opens the EventFragment for the given eventId.
+     */
+    private void openEventFromId(String eventId) {
+        if (eventId == null || eventId.isEmpty()) {
+            Toast.makeText(requireContext(), "Invalid event link", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        EventFragment eventDetailsFragment = EventFragment.newInstance(eventId);
+
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, eventDetailsFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

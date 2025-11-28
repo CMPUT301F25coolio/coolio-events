@@ -40,33 +40,32 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    //  Firebase (auth, firestore, storage)
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
 
-    //  CardView for UI
+    // CardView
     implementation("androidx.cardview:cardview:1.0.0")
 
-    //  QR code generation
+    // QR Scanning (required for IntentIntegrator + IntentResult)
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.zxing:core:3.5.3")
-    implementation(libs.firebase.storage)
 
     // Images
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
-    // Recycler View
+    // RecyclerView
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
     // Location
     implementation("com.google.android.gms:play-services-location:21.2.0")
 
-    // Maps SDK for Android
+    // Google Maps
     implementation(libs.play.services.maps)
 
-    //  Testing
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
