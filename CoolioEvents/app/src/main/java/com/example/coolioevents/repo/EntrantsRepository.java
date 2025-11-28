@@ -93,16 +93,8 @@ public class EntrantsRepository {
     public Task<Void> removeEntrant(String eventId, String entrantId) {
         DocumentReference ref = db.collection("events").document(eventId);
         return ref.update(
-                "waitlistEntrants", FieldValue.arrayRemove(entrantId),
-                "waitingEntrants", FieldValue.arrayRemove(entrantId),
                 "chosenEntrants", FieldValue.arrayRemove(entrantId),
-                "invitedEntrants", FieldValue.arrayRemove(entrantId),
-                "selectedEntrants", FieldValue.arrayRemove(entrantId),
-                "acceptedEntrants", FieldValue.arrayRemove(entrantId),
-                "enrolledEntrants", FieldValue.arrayRemove(entrantId),
-                "finalEntrants", FieldValue.arrayRemove(entrantId),
-                "canceledEntrants", FieldValue.arrayRemove(entrantId),
-                "cancelledEntrants", FieldValue.arrayRemove(entrantId)
+                "cancelledEntrants", FieldValue.arrayUnion(entrantId)
         );
     }
 }
