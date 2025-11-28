@@ -75,32 +75,31 @@
             android:id="@+id/searchBar"
             android:layout_width="0dp"
             android:layout_height="46dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/edittextbackground"
+            android:background="@drawable/searchbar_background"
             android:iconifiedByDefault="false"
-            android:queryHint="Search For An Event"
+            android:queryHint="Search"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.454"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/clearFilterButton"
+            app:layout_constraintEnd_toStartOf="@id/filterButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Content area: list + floating Scan QR button -->
+    <!-- 3) EVENT LIST + QR FAB TAKES THE REST -->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <ListView
             android:id="@+id/eventList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#DEDEDE"
-            android:descendantFocusability="beforeDescendants"
-            android:divider="#DEDEDE"
-            android:dividerHeight="5dp"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false" />
+            android:background="@android:color/transparent"
+            android:divider="#E0E0E0"
+            android:dividerHeight="6dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/scanQrFab"
