@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
@@ -289,13 +290,19 @@ public class EntrantHomeFragment extends Fragment {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dateRange = new Pair<>(DateRange[0], DateRange[1]);
-                selectedTags = filterTags;
-                System.out.println(selectedTags);
-                filterApplied = true; // Set boolean filter applied to true
-                updateEventList(); // Update the event list and adapter to show filtered events
-                clearFilterButton.setVisibility(VISIBLE); // Make clear filter button visible
-                dialog.dismiss(); // Close dialog prompt
+                if (!filterTags.isEmpty()) {
+                    // User needs to select tags to filter events
+                    dateRange = new Pair<>(DateRange[0], DateRange[1]);
+                    selectedTags = filterTags;
+                    System.out.println(selectedTags);
+                    filterApplied = true; // Set boolean filter applied to true
+                    updateEventList(); // Update the event list and adapter to show filtered events
+                    clearFilterButton.setVisibility(VISIBLE); // Make clear filter button visible
+                    dialog.dismiss(); // Close dialog prompt
+                }
+                else {
+                    Toast.makeText(getContext(), "Please select at least one tag", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
