@@ -37,8 +37,8 @@ public class EventEntrantListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_entrant_list);
 
-        String eventId = getIntent().getStringExtra(ListScreenActivity.EXTRA_EVENT_ID);
-        int type = getIntent().getIntExtra(EXTRA_TYPE, TYPE_WAIT);
+        eventId = getIntent().getStringExtra(ListScreenActivity.EXTRA_EVENT_ID);
+        currentType = getIntent().getIntExtra(EXTRA_TYPE, TYPE_WAIT);
 
         // Back button
         ImageButton back = findViewById(R.id.btnBack);
@@ -46,7 +46,7 @@ public class EventEntrantListActivity extends AppCompatActivity {
 
         // Title
         TextView title = findViewById(R.id.titleText);
-        title.setText(titleFor(type));
+        title.setText(titleFor(currentType));
 
         // Recycler setup
         RecyclerView rv = findViewById(R.id.recyclerEntrants);
@@ -55,7 +55,7 @@ public class EventEntrantListActivity extends AppCompatActivity {
         rv.setAdapter(adapter);
 
         repo = new EntrantsRepository();
-        load(eventId, type);
+        load(eventId, currentType);
 
         adapter.setOnItemClickListener((entrantId, isRegistered) -> {
             if (!isRegistered) {
