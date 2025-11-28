@@ -2,6 +2,7 @@ package com.example.coolioevents.administrator;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,12 +14,12 @@ import com.example.coolioevents.R;
 import com.example.coolioevents.events.EventImageData;
 import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.events.EventViewModelFactory;
-import com.example.coolioevents.organizer.Organizer;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+
 /**
- * Copyright 2025 Avery Dancocks
+ * Copyright 2025 Avery Dancocks & Juliane Phan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,11 +42,18 @@ import java.util.ArrayList;
  * This class was designed to allow administrators to view and
  * interact with event posters.
  *
- * @author Avery Dancocks
+ * @author Avery Dancocks & Juliane Phan
  * @version 1.0
  * @since 2025-11-19
  */
-public class AdministratorImagesActivity extends AppCompatActivity {
+
+/*Taken from: Google Gemini
+    Prompt: How to implement onclick activity for a recycler view?
+    Taken by: Juliane Phan
+    Taken on: 11/20/2025
+*/
+
+public class AdministratorImagesActivity extends AppCompatActivity implements ImagesGridAdapter.OnItemClickListener {
     private EventViewModel eventViewModel;
     private RecyclerView imagesRecyclerView;
     private ImagesGridAdapter gridAdapter;
@@ -65,6 +73,8 @@ public class AdministratorImagesActivity extends AppCompatActivity {
         // Establish Adapter
         imagesList = new ArrayList<EventImageData>();
         gridAdapter = new ImagesGridAdapter(imagesList, this);
+        gridAdapter.setOnItemClickListener(this);
+
 
         int numberOfColumns = 2; // Number of columns the images will be displayed in
         GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
@@ -90,5 +100,22 @@ public class AdministratorImagesActivity extends AppCompatActivity {
             backButton.setOnClickListener(v ->
                     startActivity(new Intent(this, AdministratorHomeActivity.class)));
         }
+    }
+
+    @Override
+    public void onItemClick(String imageURL) {
+        System.out.println("AN IMAGE WAS CLICKED IN AdministratorImagesActivity.java");
+        System.out.println(imageURL);
+
+        // Set the fragment's background colour
+        FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+        fragmentContainer.setBackgroundResource(R.drawable.whitebackground);
+
+        AdministratorImageFragment fragment = AdministratorImageFragment.newInstance(imageURL);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment) // Replace the current fragment
+                .addToBackStack(null) // This allows the user to press the back button to return to the list
+                .commit();
     }
 }

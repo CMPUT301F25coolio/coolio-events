@@ -1,7 +1,11 @@
 package com.example.coolioevents.administrator;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -19,7 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 /**
- * Copyright 2025 Avery Dancocks
+ * Copyright 2025 Avery Dancocks & Juliane Phan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +47,7 @@ import java.util.ArrayList;
  * This class was designed to allow administrators to view and
  * interact with all possible organizers.
  *
- * @author Avery Dancocks
+ * @author Avery Dancocks & Juliane Phan
  * @version 1.0
  * @since 2025-11-19
  */
@@ -80,8 +84,33 @@ public class AdministratorOrganizersActivity extends AppCompatActivity {
                 System.out.println("CHANGED OMG");
                 organizerList.addAll(organizers);
                 profileAdapter.notifyDataSetChanged();
+            }
+        });
+
+
+        // Click specific organizer --> Show fragment with user details and delete button
+        organizerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                User clickedOrganizer = (User) parent.getItemAtPosition(position);
+
+                // If organizer is null do nothing
+                if (clickedOrganizer == null) {
+                    return;
                 }
-            });
+
+                // Set the fragment's background colour
+                FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+                fragmentContainer.setBackgroundColor(Color.WHITE);
+
+                AdministratorUserFragment userFragment = AdministratorUserFragment.newInstance(clickedOrganizer.getProfile().getUser_id());
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, userFragment) // Replace the current fragment
+                        .addToBackStack(null) // This allows the user to press the back button to return to the list
+                        .commit();
+            }
+        });
 
         // Back button onclick activity --> Leads to Home activity
         if (backButton != null) {

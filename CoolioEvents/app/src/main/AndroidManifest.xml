@@ -66,9 +66,6 @@
         <activity
             android:name=".administrator.AdministratorNotificationsActivity"
             android:exported="false" />
-        <activity
-            android:name=".organizer.MapActivity"
-            android:exported="false" />
 
         <!-- Organizer side -->
         <activity

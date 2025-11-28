@@ -51,8 +51,6 @@ public class OrganizerActivity extends AppCompatActivity {
         View optMakeEvent = findViewById(R.id.optMakeEvent);
         View optMyEvents = findViewById(R.id.optMyEvents);
         View optMyProfile = findViewById(R.id.optMyProfile);
-        View optSendNotification = findViewById(R.id.optSendNotification);
-        Button logoutButton = findViewById(R.id.logoutButton);
 
         // Click actions
         if (optMakeEvent != null) {
@@ -65,27 +63,7 @@ public class OrganizerActivity extends AppCompatActivity {
         }
         if (optMyProfile != null) {
             optMyProfile.setOnClickListener(v ->
-                    Toast.makeText(this, "My Profile: coming soon", Toast.LENGTH_SHORT).show());
+                    startActivity(new Intent(this, OrganizerProfileActivity.class)));
         }
-        if (optSendNotification != null) {
-            optSendNotification.setOnClickListener(v ->
-                    Toast.makeText(this, "Send Notification: coming soon", Toast.LENGTH_SHORT).show());
-        }
-
-        logoutButton.setOnClickListener(v -> {
-            logout(); // If logout button pressed - perform logout
-        });
-    }
-
-    /**
-     * This method signs the user out of their account - it
-     * signs out of the current user in mAuth, and
-     * sends user back to the welcome screen
-     */
-    private void logout(){
-        Intent intent = new Intent(this, WelcomeActivity.class);
-        mAuth.signOut();
-        startActivity(intent);
-        finish();
     }
 }

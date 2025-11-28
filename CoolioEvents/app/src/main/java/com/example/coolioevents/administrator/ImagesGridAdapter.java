@@ -17,7 +17,7 @@ import com.example.coolioevents.events.EventImageData;
 import java.util.ArrayList;
 
 /**
- * Copyright 2025 Avery Dancocks
+ * Copyright 2025 Avery Dancocks & Juliane Phan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import java.util.ArrayList;
  * RATIONALE:
  * Posters are displayed in a grid with two columns for better user interface.
  *
- * @author Avery Dancocks
+ * @author Avery Dancocks & Juliane Phan
  * @version 1.0
  * @since 2025-11-19
  */
@@ -49,9 +49,25 @@ Taken From: https://developer.android.com/develop/ui/views/layout/recyclerview
     Taken by: Avery Dancocks
     Taken on: 11/18/25
 */
+
+/*Taken from: Google Gemini
+    Prompt: How to implement onclick activity for a recycler view?
+    Taken by: Juliane Phan
+    Taken on: 11/20/2025
+*/
 public class ImagesGridAdapter extends RecyclerView.Adapter<ImagesGridAdapter.ViewHolder>{
     private final ArrayList<EventImageData> imageList;
     private final Context context;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(String imageURL);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
 
     public ImagesGridAdapter(ArrayList<EventImageData> imageList, Context context) {
         this.imageList = imageList;
@@ -97,6 +113,15 @@ public class ImagesGridAdapter extends RecyclerView.Adapter<ImagesGridAdapter.Vi
                 .fallback(R.drawable.ic_image_placeholder) // If imageURL is null
                 .into(viewHolder.eventImageView);
 
+        // Set organizer username
+        viewHolder.organizerUsername.setText(data.getOrganizerUsername());
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(imageUrl);
+            }
+        });
     }
 
     @Override
