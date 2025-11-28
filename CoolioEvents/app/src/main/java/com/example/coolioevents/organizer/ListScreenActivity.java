@@ -1,6 +1,7 @@
 package com.example.coolioevents.organizer;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.coolioevents.R;
@@ -35,7 +36,7 @@ public class ListScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_screen);
         String eventId = getIntent().getStringExtra(EXTRA_EVENT_ID);
-        ImageButton back = findViewById(R.id.btnBack);
+        FrameLayout back = findViewById(R.id.btnBack);
         back.setOnClickListener(v -> finish());
         // Enrolled (acceptedEntrants)
         findViewById(R.id.cardEnrolled)

@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -103,8 +104,13 @@ public class OrganizerEventActivity extends AppCompatActivity {
      * This is a helper function to assist in changing the state of the UI
      */
     private void updateButtonState() {
+        // Event is still open
+        if (eventStatus.equals("open")) {
+            //drawLottery.setEnabled(false);
+            drawNewEntrant.setEnabled(false);
+        }
         // Lottery has already been drawn
-        if (lotteryDone && eventStatus.equals("closed")) {
+        if (lotteryDone) {
             /*
             drawLottery.setEnabled(false);
             // Set UI
@@ -147,11 +153,6 @@ public class OrganizerEventActivity extends AppCompatActivity {
             drawLottery.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
         }
          */
-        // Event is still open
-        if (eventStatus.equals("open")) {
-            //drawLottery.setEnabled(false);
-            drawNewEntrant.setEnabled(false);
-        }
     }
 
     @Override
@@ -305,7 +306,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
         drawNewEntrant = findViewById(R.id.draw_new_user_button);
         sendNotifications = findViewById(R.id.sendNotificationsButton);
         saveQrButton = findViewById(R.id.save_qr_button);
-        ImageButton backButton = findViewById(R.id.organizer_event_back_button);
+        FrameLayout backButton = findViewById(R.id.organizer_event_back_button);
         ImageButton editButton = findViewById(R.id.organizer_event_edit_button);
         ImageButton mapButton = findViewById(R.id.organizer_event_map_button);
 
