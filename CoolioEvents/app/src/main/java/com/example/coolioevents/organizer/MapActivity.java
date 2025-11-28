@@ -3,6 +3,7 @@ package com.example.coolioevents.organizer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -86,7 +87,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
         // Establishing Button
-        ImageButton backButton = findViewById(R.id.map_back_button);
+        FrameLayout backButton = findViewById(R.id.map_back_button);
 
         // Back Button onClick
         backButton.setOnClickListener(v ->

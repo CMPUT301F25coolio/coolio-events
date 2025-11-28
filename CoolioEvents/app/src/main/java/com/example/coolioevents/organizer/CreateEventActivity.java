@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -73,7 +74,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private EditText etTitle, etDescription, etRegistrationPeriod, etEntrantLimit, etWaitingListLimit, etEventDateTime, etEventLocation;
     private ChipGroup etTags;
     private Button btnCreate, btnPickPoster, btnGenerateQr;
-    private ImageButton btnBack;
+    private FrameLayout btnBack;
     private ImageView imgPosterPreview, imgQrPreview;
     private SwitchMaterial switchGeolocationVerification;
 
@@ -135,7 +136,7 @@ public class CreateEventActivity extends AppCompatActivity {
         etTags = findViewById(R.id.etTags);
 
         btnCreate = findViewById(R.id.btnCreate);
-        btnBack = findViewById(R.id.organizer_event_back_button);
+        btnBack = findViewById(R.id.btnBack);
         imgPosterPreview = findViewById(R.id.imgPosterPreview);
         btnPickPoster = findViewById(R.id.btnPickPoster);
         switchGeolocationVerification = findViewById(R.id.geolocation_switch);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -65,7 +66,7 @@ public class OrganizerMyEventsActivity extends AppCompatActivity {
     ArrayList<Event> eventsList; // My events-specific arraylist for array adapter
     OrganizerEventArrayAdapter eventAdapter; // Array adapter for events
     ListView eventsListView; // ListView on home fragment screen
-    ImageButton btnBack;
+    FrameLayout btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

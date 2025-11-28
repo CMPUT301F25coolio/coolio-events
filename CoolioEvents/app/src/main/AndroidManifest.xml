@@ -92,6 +92,16 @@
         <activity
             android:name=".organizer.OrganizerSendNotifications"
             android:exported="false" />
+        <activity
+            android:name=".organizer.OrganizerProfileActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".organizer.OrganizerUpdateProfileActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".organizer.MapActivity"
+            android:exported="false"/>
+
 
         <!-- Organizer list screens -->
         <activity

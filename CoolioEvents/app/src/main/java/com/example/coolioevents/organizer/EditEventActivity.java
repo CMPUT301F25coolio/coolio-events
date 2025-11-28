@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -88,7 +89,7 @@ public class EditEventActivity extends AppCompatActivity {
     private Button btnGenerateQr;
     private ImageView imgQrPreview;
 
-    private ImageButton btnBack;
+    private FrameLayout btnBack;
     private ImageView imgPosterPreview;
     private SwitchMaterial switchGeolocationVerification;
 
@@ -206,8 +207,10 @@ public class EditEventActivity extends AppCompatActivity {
                 .addOnSuccessListener((DocumentSnapshot doc) -> {
                     if (doc.exists()) {
                         // Setting Geolocation Verification Switch
-                        boolean geolocationVerificationEnabled = doc.getBoolean("geolocationVerificationEnabled");
-                        switchGeolocationVerification.setChecked(geolocationVerificationEnabled);
+                        Boolean geolocationVerificationEnabled = doc.getBoolean("geolocationVerificationEnabled");
+                        // Ensures if geolocation field doesn't exist automatically make it false
+                        boolean isChecked = (geolocationVerificationEnabled != null && geolocationVerificationEnabled);
+                        switchGeolocationVerification.setChecked(isChecked);
 
                         // Attempt to convert to Event if your Event class exists
                         Event event = doc.toObject(Event.class);
@@ -246,7 +249,7 @@ public class EditEventActivity extends AppCompatActivity {
                             }
                             // Pre"check" already selected tags for the event
                                     /*Taken from: Google Gemini
-                                    Prompt: how to check all chips in a chipgroup java android stuydio
+                                    Prompt: how to check all chips in a chipgroup java android studio
                                     Taken by: Ethan Diep
                                     Taken on: 11/22/25
                                          */
