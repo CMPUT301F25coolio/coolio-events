@@ -43,6 +43,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
+import android.view.View;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,6 +59,15 @@ import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 /**
  * A Fragment that displays the current user's profile.
@@ -292,6 +303,62 @@ public class ProfileFragment extends Fragment {
         }
         return ""; // If no words are found
     }
+    /**
+     * This method shows a dialog asking the user to re-enter their password
+     * before deleting their account : like a confirmation
+     * If password incorrect : account deleting won't go through
+     */
+
+    private void showReauthDialog() {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) return;
+
+        View view = LayoutInflater.from(getContext())
+                .inflate(R.layout.dialogue_reauth, null);
+        EditText etPassword = view.findViewById(R.id.etPassword);
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Confirm Password")
+                .setView(view)
+                .setPositiveButton("Confirm", (dialog, which) -> {
+                    String password = etPassword.getText().toString().trim();
+                    if (password.isEmpty()) {
+                        Toast.makeText(getContext(),
+                                "Password cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    reauthenticateAndDelete(user, password);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+    /**
+     * This method reauthenticates the user with their password
+     */
+
+    private void reauthenticateAndDelete(FirebaseUser user, String password) {
+        String email = user.getEmail();
+        if (email == null) {
+            Toast.makeText(getContext(),
+                    "No email associated with this account.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+        user.reauthenticate(credential)
+                .addOnSuccessListener(unused -> {
+                    Log.d("ProfileFragment", "Re-authentication successful");
+                    performAccountDeletion(user);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ProfileFragment", "Re-authentication failed", e);
+                    Toast.makeText(getContext(),
+                            "Re-authentication failed: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                });
+    }
+
 
     /**
      * This method signs the user out of their account - it
@@ -308,34 +375,130 @@ public class ProfileFragment extends Fragment {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Account")
                 .setMessage("Are you sure you want to delete your account? This cannot be undone.")
-                .setPositiveButton("Delete", (dialog, which) -> deleteAccount())
+                .setPositiveButton("Delete", (dialog, which) -> showReauthDialog())
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+    /**
+     * Remove this user from all event lists:
+     * waitlistEntrants, chosenEntrants, acceptedEntrants, cancelledEntrants.
+     */
+    private Task<Void> removeUserFromAllEventLists(String uid) {
+        // Query events where any of the 4 arrays contain this uid
+        Task<QuerySnapshot> waitListTask = db.collection("events")
+                .whereArrayContains("waitlistEntrants", uid)
+                .get();
 
-    private void deleteAccount() {
-        if (auth.getCurrentUser() == null) return;
+        Task<QuerySnapshot> chosenTask = db.collection("events")
+                .whereArrayContains("chosenEntrants", uid)
+                .get();
 
-        String uid = auth.getCurrentUser().getUid();
+        Task<QuerySnapshot> acceptedTask = db.collection("events")
+                .whereArrayContains("acceptedEntrants", uid)
+                .get();
 
-        // 1. Delete Firestore user document
-        db.collection("users").document(uid).delete()
+        Task<QuerySnapshot> canceledTask = db.collection("events")
+                .whereArrayContains("cancelledEntrants", uid)
+                .get();
+
+        return Tasks.whenAllComplete(waitListTask, chosenTask, acceptedTask, canceledTask)
+                .onSuccessTask(tasks -> {
+                    WriteBatch batch = db.batch();
+
+                    if (waitListTask.isSuccessful()) {
+                        QuerySnapshot snap = waitListTask.getResult();
+                        if (snap != null) {
+                            for (QueryDocumentSnapshot doc : snap) {
+                                batch.update(doc.getReference(),
+                                        "waitlistEntrants",
+                                        FieldValue.arrayRemove(uid));
+                            }
+                        }
+                    }
+
+                    if (chosenTask.isSuccessful()) {
+                        QuerySnapshot snap = chosenTask.getResult();
+                        if (snap != null) {
+                            for (QueryDocumentSnapshot doc : snap) {
+                                batch.update(doc.getReference(),
+                                        "chosenEntrants",
+                                        FieldValue.arrayRemove(uid));
+                            }
+                        }
+                    }
+
+                    if (acceptedTask.isSuccessful()) {
+                        QuerySnapshot snap = acceptedTask.getResult();
+                        if (snap != null) {
+                            for (QueryDocumentSnapshot doc : snap) {
+                                batch.update(doc.getReference(),
+                                        "acceptedEntrants",
+                                        FieldValue.arrayRemove(uid));
+                            }
+                        }
+                    }
+
+                    if (canceledTask.isSuccessful()) {
+                        QuerySnapshot snap = canceledTask.getResult();
+                        if (snap != null) {
+                            for (QueryDocumentSnapshot doc : snap) {
+                                batch.update(doc.getReference(),
+                                        "cancelledEntrants",
+                                        FieldValue.arrayRemove(uid));
+                            }
+                        }
+                    }
+
+                    // Commit all array updates
+                    return batch.commit();
+                });
+    }
+    /**
+     * After successful re-authentication, actually delete everything:
+     * 1) remove from all event entrant lists
+     * 2) delete Firestore user doc
+     * 3) delete FirebaseAuth user
+     */
+    private void performAccountDeletion(FirebaseUser user) {
+        String uid = user.getUid();
+
+        // 1. Remove user from all event lists
+        removeUserFromAllEventLists(uid)
                 .addOnSuccessListener(unused -> {
-                    // 2. Delete FirebaseAuth user
-                    auth.getCurrentUser().delete()
-                            .addOnSuccessListener(unused2 -> {
-                                Toast.makeText(getContext(), "Account deleted", Toast.LENGTH_SHORT).show();
+                    // 2. Delete Firestore user document
+                    db.collection("users").document(uid).delete()
+                            .addOnSuccessListener(unusedUser -> {
+                                // 3. Delete FirebaseAuth user (now recently re-authenticated)
+                                user.delete()
+                                        .addOnSuccessListener(unusedAuth -> {
+                                            Toast.makeText(getContext(),
+                                                    "Account deleted",
+                                                    Toast.LENGTH_SHORT).show();
 
-                                // 3. Log out and go to WelcomeActivity
-                                Intent intent = new Intent(requireActivity(), WelcomeActivity.class);
-                                startActivity(intent);
-                                requireActivity().finish();
+                                            Intent intent = new Intent(requireActivity(), WelcomeActivity.class);
+                                            startActivity(intent);
+                                            requireActivity().finish();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.e("ProfileFragment", "Failed to delete auth user", e);
+                                            Toast.makeText(getContext(),
+                                                    "Failed to delete auth user: " + e.getMessage(),
+                                                    Toast.LENGTH_LONG).show();
+                                        });
                             })
-                            .addOnFailureListener(e ->
-                                    Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                            .addOnFailureListener(e -> {
+                                Log.e("ProfileFragment", "Failed to delete user profile", e);
+                                Toast.makeText(getContext(),
+                                        "Failed to delete user profile: " + e.getMessage(),
+                                        Toast.LENGTH_LONG).show();
+                            });
                 })
-                .addOnFailureListener(e ->
-                        Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    Log.e("ProfileFragment", "Failed to remove user from event lists", e);
+                    Toast.makeText(getContext(),
+                            "Failed to remove user from event lists: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                });
     }
 
     /**
