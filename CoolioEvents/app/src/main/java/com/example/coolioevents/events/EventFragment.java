@@ -461,7 +461,7 @@ public class EventFragment extends Fragment {
                             //Block user from joining if full
                             if (waitlistCount >= limit) {
                                 Toast.makeText(getContext(),
-                                        "The waiting list is full. Please check back later.",
+                                        "The organizer has set a waiting list limit. The waiting list is currently full. Please check back later.",
                                         Toast.LENGTH_SHORT).show();
                                 return;
                             }
