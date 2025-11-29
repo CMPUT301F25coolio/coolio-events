@@ -25,7 +25,7 @@
             android:fontFamily="@font/poppins_bold"
             android:gravity="center"
             android:text="My Events"
-            aandroid:paddingLeft="15dp"
+            android:paddingLeft="15dp"
             android:paddingTop="25dp"
             android:paddingBottom="30dp"
             android:textColor="@color/white"
