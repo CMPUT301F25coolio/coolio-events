@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -92,8 +93,8 @@ public class EntrantSearchFragment extends Fragment {
 
     SearchView searchBar;
     ListView eventsListView; // ListView on home fragment screen
-    Button filterButton; // Button to filter events
-    Button clearFilterButton; // Button to clear filter
+    FrameLayout filterButton; // Button to filter events
+    FrameLayout clearFilterButton; // Button to clear filter
     FloatingActionButton scanQrButton; // Scan QR button
 
     Pair<Date, Date> dateRange; // dateRange to apply
@@ -195,9 +196,11 @@ public class EntrantSearchFragment extends Fragment {
         // If a filter is applied make sure clearFilterButton is visible
         if (filterApplied){
             clearFilterButton.setVisibility(VISIBLE);
+            filterButton.setVisibility(GONE);
         }
         else {
             clearFilterButton.setVisibility(GONE);
+            filterButton.setVisibility(VISIBLE);
         }
 
         // Navigating to Event Fragment when clicking on list item
@@ -235,6 +238,7 @@ public class EntrantSearchFragment extends Fragment {
                 filterApplied = false;
                 updateEventList();
                 clearFilterButton.setVisibility(GONE);
+                filterButton.setVisibility(VISIBLE);
             }
         });
 
@@ -352,6 +356,7 @@ public class EntrantSearchFragment extends Fragment {
                     filterApplied = true; // Set boolean filter applied to true
                     updateEventList(); // Update the event list and adapter to show filtered events
                     clearFilterButton.setVisibility(VISIBLE); // Make clear filter button visible
+                    filterButton.setVisibility(GONE);
                     dialog.dismiss(); // Close dialog prompt
                 }
                 else {

@@ -40,8 +40,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -335,12 +337,62 @@ public class EventFragment extends Fragment {
                         eventLocationTextView.setText("Event Location: Not Available"); // Sets event location if  null
                     }
                     if (event.getDetails().getEventDateTime() != null){
-                        eventTimeTextView.setText(String.format("%s",event.getDetails().getEventDateTime())); // Sets event time if not null
+                        Date eventDate = event.getDetails().getEventDateTime();
+                        String pattern = "MMM d h:mma";
+                        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
+                        String formattedTime = sdf.format(eventDate);
+                        formattedTime = formattedTime.replace("AM", "am").replace("PM", "pm");
+                        eventTimeTextView.setText(formattedTime);
                     }
                     else {
                         eventLocationTextView.setText("Time: Not Available"); // Sets event time if  null
                     }
-                    eventRegistrationPeriodTextView.setText(String.format("%s", String.valueOf(details.getRegistrationPeriod())));
+
+                    // Formatting registration period
+                    /*
+                    Taken From: Google Gemini
+                        Prompt: How to format a string date with a hyphen
+                        Taken By: Avery Dancocks
+                        Taken On: 11/29/25
+                     */
+                    String dateRangeString = String.valueOf(details.getRegistrationPeriod());
+
+                    String finalFormattedDate = "Date not available";
+
+                    if (dateRangeString != null && dateRangeString.contains("-")) {
+                        try {
+                            // Split the string into start and end date parts
+                            String[] dates = dateRangeString.split("\\s*-\\s*");
+                            String startDateString = dates[0]; // "2025/12/13"
+                            String endDateString = dates[1];   // "2025/12/14"
+
+                            // Define the formatter for the inputted format
+                            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+                            // Create formatter
+                            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
+
+                            // Parse input strings into LocalDate objects
+                            LocalDate startDate = LocalDate.parse(startDateString, inputFormatter);
+                            LocalDate endDate = LocalDate.parse(endDateString, inputFormatter);
+
+                            // Format the LocalDate objects into the new string format
+                            String formattedStartDate = startDate.format(outputFormatter);
+                            String formattedEndDate = endDate.format(outputFormatter);
+
+                            // Combine into the final string
+                            finalFormattedDate = String.format("%s - %s", formattedStartDate, formattedEndDate);
+
+                        } catch (Exception e) {
+                            finalFormattedDate = dateRangeString;
+                            e.printStackTrace();
+                            Log.e("DateFormattingError", "An unexpected error occurred for date string: " + dateRangeString, e);
+                        }
+
+                    }
+
+                    eventRegistrationPeriodTextView.setText(finalFormattedDate);
+                    //eventRegistrationPeriodTextView.setText(String.format("%s", String.valueOf(details.getRegistrationPeriod())));
                     eventEntrantLimitTextView.setText(String.format("%s", String.valueOf(details.getEntrantLimit())));
                     eventWaitlistEntrantCount.setText(String.format("People in the Waitlist: %s", String.valueOf(event.getWaitlistEntrants().size())));
 
@@ -380,12 +432,12 @@ public class EventFragment extends Fragment {
                     if (event.getDetails().getStatus().equals("open")) {
                         // If event open make text open with green background
                         eventStatusTextView.setText("Open");
-                        eventStatusTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
+                        eventStatusTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.medium_green_widget));
                     }
                     else{
                         // If event closed make text open with red background
                         eventStatusTextView.setText("Closed");
-                        eventStatusTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.redshapebackground));
+                        eventStatusTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.red_widget));
                     }
 
                     //Set event tags
@@ -456,18 +508,24 @@ public class EventFragment extends Fragment {
                         }
                         else { // User is NOT currently on waitlist
 
-                            int limit = currentEvent.getDetails().getWaitingListLimit();
+                            Integer limitObject = currentEvent.getDetails().getWaitingListLimit();
 
-                            //Block user from joining if full
-                            if (waitlistCount >= limit) {
-                                Toast.makeText(getContext(),
-                                        "The waiting list is full. Please check back later.",
-                                        Toast.LENGTH_SHORT).show();
-                                return;
+                            if (limitObject == null || limitObject <= 0) {
+                                // Otherwise allow joining
+                                joinWaitlistWithGeolocationCheck();
+                            }
+                            else {
+                                int limit = limitObject.intValue();
+
+                                //Block user from joining if full
+                                if (waitlistCount >= limit) {
+                                    Toast.makeText(getContext(),
+                                            "The waiting list is full. Please check back later.",
+                                            Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                             }
 
-                            // Otherwise allow joining
-                            joinWaitlistWithGeolocationCheck();
                         }
                     }
                     else {

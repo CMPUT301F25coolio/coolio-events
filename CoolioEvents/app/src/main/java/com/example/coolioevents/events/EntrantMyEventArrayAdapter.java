@@ -2,8 +2,6 @@ package com.example.coolioevents.events;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.nfc.Tag;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.coolioevents.Event;
-import com.example.coolioevents.MainActivity;
 import com.example.coolioevents.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -31,39 +27,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Copyright 2025 Ethan Diep & Avery Dancocks & Juliane Phan
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * PURPOSE:
- * This class represents an array adapter for a single event for entrant.
- * Displays the details of an event in a list view.
- *
- * RATIONALE:
- * Used to ensure the List View has a proper representation of
- * all the events in the ArrayList.
- *
- * @author Ethan Diep & Avery Dancocks & Juliane Phan
- * @version 1.0
- * @since 2025-11-05
- */
-public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
+public class EntrantMyEventArrayAdapter extends ArrayAdapter<Event> {
     private ArrayList<Event> eventList;
     private Context context;
     private FirebaseUser currentUser;
 
-    public EntrantEventArrayAdapter(Context context, ArrayList<Event> eventList){
+    public EntrantMyEventArrayAdapter(Context context, ArrayList<Event> eventList){
         super(context,0, eventList);
         this.eventList = eventList;
         this.context = context;
@@ -104,10 +73,7 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
         eventRegPrd.setText(String.format("Registration Period: %s", event.getDetails().getRegistrationPeriod())); // Sets event registration period text
         eventMaxEntrees.setText(String.format("Entrant Limit: %s", String.valueOf(event.getDetails().getEntrantLimit()))); // Sets entrant limit organizer text
 
-        // Setting Certain Views Invisible for search and home fragments
-        eventStatus.setVisibility(View.GONE);
-        eventUserStatus.setVisibility(View.GONE);
-        eventUserStatusRegistration.setVisibility(View.GONE);
+
 
         //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
         // Set event image with Glide
@@ -142,24 +108,21 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
         }
 
 
-        /*
         // Setting event status text
         if (event.getDetails().getStatus().equals("open")) {
             // If event open make text open with green background
             eventStatus.setText("Open");
-            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
+            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.medium_green_widget));
         } else if (event.getDetails().getStatus().equals("closed")) {
             eventStatus.setText("Closed");
-            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
+            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.red_widget));
         } else {
             // If event closed make text open with red background
             eventStatus.setText(event.getDetails().getStatus());
-            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
+            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.red_widget));
         }
 
-         */
 
-        /*
         List<String> waitlist = event.getWaitlistEntrants();
         List<String> chosenEntrants = event.getChosenEntrants();
         List<String> acceptedEntrants = event.getAcceptedEntrants();
@@ -177,16 +140,18 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
             eventUserStatusRegistration.setVisibility(View.GONE);
 
             // If the current user is in the waitlist, display an indicator that user is in the waiting list
-            eventUserStatus.setText("In Waiting List");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
+            eventUserStatus.setText("In Waitlist");
+            eventUserStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.purple_widget));
+            eventUserStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_purple));
         }
         if (!isUserOnWaitList && !isUserChosen && !isUserAccepted) {
             // Set Visibility of registration status
             eventUserStatusRegistration.setVisibility(View.GONE);
 
             // If the current user is not in the waitlist, display an indicator that user is  not in the waiting list
-            eventUserStatus.setText("Not In Waiting List");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greybackground));
+            eventUserStatus.setText("Not in Waitlist");
+            eventUserStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.grey_widget));
+            eventUserStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_grey));
         }
         if (isUserChosen) {
             // Set Visibility of registration status
@@ -194,7 +159,8 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
 
             // If the current user is chosen, display an indicator that user is chosen
             eventUserStatus.setText("Chosen");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
+            eventUserStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.green_widget));
+            eventUserStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_green));
         }
         if (isUserAccepted) {
             // Set visibility of registration status
@@ -202,13 +168,14 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
 
             // Set text and colour of user status
             eventUserStatus.setText("Chosen");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
+            eventUserStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.green_widget));
+            eventUserStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_green));
 
             eventUserStatusRegistration.setText("Registered");
-            eventUserStatusRegistration.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
+            eventUserStatusRegistration.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.green_widget));
+            eventUserStatusRegistration.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_green));
         }
 
-         */
 
         //Setting tags
         tagsChipGroup.removeAllViews();
@@ -226,10 +193,10 @@ public class EntrantEventArrayAdapter extends ArrayAdapter<Event> {
         // Set waiting list count text
         if (event.getWaitlistEntrants().size() == 1){
 
-            eventWaitingCount.setText("People in Waitlist: 1"); //Set waiting list count
+            eventWaitingCount.setText("People in the Waitlist: 1"); //Set waiting list count
         }
         else {
-            eventWaitingCount.setText(String.format("People in Waitlist: %s", String.valueOf(event.getWaitlistEntrants().size()))); //Set waiting list count
+            eventWaitingCount.setText(String.format("People in the WaitList: %s", String.valueOf(event.getWaitlistEntrants().size()))); //Set waiting list count
         }
 
         return view;

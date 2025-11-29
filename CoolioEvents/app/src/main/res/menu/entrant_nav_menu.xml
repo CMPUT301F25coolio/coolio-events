@@ -4,18 +4,17 @@
 
     <item
         android:id="@+id/home"
-        android:title="Home"
         android:icon="@drawable/home_selector"
         />
     <item
         android:id="@+id/search"
-        android:title="Search"
         android:icon="@drawable/search_selector"/>
-    <item android:title="Profile"
-        android:icon="@drawable/profile_selector"
-        android:id="@+id/profile"/>
 
-    <item android:title="My Events"
+    <item
         android:icon="@drawable/myevents_selector"
         android:id="@+id/myevents"/>
+
+    <item
+        android:icon="@drawable/profile_selector"
+        android:id="@+id/profile"/>
 </menu>

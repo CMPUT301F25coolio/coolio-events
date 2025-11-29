@@ -23,7 +23,7 @@
             android:fontFamily="@font/poppins_bold"
             android:gravity="center"
             android:paddingLeft="15dp"
-            android:paddingTop="5dp"
+            android:paddingTop="25dp"
             android:paddingBottom="30dp"
             android:textColor="@color/white"
             android:textSize="30sp"
@@ -42,49 +42,60 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
-        <!-- CLEAR BUTTON (LEFT) -->
-        <Button
-            android:id="@+id/clearFilterButton"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="Clear"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/light_red"
-            android:fontFamily="@font/poppins_bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/searchBar" />
-
-        <!-- FILTER BUTTON (RIGHT) -->
-        <Button
+        <FrameLayout
             android:id="@+id/filterButton"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="Filter"
-            android:textColor="@color/dark_green"
-            android:backgroundTint="@color/light_green"
-            android:fontFamily="@font/poppins_bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/searchBar" />
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Filter"
+            android:focusable="true"
+            android:padding="8dp"
+            app:layout_constraintStart_toEndOf="@+id/searchBar"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_filter"
+                app:tint="@color/dark_grey" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/clearFilterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Clear Filter"
+            android:focusable="true"
+            android:padding="8dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/searchBar"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_filter_clear"
+                app:tint="@color/dark_grey" />
+        </FrameLayout>
 
         <!-- SEARCH BAR (MIDDLE) -->
         <SearchView
             android:id="@+id/searchBar"
             android:layout_width="0dp"
             android:layout_height="46dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="50dp"
             android:background="@drawable/searchbar_background"
+            android:fontFamily="@font/poppins_bold"
             android:iconifiedByDefault="false"
             android:queryHint="Search"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="@font/poppins_bold"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/clearFilterButton"
-            app:layout_constraintEnd_toStartOf="@id/filterButton" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -98,8 +109,8 @@
             android:id="@+id/eventList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:divider="#E0E0E0"
+            android:divider="@color/white"
+            android:background="@color/white"
             android:dividerHeight="6dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -108,10 +119,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="24dp"
+            app:maxImageSize="40dp"
             android:contentDescription="Scan QR"
             app:srcCompat="@drawable/ic_qr_code"
-            app:backgroundTint="@color/dark_purple"
-            app:tint="@android:color/white" />
+            app:backgroundTint="@color/light_green"
+            app:tint="@color/dark_green" />
 
     </FrameLayout>
 

@@ -7,8 +7,15 @@
 
 
     <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">#202020</item>
+        <item name="android:color">@color/light_green</item>
+        <item name="shapeAppearance">@style/MyIndicatorShape</item>
     </style>
+
+    <style name="MyIndicatorShape" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 
     <style name="PurpleButton" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/light_purple</item>
@@ -66,5 +73,26 @@
         <item name="fontFamily">@font/poppins_bold</item>
     </style>
 
+    <style name="ShapeAppearance.App.PillShape" parent="ShapeAppearanceOverlay.Material3.Chip">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 
+    <style name="Widget.App.TagChip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="chipStrokeWidth">1.5dp</item>
+        <item name="chipStrokeColor">@color/dark_grey</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.ChipText</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.PillShape</item>
+    </style>
+
+    <style name="TextAppearance.App.ChipText" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="fontFamily">@font/poppins_bold</item> <!-- Add both for compatibility -->
+    </style>
+
+    <style name="Theme.App.Chip" parent="">
+        <item name="chipStyle">@style/Widget.App.TagChip</item>
+    </style>
 </resources>
