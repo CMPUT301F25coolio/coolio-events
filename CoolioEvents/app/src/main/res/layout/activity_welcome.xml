@@ -9,72 +9,85 @@
     android:background="@color/white"
     tools:context=".authentication.WelcomeActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/headerContainer"
+    <!-- TOP WAVE BACKGROUND -->
+
+    <ImageView
+        android:id="@+id/headerWave"
         android:layout_width="match_parent"
-        android:layout_height="310dp"
-        android:background="@drawable/bluebackground"
+        android:layout_height="1200dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- LOGO + BRAND AS ONE HORIZONTAL ROW -->
+
+    <LinearLayout
+        android:id="@+id/logoRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="110dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- CLOVER LOGO -->
+        <ImageView
+            android:id="@+id/logoIcon"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/logo" />
+
+        <!-- BRAND TEXT -->
         <TextView
-            android:id="@+id/headerTitle"
+            android:id="@+id/brandTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="COOLIO EVENTS\n\nWelcome!"
-            android:textColor="@color/white"
-            android:textSize="40dp"
-            android:gravity="center"
-            android:fontFamily="@font/clearsans_bolditalic"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:layout_marginStart="-20dp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Luckii"
+            android:textColor="@android:color/white"
+            android:textSize="60sp" />
+    </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- BUTTON BLOCK -->
     <LinearLayout
         android:id="@+id/buttonBlock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginTop="25dp"
-        app:layout_constraintTop_toBottomOf="@+id/headerContainer"
+        android:layout_marginTop="260dp"
+        app:layout_constraintTop_toBottomOf="@id/logoRow"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:paddingBottom="25dp">
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- LOGIN BUTTON -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loginButton"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:text="LOGIN"
+            android:layout_width="200dp"
+            android:layout_height="52dp"
+            android:text="Log in"
             android:textColor="@color/white"
-            android:background="@drawable/purplebutton"
-            android:layout_marginBottom="18dp"
-            android:fontFamily="@font/clearsans_bold" />
+            android:background="@drawable/green_pill_button"
+            android:fontFamily="@font/poppins_bold"
+            android:layout_marginBottom="20dp" />
 
+        <!-- SIGN UP BUTTON -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signupButton"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:text="SIGN UP"
+            android:layout_width="200dp"
+            android:layout_height="52dp"
+            android:text="Sign up"
             android:textColor="@color/white"
-            android:background="@drawable/purplebutton"
-            android:layout_marginBottom="18dp"
-            android:fontFamily="@font/clearsans_bold" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/entrantDeviceButton"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:text="CONTINUE AS GUEST"
-            android:textColor="@color/white"
-            android:background="@drawable/purplebutton"
-            android:fontFamily="@font/clearsans_bold" />
+            android:background="@drawable/green_pill_button"
+            android:fontFamily="@font/poppins_bold" />
 
     </LinearLayout>
 

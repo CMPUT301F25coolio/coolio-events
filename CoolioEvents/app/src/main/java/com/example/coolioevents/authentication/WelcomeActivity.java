@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,7 +54,7 @@ import java.util.Map;
  */
 public class WelcomeActivity extends AppCompatActivity {
 
-    private Button loginButton, signupButton, entrantDeviceButton;
+    private Button loginButton, signupButton;
     private FirebaseAuth mAuth;
 
     @Override
@@ -64,7 +65,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            v.setPadding(bars.left, 0, bars.right, bars.bottom);
             return insets;
         });
 
@@ -72,7 +73,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
         loginButton         = findViewById(R.id.loginButton);
         signupButton        = findViewById(R.id.signupButton);
-        entrantDeviceButton = findViewById(R.id.entrantDeviceButton);
 
         // Existing flows
         loginButton.setOnClickListener(v ->
@@ -80,8 +80,6 @@ public class WelcomeActivity extends AppCompatActivity {
         signupButton.setOnClickListener(v ->
                 startActivity(new Intent(WelcomeActivity.this, SignupActivity.class)));
 
-        //entrant identified by this device (no username/password)
-        entrantDeviceButton.setOnClickListener(v -> startEntrantByDevice());
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
