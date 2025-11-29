@@ -392,7 +392,19 @@ public class EventFragment extends Fragment {
                             // Change button state
                             updateButtonState();
                         }
-                        else { //User not currently in waiting list
+                        else { // User is NOT currently on waitlist
+
+                            int limit = currentEvent.getDetails().getWaitingListLimit();
+
+                            //Block user from joining if full
+                            if (waitlistCount >= limit) {
+                                Toast.makeText(getContext(),
+                                        "The waiting list is full. Please check back later.",
+                                        Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            // Otherwise allow joining
                             joinWaitlistWithGeolocationCheck();
                         }
                     }
