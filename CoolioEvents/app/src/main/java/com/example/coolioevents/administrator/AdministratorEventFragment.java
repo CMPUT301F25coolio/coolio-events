@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.R;
 import com.example.coolioevents.events.EventFragment;
@@ -71,11 +73,11 @@ public class AdministratorEventFragment extends Fragment {
     private TextView eventRegistrationPeriodTextView;
     private TextView eventEntrantLimitTextView;
     private TextView eventStatusTextView;
-    private TextView eventViewUserStatusLabel;
     private TextView eventUserStatusView;
     private TextView eventUserStatusRegistrationView;
     private TextView eventWaitlistEntrantCount;
     private Button administratorDeleteEventButton;
+    private LinearLayout deleteButtonLayout;
 
     /**
      * This is a constructor for the Event Fragment
@@ -115,13 +117,13 @@ public class AdministratorEventFragment extends Fragment {
         eventRegistrationPeriodTextView = view.findViewById(R.id.eventViewRegistrationPeriod);
         eventEntrantLimitTextView = view.findViewById(R.id.eventViewLimit);
         eventStatusTextView = view.findViewById(R.id.eventViewEventStatus);
-        eventViewUserStatusLabel = view.findViewById(R.id.eventViewUserStatusLabel);
         eventUserStatusView = view.findViewById(R.id.eventViewUserStatus);
         eventWaitlistEntrantCount = view.findViewById(R.id.eventWaitlistEntrantCount);
         eventUserStatusRegistrationView = view.findViewById(R.id.eventViewUserStatusRegistration);
+        // New UI
+        deleteButtonLayout = view.findViewById(R.id.delete_event_button_layout);
 
         // Setting visibility of certain views
-        eventViewUserStatusLabel.setVisibility(View.GONE);
         eventUserStatusView.setVisibility(View.GONE);
         eventUserStatusRegistrationView.setVisibility(View.GONE);
         eventWaitlistEntrantCount.setVisibility(View.GONE);
@@ -170,7 +172,12 @@ public class AdministratorEventFragment extends Fragment {
                         });
                     }
 
-                    // TODO: eventPosterImageView - how to do
+                    Glide.with(this)
+                            .load(event.getDetails().getPosterUrl()) // loads poster URL
+                            .placeholder(R.drawable.ic_image_placeholder)
+                            .error(R.drawable.ic_image_error)
+                            .fallback(R.drawable.ic_image_placeholder) // If imageURL is null
+                            .into(eventPosterImageView);
 
                     if (event.getDetails().getStatus().equals("open")) {
                         // If event open make text open with green background
@@ -189,11 +196,12 @@ public class AdministratorEventFragment extends Fragment {
 
         // Establishing buttons and fragment container
         administratorDeleteEventButton = view.findViewById(R.id.administratorDeleteEventButton);
-        Button backButton = view.findViewById((R.id.eventViewBackButton));
+        FrameLayout backButton = view.findViewById((R.id.eventViewBackButton));
         FrameLayout fragmentContainer = getActivity().findViewById(R.id.fragment_container);
 
         // Set visibility of "Delete Event" button for Administrator
         administratorDeleteEventButton.setVisibility(View.VISIBLE);
+        deleteButtonLayout.setVisibility(View.VISIBLE);
 
 
         // Join/Leave waitlist button onclick activity

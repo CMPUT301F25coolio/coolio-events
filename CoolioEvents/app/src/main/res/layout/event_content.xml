@@ -32,8 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/eventimage_gradient"
-        tools:layout_editor_absoluteX="152dp"
-        tools:layout_editor_absoluteY="-90dp">
+        tools:layout_editor_absoluteX="20dp"
+        tools:layout_editor_absoluteY="21dp">
 
 
     </FrameLayout>

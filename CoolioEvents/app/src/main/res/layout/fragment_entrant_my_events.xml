@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Entrant.EntrantHomeFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -13,23 +14,22 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/myEventsHeader"
         android:layout_width="match_parent"
-        android:layout_height="133dp"
-        android:background="@drawable/bluebackground"
-        android:elevation="4dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/purple_banner_3"
         android:gravity="center">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/clearsans_regular"
+            android:fontFamily="@font/poppins_bold"
             android:gravity="center"
-            android:text="MY EVENTS"
-            android:textColor="#FFFFFF"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="My Events"
+            android:paddingLeft="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/white"
+            android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,8 +43,8 @@
         android:dividerHeight="5dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
-        android:divider="#DEDEDE"
-        android:background="#DEDEDE"
+        android:divider="@color/white"
+        android:background="@color/white"
         >
     </ListView>
 

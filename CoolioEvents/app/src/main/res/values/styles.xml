@@ -50,5 +50,21 @@
         <item name="fontFamily">@font/poppins_bold</item>
     </style>
 
+    <style name="GreyWidget" parent="Widget.AppCompat.TextView">
+        <item name="backgroundTint">@color/light_grey</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:textSize">20sp</item>
+        <item name="cornerRadius">50dp</item>
+        <item name="fontFamily">@font/poppins_bold</item>
+    </style>
+
+    <style name="PurpleWidget" parent="Widget.AppCompat.TextView">
+        <item name="backgroundTint">@color/light_purple</item>
+        <item name="android:textColor">@color/dark_purple</item>
+        <item name="android:textSize">20sp</item>
+        <item name="cornerRadius">50dp</item>
+        <item name="fontFamily">@font/poppins_bold</item>
+    </style>
+
 
 </resources>
