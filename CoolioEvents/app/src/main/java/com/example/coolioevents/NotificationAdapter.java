@@ -8,8 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
@@ -30,9 +32,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         NotificationData notif = notificationList.get(position);
+        Date notificationDate = notif.getCreatedAt();
 
+        String pattern = "MMM d h:mma";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
+        String formattedTime = sdf.format(notificationDate);
+        formattedTime = formattedTime.replace("AM", "am").replace("PM", "pm");
+        holder.time.setText(formattedTime);
         holder.message.setText(notif.getMessage());
-        holder.time.setText(notif.getCreatedAt().toString());  // You can format it later
+
     }
 
     @Override

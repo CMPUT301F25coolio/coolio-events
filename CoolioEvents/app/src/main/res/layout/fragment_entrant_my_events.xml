@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/myEventsHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="110dp"
         android:background="@drawable/purple_banner_3"
         android:gravity="center">
 
@@ -25,9 +25,9 @@
             android:fontFamily="@font/poppins_bold"
             android:gravity="center"
             android:text="My Events"
-            android:paddingLeft="15dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
+            aandroid:paddingLeft="15dp"
+            android:paddingTop="25dp"
+            android:paddingBottom="30dp"
             android:textColor="@color/white"
             android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"

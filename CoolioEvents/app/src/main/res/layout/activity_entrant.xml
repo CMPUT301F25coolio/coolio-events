@@ -15,7 +15,8 @@
         app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/entrant_nav_menu" />
+        app:menu="@menu/entrant_nav_menu"
+        android:background="@color/white" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -27,8 +28,5 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

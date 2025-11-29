@@ -17,6 +17,7 @@ import android.widget.ListView;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
 import com.example.coolioevents.events.EntrantEventArrayAdapter;
+import com.example.coolioevents.events.EntrantMyEventArrayAdapter;
 import com.example.coolioevents.events.EventFragment;
 import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.events.EventViewModelFactory;
@@ -61,7 +62,7 @@ public class EntrantMyEventsFragment extends Fragment {
     EventViewModel eventViewModel; // View Model eventList up to date with database
     FirebaseAuth mAuth;
     ArrayList<Event> eventsList; // My Event specific arraylist for array adapter ()
-    EntrantEventArrayAdapter eventAdapter; // Array adapter for events
+    EntrantMyEventArrayAdapter eventAdapter; // Array adapter for events
     ListView eventsListView; // ListView on myEvents fragment screen
 
     FirebaseUser user;
@@ -120,7 +121,7 @@ public class EntrantMyEventsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         eventsListView = view.findViewById(R.id.eventList); // My Events Listview
-        eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList); // Makes a new array adapter linked to eventsList
+        eventAdapter = new EntrantMyEventArrayAdapter(getActivity(), eventsList); // Makes a new array adapter linked to eventsList
         eventsListView.setAdapter(eventAdapter); // Links eventsListview to eventAdapter
 
         // Navigating to Event Fragment

@@ -1,90 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/whitebackground"
-    >
+    android:elevation="10dp"
+    android:clipToOutline="true">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/tagsGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/rounded_border"
+        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/dateRangeView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         >
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Contest"
-            android:background="@drawable/tag_selector"></com.google.android.material.chip.Chip>
+            android:text="Contest">
+        </com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Dance"></com.google.android.material.chip.Chip>
+            android:text="Dance">
+        </com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="Party"></com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="Kids"></com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="Tech"></com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="Sports"></com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="Arts"></com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="Food"></com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="Workshop"></com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="Music"></com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="Learning"></com.google.android.material.chip.Chip>
 
         <com.google.android.material.chip.Chip
+            android:theme="@style/Theme.App.Chip"
+            android:background="@drawable/tag_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
@@ -95,16 +129,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select Date Range"
+        android:textAllCaps="false"
+        android:textSize="15dp"
         app:layout_constraintBottom_toTopOf="@+id/applyButton"
-
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/PurpleButton"/>
 
     <TextView
         android:id="@+id/dateRangeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date Range"
+        android:fontFamily="@font/poppins_bold"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:paddingTop="10dp"
         app:layout_constraintBottom_toTopOf="@+id/dateRangeButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -114,17 +154,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tags"
+        android:fontFamily="@font/poppins_bold"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toTopOf="@+id/tagsGroup"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
         android:id="@+id/applyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/acceptInvite"
         android:text="Apply"
+        android:textSize="15dp"
+        android:textAllCaps="false"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/GreenButton"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
