@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -87,6 +88,7 @@ public class EntrantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrant);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false); // don't remove this, it's so our app extends till the status bar
         // Deep link: open event details directly
         String deepEventId = getIntent().getStringExtra("EVENT_ID");
         if (deepEventId != null && !deepEventId.isEmpty()) {

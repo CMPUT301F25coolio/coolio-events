@@ -1,8 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Base application theme. -->
     <style name="Base.Theme.CoolioEvents" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!-- Draw behind system bars -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <!-- Make status bar + nav bar transparent so your gradient shows -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+
+        <!-- Choose icon color on status bar -->
+        <!-- If top of your gradient is LIGHT, keep this true (dark icons) -->
+        <!-- If you want WHITE icons, change to false -->
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.CoolioEvents" parent="Base.Theme.CoolioEvents" />

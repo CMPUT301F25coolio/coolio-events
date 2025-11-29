@@ -15,6 +15,9 @@ import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -158,11 +161,32 @@ public class EntrantSearchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        View header = view.findViewById(R.id.homeHeader); //this too added
         searchBar = view.findViewById(R.id.searchBar);
         eventsListView = view.findViewById(R.id.eventList); // Listview in search
         filterButton = view.findViewById(R.id.filterButton); // Filter button in search
         clearFilterButton = view.findViewById(R.id.clearFilterButton); // Clear Filter button in search
         scanQrButton = view.findViewById(R.id.scanQrFab); // Scan QR FAB in search
+
+        //change : don't undo them
+        final int initialPaddingTop = header.getPaddingTop();
+        final int initialPaddingLeft = header.getPaddingLeft();
+        final int initialPaddingRight = header.getPaddingRight();
+        final int initialPaddingBottom = header.getPaddingBottom();
+
+        ViewCompat.setOnApplyWindowInsetsListener(header, (v, insets) -> {
+            int topInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+
+            v.setPadding(
+                    initialPaddingLeft,
+                    initialPaddingTop + topInset,   // add status bar height on top
+                    initialPaddingRight,
+                    initialPaddingBottom
+            );
+
+            return insets;
+        });
+        //till here
 
         eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList); // Make new event adapter linked to eventList
         eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsSearchList);
