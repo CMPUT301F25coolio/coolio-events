@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -82,8 +83,8 @@ public class EntrantHomeFragment extends Fragment {
     ArrayList<Event> eventsList; // Home specific arraylist for array adapter ()
     EntrantEventArrayAdapter eventAdapter; // Array adapter for events
     ListView eventsListView; // ListView on home fragment screen
-    Button filterButton; // Button to filter events
-    Button clearFilterButton; // Button to clear filter
+    FrameLayout filterButton; // Button to filter events
+    FrameLayout clearFilterButton; // Button to clear filter
     ImageButton notificationButton; //ImageButton for notifications
     Pair<Date, Date> dateRange; // dateRange to apply
     ArrayList<String> selectedTags; // tags to apply
@@ -147,9 +148,11 @@ public class EntrantHomeFragment extends Fragment {
         // If a filter is applied make sure clearFilterButton is visible
         if (filterApplied){
             clearFilterButton.setVisibility(VISIBLE);
+            filterButton.setVisibility(GONE);
         }
         else {
-            clearFilterButton.setVisibility(GONE);}
+            clearFilterButton.setVisibility(GONE);
+            filterButton.setVisibility(VISIBLE);}
 
         // Add click listener to the Notification Button
         if (notificationButton != null) {
@@ -202,6 +205,7 @@ public class EntrantHomeFragment extends Fragment {
                 filterApplied = false;
                 updateEventList();
                 clearFilterButton.setVisibility(GONE);
+                filterButton.setVisibility(VISIBLE);
             }
         });
     }
@@ -298,6 +302,7 @@ public class EntrantHomeFragment extends Fragment {
                     filterApplied = true; // Set boolean filter applied to true
                     updateEventList(); // Update the event list and adapter to show filtered events
                     clearFilterButton.setVisibility(VISIBLE); // Make clear filter button visible
+                    filterButton.setVisibility(GONE);
                     dialog.dismiss(); // Close dialog prompt
                 }
                 else {

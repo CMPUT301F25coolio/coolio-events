@@ -1,318 +1,494 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:fillViewport="true"
+        android:padding="24dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+                <!-- Poster -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/eventViewPoster"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintDimensionRatio="9:10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearance="@style/roundedcornerimageview"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <View
+                    android:id="@+id/gradient_overlay"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/eventimage_gradient_white"
+                    app:layout_constraintBottom_toBottomOf="@id/eventViewPoster"
+                    app:layout_constraintEnd_toEndOf="@id/eventViewPoster"
+                    app:layout_constraintStart_toStartOf="@id/eventViewPoster"
+                    app:layout_constraintTop_toTopOf="@id/eventViewPoster" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/eventViewName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoSizeTextType="uniform"
+                    android:fontFamily="@font/poppins_bold"
+                    android:paddingTop="5dp"
+                    android:text="Event Title"
+                    android:textColor="#000000"
+                    android:textSize="30sp" />
+
+                <!-- Organizer -->
+                <TextView
+                    android:id="@+id/eventViewOrganizer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Organizer"
+                    android:textColor="#000000"
+                    android:textSize="20dp" />
+
+                <!-- Time -->
+                <TextView
+                    android:id="@+id/eventViewTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Month Day Year | Time"
+                    android:textColor="#000000"
+                    android:textSize="15dp" />
 
 
-    <!-- Poster -->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/eventViewPoster"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        app:shapeAppearance="@style/roundedcornerimageview"
-        android:scaleType="centerCrop"/>
+                <!-- Location -->
+                <TextView
+                    android:id="@+id/eventViewLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="123 Address, 567 231"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
 
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/eventViewName"
-        android:layout_width="280dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="35dp"
-        android:autoSizeTextType="uniform"
-        android:text="Event Title"
-        app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
-        app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp">
+
+                <!-- Event Status -->
+                <TextView
+                    android:id="@+id/eventViewEventStatus"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/greenshapebackground"
+                    android:fontFamily="@font/poppins_bold"
+                    android:gravity="center"
+                    android:text="Open"
+                    android:textColor="@color/white"
+                    android:textSize="17sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="8dp">
+
+                <!-- Tags -->
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/tagsGroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:focusable="false">
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/rounded_border"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/about_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="About"
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="#CCCCCC" />
+
+                <!-- Description -->
+                <TextView
+                    android:id="@+id/eventViewDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:gravity="top|left"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="8dp"
+                    android:text="This is the event discription. This describes what the events is about, isn't that crazy? Pretty amazing event description right here if you ask me."
+                    android:textColor="#000000"
+                    android:textSize="20dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/registration_period_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Registration Period"
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="#CCCCCC" />
+
+                <!-- Registration Period -->
+                <TextView
+                    android:id="@+id/eventViewRegistrationPeriod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="8dp"
+                    android:text="Month/Day/Year - Month/Day/Year"
+                    android:textColor="#000000"
+                    android:textSize="20dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/registration_limit_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Registration Limit"
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="#CCCCCC" />
+
+                <!-- Entrant Limit -->
+                <TextView
+                    android:id="@+id/eventViewLimit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="8dp"
+                    android:text="No Limit"
+                    android:textColor="#000000"
+                    android:textSize="20dp" />
 
 
-    <!-- Organizer -->
-    <TextView
-        android:id="@+id/eventViewOrganizer"
-        android:layout_width="280dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="5dp"
-        android:autoSizeTextType="uniform"
-        android:text="Posted By: Organizer"
-        app:layout_constraintStart_toEndOf="@+id/eventViewPoster"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewName" />
+            </LinearLayout>
 
 
-    <!-- Description -->
-    <TextView
-        android:id="@+id/eventViewDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:gravity="top|left"
-        android:text="This is the event discription. This describes what the events is about, isn't that crazy? Pretty amazing event description right here if you ask me. Wow"
-        android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewPoster" />
+            <LinearLayout
+                android:id="@+id/bottom_action_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="50dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:elevation="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop ="10dp"
+                    android:paddingLeft ="10dp"
+                    android:paddingRight ="10dp"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <!-- User Status -->
+                    <TextView
+                        android:id="@+id/eventViewUserStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:background="@drawable/grey_widget"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:paddingEnd="20dp"
+                        android:paddingTop="2dp"
+                        android:text="Not In Waiting List"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/dark_grey" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="#FFFFFF" />
 
 
-    <!-- Time -->
-    <TextView
-        android:id="@+id/eventViewTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Time: Month Day Year | Time"
-        android:textSize="17dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewDescription" />
+                    <TextView
+                        android:id="@+id/eventViewUserStatusRegistration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:background="@drawable/grey_widget"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:paddingEnd="20dp"
+                        android:paddingTop="2dp"
+                        android:text="Not Registered"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/dark_grey"
+                        android:visibility="gone" />
 
 
-    <!-- Location -->
-    <TextView
-        android:id="@+id/eventViewLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Location: 123 Address, 567 231"
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewTime" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/invite_button_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom ="10dp"
+                    android:paddingLeft ="10dp"
+                    android:paddingRight ="10dp"
+                    android:visibility="gone">
+
+                    <!-- Accept and Decline Buttons -->
+                    <Button
+                        android:id="@+id/eventAcceptInviteButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:text="Accept"
+                        android:textAllCaps="false"
+                        style="@style/GreenButton" />
+
+                    <Button
+                        android:id="@+id/eventDeclineInviteButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="Decline"
+                        android:textAllCaps="false"
+                        style="@style/RedButton" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/join_button_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom ="10dp"
+                    android:paddingLeft ="10dp"
+                    android:paddingRight ="10dp"
+                    android:visibility="gone">
+
+                    <!-- Join/Leave Waitlist Button -->
+                    <Button
+                        android:id="@+id/eventViewJoinWaitListButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Join Waiting List"
+                        android:textAllCaps="false"
+                        style="@style/GreenButton" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/unregister_button_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom ="10dp"
+                    android:paddingLeft ="10dp"
+                    android:paddingRight ="10dp"
+                    android:visibility="gone">
+
+                    <!-- Unregister from Event Button -->
+                    <Button
+                        android:id="@+id/eventUnregisterButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Unregister"
+                        android:textAllCaps="false"
+                        style="@style/RedButton" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/delete_event_button_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom ="10dp"
+                    android:paddingLeft ="10dp"
+                    android:paddingRight ="10dp"
+                    android:visibility="gone">
+
+                    <!-- Administrator Delete Event Button (Only shows for Administrator) -->
+                    <Button
+                        android:id="@+id/administratorDeleteEventButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delete Event"
+                        android:textAllCaps="false"
+                        style="@style/RedButton" />
+
+                </LinearLayout>
 
 
-    <!-- Registration Period -->
-    <TextView
-        android:id="@+id/eventViewRegistrationPeriod"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Registration Period: Month/Day/Year - Month/Day/Year"
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewLocation" />
+                <!-- Number of people in waitlist -->
+                <TextView
+                    android:id="@+id/eventWaitlistEntrantCount"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:text="People in the Waitlist: 0"
+                    android:background="@drawable/dark_purple_widget"
+                    android:paddingLeft="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingTop="2dp"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textColor="@color/white"
+                    android:visibility="gone"/>
 
+            </LinearLayout>
 
-    <!-- Entrant Limit -->
-    <TextView
-        android:id="@+id/eventViewLimit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Entrant Limit: No Limit"
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewRegistrationPeriod" />
+        </LinearLayout>
 
-
-    <!-- Event Status -->
-    <TextView
-        android:id="@+id/eventViewEventStatusLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Event Status: "
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
-
-
-    <TextView
-        android:id="@+id/eventViewEventStatus"
-        android:layout_width="100dp"
-        android:layout_height="22dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/greenshapebackground"
-        android:gravity="center"
-        android:text="Open"
-        android:textColor="@color/white"
-        android:textSize="17sp"
-        app:layout_constraintStart_toEndOf="@+id/eventViewEventStatusLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewLimit" />
-
-
-    <!-- User Status -->
-    <TextView
-        android:id="@+id/eventViewUserStatusLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="User Status:"
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatusLabel" />
-
-    <!-- Tags -->
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/tagsGroup"
-        android:layout_width="355dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="12dp"
-
-        android:clickable="false"
-        android:focusable="false"
-        app:layout_constraintStart_toEndOf="@+id/tagLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewUserStatus">
-
-
-    </com.google.android.material.chip.ChipGroup>
-
-    <TextView
-        android:id="@+id/tagLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Tags:"
-        android:textSize="17dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewUserStatusLabel" />
-
-    <TextView
-        android:id="@+id/eventViewUserStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="22dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/greybuttonbackground"
-        android:gravity="center"
-        android:paddingLeft="10dp"
-        android:paddingEnd="10dp"
-        android:text="Not In Waiting List"
-        android:textColor="@color/white"
-        android:textSize="17sp"
-        app:layout_constraintStart_toEndOf="@+id/eventViewUserStatusLabel"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewEventStatus" />
-
-
-    <TextView
-        android:id="@+id/eventViewUserStatusRegistration"
-        android:layout_width="wrap_content"
-        android:layout_height="22dp"
-        android:layout_marginStart="10dp"
-        android:background="@drawable/greybuttonbackground"
-        android:gravity="center"
-        android:paddingLeft="10dp"
-        android:paddingEnd="10dp"
-        android:text="Not Registered"
-        android:textColor="@color/white"
-        android:textSize="17sp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/eventViewUserStatus"
-        app:layout_constraintTop_toTopOf="@+id/eventViewUserStatus" />
-
+    </ScrollView>
 
     <!-- Back Button -->
-    <Button
+    <FrameLayout
         android:id="@+id/eventViewBackButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="Back"
-        app:backgroundTint="@color/back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-    <!-- Join/Leave Waitlist Button -->
-    <Button
-        android:id="@+id/eventViewJoinWaitListButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Join Waiting List"
-        app:backgroundTint="@color/joinwaitinglist"
-        app:layout_constraintBottom_toTopOf="@+id/eventViewBackButton"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/dark_grey" />
 
-        android:visibility="gone"
-        />
-
-
-    <!-- Accept Event Invite Button -->
-    <Button
-        android:id="@+id/eventAcceptInviteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Accept"
-        app:backgroundTint="@color/acceptInvite"
-        app:layout_constraintBottom_toTopOf="@+id/eventViewBackButton"
-        app:layout_constraintEnd_toEndOf="@+id/eventDeclineInviteButton"
-        app:layout_constraintStart_toStartOf="parent"
-
-
-        android:visibility="gone"
-        />
-
-
-    <!-- Decline Event Invite Button -->
-    <Button
-        android:id="@+id/eventDeclineInviteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Decline"
-        app:backgroundTint="@color/declineInvite"
-        app:layout_constraintBottom_toTopOf="@+id/eventViewBackButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/eventAcceptInviteButton"
-
-
-        android:visibility="gone"
-        />
-
-
-    <!-- Unregister from Event Button -->
-    <Button
-        android:id="@+id/eventUnregisterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Unregister"
-        app:backgroundTint="@color/unregister"
-        app:layout_constraintBottom_toTopOf="@+id/eventViewBackButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-
-
-        android:visibility="gone"
-        />
-
-
-    <!-- Number of people in waitlist -->
-    <TextView
-        android:id="@+id/eventWaitlistEntrantCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="144dp"
-        android:autoSizeTextType="uniform"
-        android:background="@drawable/purplecircularbackground"
-        android:gravity="center"
-        android:text="0 PEOPLE WAITING IN WAITLIST"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventViewUserStatus"
-        android:visibility="gone"/>
-
-    <!-- Administrator Delete Event Button (Only shows for Administrator) -->
-    <Button
-        android:id="@+id/administratorDeleteEventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="Delete Event"
-        app:backgroundTint="@color/delete"
-        app:layout_constraintBottom_toTopOf="@+id/eventViewBackButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-
-
-        android:visibility="gone"/>
-
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

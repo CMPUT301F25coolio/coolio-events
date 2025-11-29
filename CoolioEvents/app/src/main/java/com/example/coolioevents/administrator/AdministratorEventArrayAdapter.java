@@ -5,12 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
 
@@ -62,6 +64,7 @@ public class AdministratorEventArrayAdapter extends ArrayAdapter<Event> {
         }
 
         Event event = eventList.get(position);
+        ImageView eventPosterImageView = view.findViewById(R.id.imageView);
         TextView eventName = view.findViewById(R.id.eventName);
         TextView eventOrganizer = view.findViewById(R.id.eventOrganizer);
         TextView eventDescription = view.findViewById(R.id.eventDescription);
@@ -77,6 +80,14 @@ public class AdministratorEventArrayAdapter extends ArrayAdapter<Event> {
         // Making the user status views invisible since this is the Administrator's screen
         eventUserStatus.setVisibility(View.GONE);
         eventUserStatusRegistration.setVisibility(View.GONE);
+
+        // Setting event poster
+        Glide.with(this.getContext())
+                .load(event.getDetails().getPosterUrl()) // loads poster URL
+                .placeholder(R.drawable.ic_image_placeholder)
+                .error(R.drawable.ic_image_error)
+                .fallback(R.drawable.ic_image_placeholder) // If imageURL is null
+                .into(eventPosterImageView);
 
         // Setting event details (excludes the user's status such as "In Waiting List", "Selected", etc. since this is the Administrator's screen)
         eventName.setText(event.getDetails().getEventName());

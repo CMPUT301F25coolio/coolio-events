@@ -5,13 +5,16 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +22,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -30,12 +34,16 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.shape.RelativeCornerSize;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Copyright 2025 Avery Dancocks, Juliane Phan
@@ -96,6 +104,10 @@ public class EventFragment extends Fragment {
     private Button declineInviteButton;
     private Button unregisterButton;
     private int waitlistCount;
+    private LinearLayout acceptAndDecline;
+    private LinearLayout joinWaitlist;
+    private LinearLayout unregister;
+    private LinearLayout adminDelete;
 
     /*
     Taken From:  https://developer.android.com/develop/sensors-and-location/location/retrieve-current
@@ -145,13 +157,19 @@ public class EventFragment extends Fragment {
             eventWaitlistEntrantCount.setVisibility(View.VISIBLE);
             eventUserStatusRegistrationView.setVisibility(View.GONE);
 
+            joinWaitlist.setVisibility(View.VISIBLE);
+            acceptAndDecline.setVisibility(View.GONE);
+            unregister.setVisibility(View.GONE);
+
             // Set text and colour of button
             joinLeaveWaitlistButton.setText("Leave Waitlist");
-            joinLeaveWaitlistButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.leavewaitinglist)));
+            joinLeaveWaitlistButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.light_red)));
+            joinLeaveWaitlistButton.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
 
             // Set text and colour of user status
             eventUserStatusView.setText("In Waitlist");
-            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
+            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.purple_widget));
+            eventUserStatusView.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_purple));
         }
 
         // User is NOT on the waitlist --> Button shows option to join, user status says "Not in Waitlist"
@@ -164,13 +182,19 @@ public class EventFragment extends Fragment {
             eventWaitlistEntrantCount.setVisibility(View.VISIBLE);
             eventUserStatusRegistrationView.setVisibility(View.GONE);
 
+            joinWaitlist.setVisibility(View.VISIBLE);
+            acceptAndDecline.setVisibility(View.GONE);
+            unregister.setVisibility(View.GONE);
+
             // Set text and colour of button
             joinLeaveWaitlistButton.setText("Join Waitlist");
-            joinLeaveWaitlistButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.joinwaitinglist)));
+            joinLeaveWaitlistButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.dark_green)));
+            joinLeaveWaitlistButton.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
 
             // Set text and colour of user status
             eventUserStatusView.setText("Not in Waitlist");
-            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greybackground));
+            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.grey_widget));
+            eventUserStatusView.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_grey));
         }
 
         // User is chosen --> Button shows options to accept or decline the invite, user status says "Chosen" and "Not Registered"
@@ -182,12 +206,18 @@ public class EventFragment extends Fragment {
             unregisterButton.setVisibility(View.GONE);
             eventWaitlistEntrantCount.setVisibility(View.GONE);
 
+            joinWaitlist.setVisibility(View.GONE);
+            acceptAndDecline.setVisibility(View.VISIBLE);
+            unregister.setVisibility(View.GONE);
+
             // Set visibility of registration status
             eventUserStatusRegistrationView.setVisibility(View.VISIBLE);
 
             // Set text and colour of user status
             eventUserStatusView.setText("Chosen");
-            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
+            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.green_widget));
+            eventUserStatusView.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_green));
+
         }
 
         // User is accepted --> Button shows options to unregister from the event, user status says "Chosen" and "Registered"
@@ -199,15 +229,21 @@ public class EventFragment extends Fragment {
             unregisterButton.setVisibility(View.VISIBLE);
             eventWaitlistEntrantCount.setVisibility(View.GONE);
 
+            joinWaitlist.setVisibility(View.GONE);
+            acceptAndDecline.setVisibility(View.GONE);
+            unregister.setVisibility(View.VISIBLE);
+
             // Set visibility of registration status
             eventUserStatusRegistrationView.setVisibility(View.VISIBLE);
 
             // Set text and colour of user status
             eventUserStatusView.setText("Chosen");
-            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
+            eventUserStatusView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.green_widget));
+            eventUserStatusView.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_green));
 
             eventUserStatusRegistrationView.setText("Registered");
-            eventUserStatusRegistrationView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
+            eventUserStatusRegistrationView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.green_widget));
+            eventUserStatusRegistrationView.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_green));
         }
     }
 
@@ -259,6 +295,11 @@ public class EventFragment extends Fragment {
         eventWaitlistEntrantCount = view.findViewById(R.id.eventWaitlistEntrantCount);
         eventUserStatusRegistrationView = view.findViewById(R.id.eventViewUserStatusRegistration);
         tagsGroup = view.findViewById(R.id.tagsGroup);
+        //New layouts
+        acceptAndDecline = view.findViewById(R.id.invite_button_layout);
+        joinWaitlist = view.findViewById(R.id.join_button_layout);
+        unregister = view.findViewById(R.id.unregister_button_layout);
+        adminDelete = view.findViewById(R.id.delete_event_button_layout);
 
         // Getting ViewModel and displaying event details
         eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
@@ -286,22 +327,22 @@ public class EventFragment extends Fragment {
                     System.out.println("WE MADE IT HERE");
                     // Updating UI components to match clicked event
                     eventNameTextView.setText(details.getEventName());
-                    eventDescriptionTextView.setText(String.format("Description: %s", event.getDetails().getEventDescription()));
+                    eventDescriptionTextView.setText(String.format("%s", event.getDetails().getEventDescription()));
                     if (event.getDetails().getEventLocation() != null){
-                        eventLocationTextView.setText(String.format("Event Location: %s",event.getDetails().getEventLocation())); // Sets event location if not null
+                        eventLocationTextView.setText(String.format("%s",event.getDetails().getEventLocation())); // Sets event location if not null
                     }
                     else {
                         eventLocationTextView.setText("Event Location: Not Available"); // Sets event location if  null
                     }
                     if (event.getDetails().getEventDateTime() != null){
-                        eventTimeTextView.setText(String.format("Time: %s",event.getDetails().getEventDateTime())); // Sets event time if not null
+                        eventTimeTextView.setText(String.format("%s",event.getDetails().getEventDateTime())); // Sets event time if not null
                     }
                     else {
                         eventLocationTextView.setText("Time: Not Available"); // Sets event time if  null
                     }
-                    eventRegistrationPeriodTextView.setText(String.format("Registration Period: %s", String.valueOf(details.getRegistrationPeriod())));
-                    eventEntrantLimitTextView.setText(String.format("Max Entrees: %s", String.valueOf(details.getEntrantLimit())));
-                    eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(event.getWaitlistEntrants().size())));
+                    eventRegistrationPeriodTextView.setText(String.format("%s", String.valueOf(details.getRegistrationPeriod())));
+                    eventEntrantLimitTextView.setText(String.format("%s", String.valueOf(details.getEntrantLimit())));
+                    eventWaitlistEntrantCount.setText(String.format("People in the Waitlist: %s", String.valueOf(event.getWaitlistEntrants().size())));
 
                     // UI set up specifically for organizer
                     String organizerId = event.getOrganizerId();
@@ -310,7 +351,7 @@ public class EventFragment extends Fragment {
                             if (organizer != null && organizer.getProfile() != null) {
                                 String username = organizer.getProfile().getUsername();
                                 if (username != null) { // Organizer has a username
-                                    eventOrganizerTextView.setText(String.format("Posted By: %s", username)); // Set the text for organizer
+                                    eventOrganizerTextView.setText(String.format("%s", username)); // Set the text for organizer
                                 }
                                 else {
                                     eventOrganizerTextView.setText("Posted By: Unknown");
@@ -349,10 +390,31 @@ public class EventFragment extends Fragment {
 
                     //Set event tags
                     if (event.getDetails().getTags() != null){
+                        /*
+                        Taken From: Google Gemini
+                            Prompt: How do i customize tags?
+                            Taken By: Avery Dancocks
+                            Taken On: 11/28/25
+                         */
+                        final Typeface poppinsFont = ResourcesCompat.getFont(getContext(), R.font.poppins_bold);
+
                         for (String tagString : event.getDetails().getTags()){
                             Chip tag = new Chip(getContext());
+                            final float scale = getContext().getResources().getDisplayMetrics().density;
                             tag.setText(tagString);
-                            tag.setHeight(40);
+                            tag.setChipStrokeWidth(1.5f * getContext().getResources().getDisplayMetrics().density); // Use dp for consistency
+                            tag.setChipStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.dark_grey)));
+                            tag.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.white)));
+                            tag.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+
+                            tag.setTypeface(poppinsFont);
+
+                            tag.setShapeAppearanceModel(
+                                    tag.getShapeAppearanceModel()
+                                            .toBuilder()
+                                            .setAllCornerSizes(new RelativeCornerSize(0.5f))
+                                            .build()
+                            );
                             tag.setClickable(false);
                             tagsGroup.addView(tag);
                         }
@@ -367,7 +429,7 @@ public class EventFragment extends Fragment {
         acceptInviteButton = view.findViewById(R.id.eventAcceptInviteButton);
         declineInviteButton = view.findViewById(R.id.eventDeclineInviteButton);
         unregisterButton = view.findViewById(R.id.eventUnregisterButton);
-        Button backButton = view.findViewById((R.id.eventViewBackButton));
+        FrameLayout backButton = view.findViewById((R.id.eventViewBackButton));
 
 
         // Join/Leave waitlist button onclick activity
@@ -385,7 +447,7 @@ public class EventFragment extends Fragment {
 
                             // Update and display new waitlist count
                             waitlistCount--;
-                            eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
+                            eventWaitlistEntrantCount.setText(String.format("People in the Waitlist: %s", String.valueOf(waitlistCount))); //Update waitlist count
 
                             // Change the User state
                             isUserOnWaitList = !isUserOnWaitList;
@@ -521,7 +583,7 @@ public class EventFragment extends Fragment {
 
             // Update and display new waitlist count
             waitlistCount++;
-            eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
+            eventWaitlistEntrantCount.setText(String.format("People in the Waitlist: %s", String.valueOf(waitlistCount))); //Update waitlist count
 
             // Change the User state
             isUserOnWaitList = !isUserOnWaitList;
@@ -554,7 +616,7 @@ public class EventFragment extends Fragment {
 
                 // Update and display new waitlist count
                 waitlistCount++;
-                eventWaitlistEntrantCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(waitlistCount))); //Update waitlist count
+                eventWaitlistEntrantCount.setText(String.format("People in the Waitlist: %s", String.valueOf(waitlistCount))); //Update waitlist count
 
                 // Change the User state
                 isUserOnWaitList = !isUserOnWaitList;
