@@ -225,7 +225,7 @@ public class EditEventActivity extends AppCompatActivity {
                             }
                             etEntrantLimit.setText(String.valueOf(details.getEntrantLimit()));
                             if (details.getWaitingListLimit() != null){
-                                etWaitingListLimit.setText(details.getWaitingListLimit());
+                                etWaitingListLimit.setText(String.valueOf(details.getWaitingListLimit()));
                             }
                             if (details.getEventDateTime() != null) {
                                 eventDateTimeCalendar = Calendar.getInstance();
