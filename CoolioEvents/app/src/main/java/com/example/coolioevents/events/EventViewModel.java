@@ -338,6 +338,9 @@ public class EventViewModel extends ViewModel {
             return;
         }
 
+        DocumentReference eventRef = db.collection("events").document(eventId);
+        
+
         /* Taken From: https://firebase.google.com/docs/firestore/manage-data/transactions#java_4
             License: http://www.apache.org/licenses/LICENSE-2.0
             Authored by: Firebase
@@ -347,7 +350,6 @@ public class EventViewModel extends ViewModel {
         WriteBatch batch = db.batch();
 
         // Update Waitlist - always occurs
-        DocumentReference eventRef = db.collection("events").document(eventId);
         batch.update(eventRef, "waitlistEntrants", FieldValue.arrayUnion(userId));
 
         // Save Location - conditional

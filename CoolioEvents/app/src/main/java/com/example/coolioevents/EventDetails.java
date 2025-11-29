@@ -37,8 +37,6 @@ public class EventDetails {
     private String registrationPeriod; // string for display only, e.g. "2025/10/28 - 2025/11/11"
     private int entrantLimit;
     private Integer waitingListLimit;
-    private int currentWaiting;
-
     private Date eventDateTime; // actual event date and time
     private Date postedDate;
     private Date startDate;
@@ -81,20 +79,6 @@ public class EventDetails {
         parseRegistrationPeriod();  // Convert to date objects
     }
 
-
-    public EventDetails(String eventName, String eventDescription, String registrationPeriod, int entrantLimit, Date eventDateTime, String eventLocation,
-                        Date postedDate, ArrayList<String> tags) {
-        this.eventName = eventName;
-        this.eventDescription = eventDescription;
-        this.eventDateTime = eventDateTime;
-        this.eventLocation = eventLocation;
-        this.registrationPeriod = registrationPeriod;
-        this.entrantLimit = entrantLimit;
-        this.postedDate = postedDate;
-        this.tags = tags;
-
-        parseRegistrationPeriod();  // Convert to date objects
-    }
 
     // Getters
 
@@ -147,12 +131,6 @@ public class EventDetails {
      */
     public Integer getWaitingListLimit() { return waitingListLimit; }
 
-    /**
-     * This method gets the current entrants in the waiting list.
-     * @return
-     *      The current entrants in the waiting list
-     */
-    public int getCurrentWaiting() { return currentWaiting; }
 
     /**
      * This method gets the status of the event.
@@ -167,11 +145,7 @@ public class EventDetails {
         Date now = new Date();
         boolean inRegistrationPeriod = now.after(startDate) && now.before(endDate);
 
-        // waiting list limit check
-        boolean waitingSpaceAvailable =
-                waitingListLimit == null || currentWaiting < waitingListLimit;
-
-        if (inRegistrationPeriod && waitingSpaceAvailable) {
+        if (inRegistrationPeriod) {
             return "open";
         }
 
@@ -261,13 +235,6 @@ public class EventDetails {
     public void setWaitingListLimit(Integer waitingListLimit) { this.waitingListLimit = waitingListLimit; }
 
     /**
-     * This method sets the current entrants in waiting list event to currentWaiting
-     * @param currentWaiting
-     *      The current entrants in the event waiting list
-     */
-    public void setCurrentWaiting(int currentWaiting) { this.currentWaiting = currentWaiting; }
-
-    /**
      * This method sets the poster's Url of the event to posterUrl
      * @param posterUrl
      *      The Url of the poster
@@ -280,6 +247,12 @@ public class EventDetails {
      *      the start date of the event
      */
     public void setStartDate(Date startDate) { this.startDate = startDate; }
+
+    /**
+     * This method sets te poster's end date of the event to startDate
+     * @param endDate
+     *      the end date of the event
+     */
     public void setEndDate(Date endDate) { this.endDate = endDate; }
 
     /**
