@@ -47,7 +47,9 @@ import java.util.Map;
  */
 public class UserViewModel extends ViewModel {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final MutableLiveData<Map<String, User>> userMap = new MutableLiveData<>(); // List of all events in db
+    private final MutableLiveData<Map<String, User>> userMap = new MutableLiveData<>();
+    private final MutableLiveData<Map<String, Organizer>> organizerMap = new MutableLiveData<>();
+    private final MutableLiveData<Map<String, Entrant>> entrantMap = new MutableLiveData<>();
 
     public UserViewModel(){
         addUserSL(); // Establish the user snapshot listener which updates userMap to be up to date
@@ -75,7 +77,7 @@ public class UserViewModel extends ViewModel {
     }
 
     /**
-     * Initializes a database snapshotlistener to keep userMap up to date with the database.
+     * Initializes a database snapshotlistener to keep userMap, entrantMap, and organizerMap up to date with the database.
      */
     private void addUserSL(){
         // Snapshot listener for users in db - updates userMap when updated in db
@@ -83,17 +85,39 @@ public class UserViewModel extends ViewModel {
             if (value !=null && !value.isEmpty()){
                 userMap.setValue(new HashMap<>()); // Make userMap empty
                 Map<String, User> newUserMap = userMap.getValue(); // Placeholder userMap which will be assigned to userMap later
+
+                Map<String, Entrant> newEntrantMap = new HashMap<>();
+                Map<String, Organizer> newOrganizerMap = new HashMap<>();
+
                 for (QueryDocumentSnapshot snapshot : value){
                     String userID = snapshot.getId();
                     String username = snapshot.getString("username");
                     String name = snapshot.getString("name");
                     String email = snapshot.getString("email");
+                    String role = snapshot.getString("role");
+
+                    // Update userMap
                     User user = new User();
                     user.setProfile(new Profile(userID,username,name,email));
                     newUserMap.put(userID, user);
                     System.out.println("hello");
+
+                    // Update entrantMap
+                    if (role.equals("Entrant")) {
+                        Entrant entrant = new Entrant(new Profile(userID,username,name,email));
+                        newEntrantMap.put(userID, entrant);
+                    }
+
+                    // Update organizerMap
+                    if (role.equals("Organizer")) {
+                        Organizer organizer = new Organizer(new Profile(userID,username,name,email));
+                        //organizer.setProfile(new Profile(userID,username,name,email));
+                        newOrganizerMap.put(userID, organizer);
+                    }
                 }
                 userMap.setValue(newUserMap); // Sets userMap to updated userMap
+                entrantMap.setValue(newEntrantMap);  // Sets entrantMap to updated entrantMap
+                organizerMap.setValue(newOrganizerMap);  // Sets organizerMap to updated organizerMap
             }
         });
     }
@@ -105,6 +129,23 @@ public class UserViewModel extends ViewModel {
     public MutableLiveData<Map<String, User>> getUserMap(){
         return userMap;
     }
+
+    /**
+     * Returns a map of all entrants in the database
+     * @return The map of all entrants in the database
+     */
+    public MutableLiveData<Map<String, Entrant>> getEntrantMap(){
+        return entrantMap;
+    }
+
+    /**
+     * Returns a map of all organizers in the database
+     * @return The map of all organizers in the database
+     */
+    public MutableLiveData<Map<String, Organizer>> getOrganizerMap() {
+        return organizerMap;
+    }
+
 
     /**
      * This is called when an administrator chooses to delete a user (entrant/organizer).

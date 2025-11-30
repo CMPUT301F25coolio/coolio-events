@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.coolioevents.Entrant.UserViewModel;
 import com.example.coolioevents.R;
 import com.example.coolioevents.User;
+import com.example.coolioevents.organizer.Organizer;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -76,13 +77,13 @@ public class AdministratorOrganizersActivity extends AppCompatActivity {
         // Establish ViewModel
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        userViewModel.getUserMap().observe(this, new Observer<Map<String, User>>() {
+        userViewModel.getOrganizerMap().observe(this, new Observer<Map<String, Organizer>>() {
             @Override
-            public void onChanged(Map<String, User> userMap) {
+            public void onChanged(Map<String, Organizer> organizerMap) {
                 // Update organizerList and notify array adapter whenever it changes
                 organizerList.clear();
-                if (userMap != null) {
-                    organizerList.addAll(userMap.values());
+                if (organizerMap != null) {
+                    organizerList.addAll(organizerMap.values());
                 }
                 profileAdapter.notifyDataSetChanged();
             }

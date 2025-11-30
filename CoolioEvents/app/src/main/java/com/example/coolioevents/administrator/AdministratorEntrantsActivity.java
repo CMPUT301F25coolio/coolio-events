@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.Entrant.UserViewModel;
 import com.example.coolioevents.R;
 import com.example.coolioevents.User;
@@ -76,13 +77,13 @@ public class AdministratorEntrantsActivity extends AppCompatActivity {
         // Establish ViewModel
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        userViewModel.getUserMap().observe(this, new Observer<Map<String, User>>() {
+        userViewModel.getEntrantMap().observe(this, new Observer<Map<String, Entrant>>() {
             @Override
-            public void onChanged(Map<String, User> userMap) {
+            public void onChanged(Map<String, Entrant> entrantMap) {
                 // Update entrantsList and notify array adapter whenever it changes
                 entrantsList.clear();
-                if (userMap != null) {
-                    entrantsList.addAll(userMap.values());
+                if (entrantMap != null) {
+                    entrantsList.addAll(entrantMap.values());
                 }
                 profileAdapter.notifyDataSetChanged();
             }
