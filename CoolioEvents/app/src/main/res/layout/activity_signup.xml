@@ -9,8 +9,7 @@
     android:background="@color/white"
     tools:context=".authentication.SignupActivity">
 
-  <!-- TOP WAVE HEADER -->
-
+  <!-- TOP WAVE HEADER (background) -->
   <ImageView
       android:id="@+id/topWave"
       android:layout_width="0dp"
@@ -22,37 +21,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHeight_percent="0.45"/>
 
-  <!-- Back arrow on top of header -->
-  <ImageButton
-      android:id="@+id/backButton"
-      android:layout_width="32dp"
-      android:layout_height="32dp"
-      android:background="@android:color/transparent"
-      android:src="@drawable/arrow_back_white"
-      android:padding="4dp"
-      app:tint="@color/white"
-      android:contentDescription="Back"
-      android:layout_marginStart="16dp"
-      android:layout_marginTop="16dp"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="@id/topWave" />
-
-  <!-- SIGN UP title -->
-  <TextView
-      android:id="@+id/screenTitle"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="SIGN UP"
-      android:textColor="@color/white"
-      android:textSize="32sp"
-      android:fontFamily="@font/poppins_bold"
-      android:layout_marginStart="24dp"
-      android:layout_marginTop="60dp"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="@id/topWave" />
-
-  <!-- FORM AREA - -->
-
+  <!-- FORM AREA (this must come BEFORE back/title so the others overlay on top) -->
   <ScrollView
       android:id="@+id/formScroll"
       android:layout_width="0dp"
@@ -70,13 +39,12 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-      <!-- Full name -->
+      <!-- TEXT FIELDS -->
       <EditText
           android:id="@+id/nameEditText"
           android:layout_width="match_parent"
           android:layout_height="50dp"
           android:background="@drawable/searchbar_background"
-          android:ems="10"
           android:fontFamily="@font/poppins_bold"
           android:hint="Full name"
           android:textSize="16sp"
@@ -86,13 +54,11 @@
           android:paddingEnd="16dp"
           android:layout_marginTop="8dp" />
 
-      <!-- Username -->
       <EditText
           android:id="@+id/usernameEditText"
           android:layout_width="match_parent"
           android:layout_height="50dp"
           android:background="@drawable/searchbar_background"
-          android:ems="10"
           android:fontFamily="@font/poppins_bold"
           android:hint="Username"
           android:textSize="16sp"
@@ -102,13 +68,11 @@
           android:paddingEnd="16dp"
           android:layout_marginTop="8dp" />
 
-      <!-- Email -->
       <EditText
           android:id="@+id/emailEditText"
           android:layout_width="match_parent"
           android:layout_height="50dp"
           android:background="@drawable/searchbar_background"
-          android:ems="10"
           android:fontFamily="@font/poppins_bold"
           android:hint="Email"
           android:inputType="textEmailAddress"
@@ -119,25 +83,22 @@
           android:paddingEnd="16dp"
           android:layout_marginTop="8dp" />
 
-      <!-- Password -->
-
-      <!-- Role label -->
       <EditText
           android:id="@+id/passwordEditText"
           android:layout_width="match_parent"
           android:layout_height="50dp"
-          android:layout_marginTop="8dp"
           android:background="@drawable/searchbar_background"
-          android:ems="10"
           android:fontFamily="@font/poppins_bold"
           android:hint="Password"
           android:inputType="textPassword"
-          android:paddingStart="16dp"
-          android:paddingEnd="16dp"
+          android:textSize="16sp"
           android:textColor="@color/black"
           android:textColorHint="#66000000"
-          android:textSize="16sp" />
+          android:paddingStart="16dp"
+          android:paddingEnd="16dp"
+          android:layout_marginTop="8dp" />
 
+      <!-- ROLE LABEL -->
       <TextView
           android:id="@+id/textView4"
           android:layout_width="wrap_content"
@@ -146,7 +107,7 @@
           android:textColor="@color/black"
           android:layout_marginTop="16dp" />
 
-      <!-- Role buttons row -->
+      <!-- ROLE BUTTONS -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -176,7 +137,7 @@
             android:textColor="@color/black" />
       </LinearLayout>
 
-      <!-- Warning text -->
+      <!-- WARNING TEXT -->
       <TextView
           android:id="@+id/warnText"
           android:layout_width="match_parent"
@@ -185,7 +146,7 @@
           android:textColor="#FF5555"
           android:layout_marginTop="8dp" />
 
-      <!-- Create account button -->
+      <!-- CREATE ACCOUNT BUTTON -->
       <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/createAccountButton"
           android:layout_width="match_parent"
@@ -198,5 +159,34 @@
 
     </LinearLayout>
   </ScrollView>
+
+  <!-- BACK BUTTON (now on top) -->
+  <ImageButton
+      android:id="@+id/backButton"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      android:background="@android:color/transparent"
+      android:src="@drawable/arrow_back_white"
+      android:padding="4dp"
+      app:tint="@color/white"
+      android:contentDescription="Back"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@id/topWave" />
+
+  <!-- SCREEN TITLE (also on top) -->
+  <TextView
+      android:id="@+id/screenTitle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="SIGN UP"
+      android:textColor="@color/white"
+      android:textSize="32sp"
+      android:fontFamily="@font/poppins_bold"
+      android:layout_marginStart="24dp"
+      android:layout_marginTop="60dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@id/topWave" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
