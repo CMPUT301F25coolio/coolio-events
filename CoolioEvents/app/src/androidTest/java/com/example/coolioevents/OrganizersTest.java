@@ -151,10 +151,6 @@ public class OrganizersTest {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-
-
-
-
         // Type Event Title into name field
         onView(withId(R.id.etEventTitle)).perform(ViewActions.typeText(eventName));
 
@@ -210,7 +206,4 @@ public class OrganizersTest {
             }
         }); // Check that event document was made in db
     }
-
-
-
 }

@@ -3,6 +3,8 @@ package com.example.coolioevents;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+
+import androidx.annotation.NonNull;
 import androidx.test.rule.GrantPermissionRule;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
@@ -12,6 +14,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 
 import static org.hamcrest.Matchers.anything;
+import static org.junit.Assert.fail;
 
 import android.Manifest;
 
@@ -20,6 +23,7 @@ import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.example.coolioevents.authentication.WelcomeActivity;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
@@ -144,12 +148,12 @@ public class SignupLoginTest {
     @Test
     public void testGoToLogin(){
         // Tests to make sure the Welcome Screen login button directs user to login screen
-        // TODO: UPDATE WHENEVER UI GETS UPDATED
         // Click login button
+        // TODO: NEEDS TO BE FIXED
         onView(withId(R.id.loginButton)).perform(click());
 
         // Ensures login button sends user to login screen (welcome back text should be displayed)
-        onView(withText("Welcome Back!\n\n LOGIN")).check(matches(isDisplayed()));
+        onView(withText("LOG IN")).check(matches(isDisplayed()));
     }
     @Test
     public void testLoginGoBack(){
@@ -173,7 +177,7 @@ public class SignupLoginTest {
         onView(withId(R.id.signupButton)).perform(click());
 
         // Ensures signup button sends user to signup screen (create an account text should be displayed)
-        onView(withText("CREATE \nAN ACCOUNT")).check(matches(isDisplayed()));
+        onView(withText("SIGN UP")).check(matches(isDisplayed()));
     }
 
     @Test
@@ -359,7 +363,13 @@ public class SignupLoginTest {
                 assert(documentSnapshot.getString("email").equals(email));
                 assert(documentSnapshot.getString("role").equals("Organizer"));
             }
-        });
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        fail("Couldn't find organizer user Document");
+                    }
+                });;
     }
 
     @Test
@@ -396,7 +406,8 @@ public class SignupLoginTest {
         assert(mAuth.getCurrentUser() != null); // Check that user is logged in - ie current user is not null
 
         // Check that the user's document was made on the database - with correct fields
-        db.collection("users").document(mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        db.collection("users").document(mAuth.getCurrentUser().getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 assert(documentSnapshot.getString("name").equals(name));
@@ -404,7 +415,13 @@ public class SignupLoginTest {
                 assert(documentSnapshot.getString("email").equals(email));
                 assert(documentSnapshot.getString("role").equals("Entrant"));
             }
-        });
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        fail("Couldn't find entrant user Document");
+                    }
+                });
     }
 
     @Test
@@ -413,9 +430,9 @@ public class SignupLoginTest {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-        String name = "entrant";
-        String username = "entrant";
-        String email = "entrant@test.com";
+        String name = "organizer";
+        String username = "organizer";
+        String email = "organizer@test.com";
         String password = "password";
 
         // 1. SIGN UP THE USER ----------------------------------------------------------------------------------------
