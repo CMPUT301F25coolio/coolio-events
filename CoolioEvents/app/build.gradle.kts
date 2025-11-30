@@ -64,6 +64,8 @@ dependencies {
 
     // Google Maps
     implementation(libs.play.services.maps)
+    implementation(libs.firebase.functions)
+    implementation(libs.rules)
 
     // Testing
     testImplementation(libs.junit)

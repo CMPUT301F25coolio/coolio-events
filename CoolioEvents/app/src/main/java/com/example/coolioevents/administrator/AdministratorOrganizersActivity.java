@@ -14,13 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.coolioevents.Entrant.UserViewModel;
 import com.example.coolioevents.R;
 import com.example.coolioevents.User;
-import com.example.coolioevents.events.EventViewModel;
-import com.example.coolioevents.events.EventViewModelFactory;
+import com.example.coolioevents.organizer.Organizer;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Copyright 2025 Avery Dancocks & Juliane Phan
@@ -52,7 +53,7 @@ import java.util.ArrayList;
  * @since 2025-11-19
  */
 public class AdministratorOrganizersActivity extends AppCompatActivity {
-    EventViewModel eventViewModel; // View Model eventList up to date with database
+    UserViewModel userViewModel;
     ArrayList<User> organizerList; // My Organizer specific arraylist for array adapter ()
     UserArrayAdapter profileAdapter; // Array adapter for organizer
     ListView organizerListView;
@@ -74,19 +75,19 @@ public class AdministratorOrganizersActivity extends AppCompatActivity {
         organizerListView.setAdapter(profileAdapter);
 
         // Establish ViewModel
-        eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        eventViewModel.getUserList("Organizer").observe(this, new Observer<ArrayList<User>>() {
-            // When organizer list in viewmodel is updated, update organizerList too (as well as notify array adapter)
+        userViewModel.getOrganizerMap().observe(this, new Observer<Map<String, Organizer>>() {
             @Override
-            public void onChanged(ArrayList<User> organizers) {
+            public void onChanged(Map<String, Organizer> organizerMap) {
+                // Update organizerList and notify array adapter whenever it changes
                 organizerList.clear();
-                System.out.println("CHANGED OMG");
-                organizerList.addAll(organizers);
+                if (organizerMap != null) {
+                    organizerList.addAll(organizerMap.values());
+                }
                 profileAdapter.notifyDataSetChanged();
             }
         });
-
 
         // Click specific organizer --> Show fragment with user details and delete button
         organizerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

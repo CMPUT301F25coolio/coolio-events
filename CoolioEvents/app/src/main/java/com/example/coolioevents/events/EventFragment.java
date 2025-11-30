@@ -507,10 +507,10 @@ public class EventFragment extends Fragment {
                             updateButtonState();
                         }
                         else { // User is NOT currently on waitlist
-
+                            
                             Integer limitObject = currentEvent.getDetails().getWaitingListLimit();
 
-                            if (limitObject == null || limitObject <= 0) {
+                            if (limitObject == null) {
                                 // Otherwise allow joining
                                 joinWaitlistWithGeolocationCheck();
                             }
