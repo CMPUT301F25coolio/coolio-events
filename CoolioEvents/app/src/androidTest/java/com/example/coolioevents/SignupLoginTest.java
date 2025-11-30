@@ -119,16 +119,6 @@ public class SignupLoginTest {
         }
         connection.disconnect();
     }
-    public void typeSignUpFields(String name, String username, String email, String password){
-        // Type Name into name field
-        onView(withId(R.id.nameEditText)).perform(ViewActions.typeText(name));
-        // Type Username into name field
-        onView(withId(R.id.usernameEditText)).perform(ViewActions.typeText(username));
-        // Type Email into name field
-        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));
-        // Type Name into name field
-        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));
-    }
     @Before
     public void initializeTest(){
         // This connects to to the firestore and mAuth emulators - also resets the emulator
@@ -150,13 +140,11 @@ public class SignupLoginTest {
 
         }
 
-
-
     }
     @Test
     public void testGoToLogin(){
         // Tests to make sure the Welcome Screen login button directs user to login screen
-
+        // TODO: UPDATE WHENEVER UI GETS UPDATED
         // Click login button
         onView(withId(R.id.loginButton)).perform(click());
 
@@ -174,13 +162,13 @@ public class SignupLoginTest {
         onView(withId(R.id.backButton)).perform(click());
 
         // Ensures user is sent back to welcome screen
-        onView(withText("COOLIO EVENTS\n\n Welcome!")).check(matches(isDisplayed()));
+        onView(withText("Luckii")).check(matches(isDisplayed()));
     }
 
     @Test
     public void testGoToSignup(){
         // Tests to make sure the Welcome Screen signup button directs user to signup screen
-
+        // TODO: UPDATE WHENEVER UI GETS UPDATED
         // Click signup button
         onView(withId(R.id.signupButton)).perform(click());
 
@@ -199,7 +187,7 @@ public class SignupLoginTest {
         onView(withId(R.id.backButton)).perform(click());
 
         // Ensures user is sent back to welcome screen
-        onView(withText("COOLIO EVENTS\n\n Welcome!")).check(matches(isDisplayed()));
+        onView(withText("Luckii")).check(matches(isDisplayed()));
     }
     @Test
     public void testEmptyName(){
@@ -404,6 +392,7 @@ public class SignupLoginTest {
         onView(withId(R.id.createAccountButton)).perform(click());
 
         try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+        onView(withId(R.id.eventList)).check(matches(isDisplayed())); // Check if home screen is displayed
         assert(mAuth.getCurrentUser() != null); // Check that user is logged in - ie current user is not null
 
         // Check that the user's document was made on the database - with correct fields
@@ -554,7 +543,7 @@ public class SignupLoginTest {
 
     @Test
     public void testLoginEntrant(){
-        // Test to make sure an organizer can properly log in (after they sign up with an account)
+        // Test to make sure an entrant can properly log in (after they sign up with an account)
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -607,26 +596,6 @@ public class SignupLoginTest {
     }
 
 
-
-
-    @Test
-    public void testEntrantHomeDisplay() {
-        // Log in to the test account
-        onView(withId(R.id.loginButton)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        String email = "testguy@test.com";
-        String password = "tttttt";
-        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
-        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
-        onView(withId(R.id.loginButton)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        // Check if home screen is displayed
-        onView(withId(R.id.eventList)).check(matches(isDisplayed()));
-    }
 
     @Test
     public void testEntrantClickedEventDisplay() {

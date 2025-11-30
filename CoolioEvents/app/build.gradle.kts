@@ -66,6 +66,11 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.firebase.functions)
     implementation(libs.rules)
+    implementation(libs.espresso.contrib)
+    {
+        exclude(group = "com.google.protobuf", module = "protobuf-lite")
+    }
+
 
     // Testing
     testImplementation(libs.junit)
