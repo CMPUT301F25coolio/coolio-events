@@ -1,189 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".authentication.SignupActivity">
 
+  <!-- TOP WAVE HEADER -->
 
-  <EditText
-      android:id="@+id/passwordEditText"
-      android:layout_width="350dp"
-      android:layout_height="50dp"
-      android:layout_marginTop="8dp"
-      android:background="@drawable/edittextbackground"
-      android:ems="10"
-      android:fontFamily="@font/clearsans_bold"
-      android:hint="Password"
-      android:inputType="textPassword"
-      android:text=""
-      android:textSize="20dp"
-      app:layout_constraintEnd_toEndOf="parent"
-
+  <ImageView
+      android:id="@+id/topWave"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:src="@drawable/finalscreen"
+      android:scaleType="centerCrop"
+      app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
-
-  <EditText
-      android:id="@+id/emailEditText"
-      android:layout_width="350dp"
-      android:layout_height="50dp"
-      android:layout_marginTop="8dp"
-      android:background="@drawable/edittextbackground"
-      android:ems="10"
-      android:fontFamily="@font/clearsans_bold"
-      android:hint="Email"
-      android:inputType="textEmailAddress"
-      android:text=""
-      android:textSize="20dp"
       app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHeight_percent="0.45"/>
 
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/usernameEditText" />
-
-  <EditText
-      android:id="@+id/usernameEditText"
-      android:layout_width="350dp"
-      android:layout_height="50dp"
-      android:layout_marginTop="8dp"
-      android:background="@drawable/edittextbackground"
-      android:ems="10"
-      android:fontFamily="@font/clearsans_bold"
-      android:hint="Username"
-      android:text=""
-      android:textSize="20dp"
-      app:layout_constraintEnd_toEndOf="parent"
-
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
-
-  <EditText
-      android:id="@+id/nameEditText"
-      android:layout_width="350dp"
-      android:layout_height="50dp"
+  <!-- Back arrow on top of header -->
+  <ImageButton
+      android:id="@+id/backButton"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      android:background="@android:color/transparent"
+      android:src="@drawable/arrow_back_white"
+      android:padding="4dp"
+      app:tint="@color/white"
+      android:contentDescription="Back"
+      android:layout_marginStart="16dp"
       android:layout_marginTop="16dp"
-      android:background="@drawable/edittextbackground"
-      android:ems="10"
-      android:fontFamily="@font/clearsans_bold"
-      android:hint="Full name"
-      android:text=""
-      android:textSize="20dp"
-      app:layout_constraintEnd_toEndOf="parent"
-
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+      app:layout_constraintTop_toTopOf="@id/topWave" />
 
-  <androidx.appcompat.widget.AppCompatButton
-      android:id="@+id/entrantButton"
-      android:layout_width="120dp"
-      android:layout_height="50dp"
-      android:layout_marginTop="12dp"
-      android:layout_marginEnd="80dp"
-
-      android:background="@drawable/greybuttonbackground"
-      android:fontFamily="@font/clearsans_bold"
-      android:text="Entrant"
-      android:textColor="@color/white"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-  <androidx.appcompat.widget.AppCompatButton
-      android:id="@+id/organizerButton"
-      android:layout_width="125dp"
-      android:layout_height="50dp"
-      android:layout_marginStart="64dp"
-      android:layout_marginTop="12dp"
-
-      android:background="@drawable/greybuttonbackground"
-      android:fontFamily="@font/clearsans_bold"
-      android:text="Organizer"
-      android:textColor="@color/white"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
+  <!-- SIGN UP title -->
   <TextView
-      android:id="@+id/warnText"
-      android:layout_width="300dp"
-      android:layout_height="25dp"
-      android:layout_marginTop="16dp"
-      android:text=""
-      android:autoSizeTextType="uniform"
-      android:textColor="#BD0000"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.504"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/entrantButton" />
-
-  <TextView
-      android:id="@+id/textView4"
+      android:id="@+id/screenTitle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      android:text="I am an: "
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
-
-  <androidx.appcompat.widget.AppCompatButton
-      android:id="@+id/createAccountButton"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:width="250dp"
-      android:background="@drawable/purplebutton"
-      android:fontFamily="@font/clearsans_bold"
-      android:text="Create Account"
+      android:text="SIGN UP"
       android:textColor="@color/white"
+      android:textSize="32sp"
+      android:fontFamily="@font/poppins_bold"
+      android:layout_marginStart="24dp"
+      android:layout_marginTop="60dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@id/topWave" />
+
+  <!-- FORM AREA - -->
+
+  <ScrollView
+      android:id="@+id/formScroll"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:fillViewport="true"
+      android:clipToPadding="false"
+      app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintBottom_toBottomOf="parent"
-
-      app:layout_constraintEnd_toEndOf="parent"
-
-      app:layout_constraintHorizontal_bias="0.496"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/warnText"
-      app:layout_constraintVertical_bias="0.114" />
+      app:layout_constraintEnd_toEndOf="parent">
 
-  <androidx.constraintlayout.widget.ConstraintLayout
-      android:id="@+id/constraintLayout"
-      android:layout_width="match_parent"
-      android:layout_height="300dp"
-      android:background="@drawable/bluebackground"
-      app:layout_constraintEnd_toEndOf="parent"
-
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
-
-    <TextView
-        android:id="@+id/screenTitle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
-        android:fontFamily="@font/clearsans_bold"
-        android:gravity="center"
-        android:text="CREATE \nAN ACCOUNT"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-        android:textColor="@color/white"
-        android:textSize="40dp"
+      <!-- Full name -->
+      <EditText
+          android:id="@+id/nameEditText"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:background="@drawable/searchbar_background"
+          android:ems="10"
+          android:fontFamily="@font/poppins_bold"
+          android:hint="Full name"
+          android:textSize="16sp"
+          android:textColor="@color/black"
+          android:textColorHint="#66000000"
+          android:paddingStart="16dp"
+          android:paddingEnd="16dp"
+          android:layout_marginTop="8dp" />
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+      <!-- Username -->
+      <EditText
+          android:id="@+id/usernameEditText"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:background="@drawable/searchbar_background"
+          android:ems="10"
+          android:fontFamily="@font/poppins_bold"
+          android:hint="Username"
+          android:textSize="16sp"
+          android:textColor="@color/black"
+          android:textColorHint="#66000000"
+          android:paddingStart="16dp"
+          android:paddingEnd="16dp"
+          android:layout_marginTop="8dp" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:width="100dp"
-        android:background="@drawable/whitebutton"
-        android:fontFamily="@font/clearsans_bold"
-        android:text="Back"
+      <!-- Email -->
+      <EditText
+          android:id="@+id/emailEditText"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:background="@drawable/searchbar_background"
+          android:ems="10"
+          android:fontFamily="@font/poppins_bold"
+          android:hint="Email"
+          android:inputType="textEmailAddress"
+          android:textSize="16sp"
+          android:textColor="@color/black"
+          android:textColorHint="#66000000"
+          android:paddingStart="16dp"
+          android:paddingEnd="16dp"
+          android:layout_marginTop="8dp" />
 
-        android:textColor="#8917E4"
+      <!-- Password -->
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+      <!-- Role label -->
+      <EditText
+          android:id="@+id/passwordEditText"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:layout_marginTop="8dp"
+          android:background="@drawable/searchbar_background"
+          android:ems="10"
+          android:fontFamily="@font/poppins_bold"
+          android:hint="Password"
+          android:inputType="textPassword"
+          android:paddingStart="16dp"
+          android:paddingEnd="16dp"
+          android:textColor="@color/black"
+          android:textColorHint="#66000000"
+          android:textSize="16sp" />
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+      <TextView
+          android:id="@+id/textView4"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="I am an:"
+          android:textColor="@color/black"
+          android:layout_marginTop="16dp" />
+
+      <!-- Role buttons row -->
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_marginTop="8dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/organizerButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/role_toggle_button"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Organizer"
+            android:textColor="@color/black" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/entrantButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/role_toggle_button"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Entrant"
+            android:textColor="@color/black" />
+      </LinearLayout>
+
+      <!-- Warning text -->
+      <TextView
+          android:id="@+id/warnText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text=""
+          android:textColor="#FF5555"
+          android:layout_marginTop="8dp" />
+
+      <!-- Create account button -->
+      <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/createAccountButton"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:layout_marginTop="16dp"
+          android:background="@drawable/button_primary_green"
+          android:fontFamily="@font/poppins_bold"
+          android:text="Create Account"
+          android:textColor="@color/white" />
+
+    </LinearLayout>
+  </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
