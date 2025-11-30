@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-
 /**
  * Copyright 2025 Ethan Diep
  *
@@ -52,15 +50,60 @@ import java.util.Map;
  * @version 1.1
  * @since 2025-11-06
  */
+/*
+ * Welcome screen – lets users log in, sign up,
+ * and for entrants supports device based identification.
+ */
 public class WelcomeActivity extends AppCompatActivity {
 
     private Button loginButton, signupButton;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser == null) {
+            // No one signed in on this device then normal welcome screen
+            showWelcomeUI();
+            return;
+        }
+
+        // Someone is signed in (could be organizer or entrant) then check Firestore role
+        db.collection("users").document(currentUser.getUid()).get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        String role = doc.getString("role");
+                        if ("Entrant".equalsIgnoreCase(role)) {
+                            // Device belongs to an entrant: auto-login, skips welcome or login
+                            Intent i = new Intent(WelcomeActivity.this, EntrantActivity.class);
+                            startActivity(i);
+                            finish();
+                            return;
+                        }
+                    }
+                    // Not an entrant or missing doc directs to normal welcome screen
+                    showWelcomeUI();
+                })
+                .addOnFailureListener(e -> {
+                    // On any error fall back to normal welcome
+                    showWelcomeUI();
+                });
+    }
+
+
+    /**
+     * Shows the existing welcome UI (login + signup buttons).
+     * This is the old onCreate body extracted into a method.
+     */
+    private void showWelcomeUI() {
         setContentView(R.layout.activity_welcome);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -69,28 +112,25 @@ public class WelcomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        mAuth = FirebaseAuth.getInstance();
+        loginButton  = findViewById(R.id.loginButton);
+        signupButton = findViewById(R.id.signupButton);
 
-        loginButton         = findViewById(R.id.loginButton);
-        signupButton        = findViewById(R.id.signupButton);
-
-        // Existing flows
+        // Existing flows – unchanged
         loginButton.setOnClickListener(v ->
                 startActivity(new Intent(WelcomeActivity.this, LoginActivity.class)));
         signupButton.setOnClickListener(v ->
                 startActivity(new Intent(WelcomeActivity.this, SignupActivity.class)));
 
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
         }
     }
 
-    /**
-     * Starts an entrant session that is identified by this device only.
-     * Uses Firebase anonymous authentication and ensures there is a user
-     * document with role "Entrant" for this UID.
-     */
+
+     // Starts an entrant session that is identified by this device only.
+
     private void startEntrantByDevice() {
         FirebaseUser current = mAuth.getCurrentUser();
 
@@ -148,11 +188,11 @@ public class WelcomeActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     * Sets the FirebaseAuth, which logs users into the app.
-     * @param mAuth The system that logs users into the app.
-     */
+     // For tests/mocking
+
     public void setmAuth(FirebaseAuth mAuth) {
         this.mAuth = mAuth;
     }
+
+
 }
