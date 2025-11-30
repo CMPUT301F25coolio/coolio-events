@@ -3,4 +3,24 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="bold">abc<b>Description</b>efg</string>
+
+    <!-- Text for Criteria and Guidelines -->
+    <!-- Taken From: https://stackoverflow.com/a/17811589 -->
+    <!-- License:  https://creativecommons.org/licenses/by-sa/3.0/ -->
+    <!-- Author: redIntent -->
+    <!-- Taken by: Juliane Phan -->
+    <!-- Taken on: 11/30/25 -->
+    <string name="criteria_1a">Go to <b>Home</b> or <b>Search</b> to find an event. Use the filter button to narrow your results by date or tags.</string>
+    <string name="criteria_1b">To view an event’s details or to join its waitlist, tap the event.</string>
+    <string name="criteria_2a">After opening an event, you can press <b>Join Waitlist</b>. This adds you to the event’s waitlist, where you will have a chance to be chosen for the event through the lottery.</string>
+    <string name="criteria_2b">The <b>Registration Limit</b> indicates how many people may be chosen through the lottery.</string>
+    <string name="criteria_3">After joining the waitlist, wait until the registration deadline to see if you’re chosen for the event.</string>
+    <string name="criteria_4a">Once the registration deadline passes, the lottery is drawn automatically. Entrants in the waitlist are randomly chosen to participate in the event.</string>
+    <string name="criteria_4b">If you were chosen, you will be notified in the app upon logging in.</string>
+    <string name="criteria_4c">You can check the notification bell in <b>Home</b> to view your past notifications.</string>
+    <string name="criteria_4d">You can also view your status for the event under <b>My Events</b>, where you will see a <b>Chosen</b> indicator if you were chosen for the event.</string>
+    <string name="criteria_4e">If you weren’t chosen, you will stay on the waitlist and may still be chosen if a chosen participant unregisters from the event.</string>
+    <string name="criteria_5">If you were chosen, open the event in <b>My Events</b> and press <b>Register</b> to secure your spot.</string>
+    <string name="criteria_6a">After registering, you’re all set!</string>
+    <string name="criteria_6b">Check the event’s time and location, and watch for notifications sent by the organizer through the app.</string>
 </resources>

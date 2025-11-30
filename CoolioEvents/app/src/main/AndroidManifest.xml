@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Permissions -->
     <uses-feature
         android:name="android.hardware.camera"
@@ -24,9 +23,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CoolioEvents"
-        tools:targetApi="31"
-        android:usesCleartextTraffic="true">
-
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
         <!-- FileProvider for exporting CSV files -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -36,18 +34,13 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider>
-
-        <!-- Google Maps Meta Data -->
+        </provider> <!-- Google Maps Meta Data -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
-
-        <!-- Administrator side -->
+            android:value="${MAPS_API_KEY}" /> <!-- Administrator side -->
         <activity
             android:name=".administrator.AdministratorHomeActivity"
             android:exported="false" />
@@ -65,9 +58,7 @@
             android:exported="false" />
         <activity
             android:name=".administrator.AdministratorNotificationsActivity"
-            android:exported="false" />
-
-        <!-- Organizer side -->
+            android:exported="false" /> <!-- Organizer side -->
         <activity
             android:name=".organizer.OrganizerEventActivity"
             android:exported="false" />
@@ -94,27 +85,24 @@
             android:exported="false" />
         <activity
             android:name=".organizer.OrganizerProfileActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".organizer.OrganizerUpdateProfileActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".organizer.MapActivity"
-            android:exported="false"/>
-
-
-        <!-- Organizer list screens -->
+            android:exported="false" /> <!-- Organizer list screens -->
         <activity
             android:name=".organizer.ListScreenActivity"
             android:exported="false" />
-
         <activity
             android:name=".organizer.EventEntrantListActivity"
-            android:exported="false" />
-
-        <!-- Entrant side -->
+            android:exported="false" /> <!-- Entrant side -->
         <activity
             android:name=".Entrant.EntrantActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Entrant.EntrantCriteriaGuidelinesActivity"
             android:exported="false" />
 
         <!-- Deep link handler for events -->
@@ -131,27 +119,22 @@
                     android:host="event"
                     android:scheme="coolioevents" />
             </intent-filter>
-        </activity>
-
-        <!-- Authentication screens -->
+        </activity> <!-- Authentication screens -->
         <activity
             android:name=".authentication.SignupActivity"
             android:exported="false" />
         <activity
             android:name=".authentication.LoginActivity"
-            android:exported="false" />
-
-        <!-- Launcher -->
+            android:exported="false" /> <!-- Launcher -->
         <activity
             android:name=".authentication.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Miscellaneous -->
+        </activity> <!-- Miscellaneous -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />

@@ -53,6 +53,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.coolioevents.Entrant.EntrantCriteriaGuidelinesActivity;
 import com.example.coolioevents.Entrant.UserViewModel;
 import com.example.coolioevents.Entrant.EntrantSettingsFragment;
 import com.example.coolioevents.authentication.WelcomeActivity;
@@ -103,6 +104,9 @@ public class ProfileFragment extends Fragment {
     private Button logoutButton;
     private Button deleteAccountButton;
 
+    // Button allowing the user to navigate to the Criteria and Guidelines page
+    private Button criteriaButton;
+
     // Firebase Authentication instance used to identify the logged-in user
     private FirebaseAuth auth;
 
@@ -143,6 +147,7 @@ public class ProfileFragment extends Fragment {
         btnEditProfile = view.findViewById(R.id.btn_edit_profile);
         logoutButton = view.findViewById(R.id.logoutButton);
         deleteAccountButton = view.findViewById(R.id.deleteAccountButton);
+        criteriaButton = view.findViewById(R.id.criteria_button);
 
         notificationSwitch = view.findViewById(R.id.notificationSwitch);
 
@@ -190,6 +195,11 @@ public class ProfileFragment extends Fragment {
         }
         );
         deleteAccountButton.setOnClickListener(v -> showDeleteConfirmationDialog());
+
+        criteriaButton.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), EntrantCriteriaGuidelinesActivity.class));
+        });
+
         return view;
     }
 
