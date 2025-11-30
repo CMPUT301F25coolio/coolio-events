@@ -67,7 +67,7 @@ public class AdministratorEntrantsActivity extends AppCompatActivity {
 
         // Establishing views
         ImageButton backButton = findViewById(R.id.btnBack);
-        entrantListView = findViewById(R.id.entrant_list_view);
+        entrantListView = findViewById(R.id.user_list_view);
 
         // Establishing Adapter
         entrantsList = new ArrayList<User>();
@@ -103,6 +103,12 @@ public class AdministratorEntrantsActivity extends AppCompatActivity {
                 // Set the fragment's background colour
                 FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
                 fragmentContainer.setBackgroundResource(R.drawable.whitebackground);
+
+                // Make ListView and header invisible
+                entrantListView.setVisibility(View.GONE);
+                View header = findViewById(R.id.header);
+                header.setVisibility(View.GONE);
+
 
                 AdministratorUserFragment userFragment = AdministratorUserFragment.newInstance(clickedEntrant.getProfile().getUser_id());
 

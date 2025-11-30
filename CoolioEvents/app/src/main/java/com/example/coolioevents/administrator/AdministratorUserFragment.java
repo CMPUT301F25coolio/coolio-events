@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -153,6 +154,10 @@ public class AdministratorUserFragment extends Fragment {
             }
         });
 
+        // Establish views associated with closing the fragment
+        View header = getActivity().findViewById(R.id.header);
+        ListView usersListView = getActivity().findViewById(R.id.user_list_view);
+
         // Close button onclick activity --> Goes back to Entrants/Organizers screen
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +166,10 @@ public class AdministratorUserFragment extends Fragment {
 
                 // Remove white background from fragment container
                 fragmentContainer.setBackgroundColor(Color.TRANSPARENT);
+
+                // Make header and list view visible
+                header.setVisibility(View.VISIBLE);
+                usersListView.setVisibility(View.VISIBLE);
             }
         });
     }

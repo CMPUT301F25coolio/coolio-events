@@ -137,6 +137,10 @@ public class AdministratorImageFragment extends Fragment {
             }
         });
 
+        // Establish views associated with closing the fragment
+        View header = getActivity().findViewById(R.id.header);
+        View imagesRecyclerView = getActivity().findViewById(R.id.images_recycler_view);
+
         // Close button onclick activity --> Goes back to Images screen
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +149,10 @@ public class AdministratorImageFragment extends Fragment {
 
                 // Remove white background from fragment container
                 fragmentContainer.setBackgroundColor(Color.TRANSPARENT);
+
+                // Make header and recyclier view visible
+                header.setVisibility(View.VISIBLE);
+                imagesRecyclerView.setVisibility(View.VISIBLE);
             }
         });
     }

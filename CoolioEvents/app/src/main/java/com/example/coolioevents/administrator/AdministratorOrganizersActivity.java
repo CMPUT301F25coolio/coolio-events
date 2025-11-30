@@ -67,7 +67,7 @@ public class AdministratorOrganizersActivity extends AppCompatActivity {
 
         // Establishing views
         ImageButton backButton = findViewById(R.id.btnBack);
-        organizerListView = findViewById(R.id.organizer_list_view);
+        organizerListView = findViewById(R.id.user_list_view);
 
         // Establishing Adapter
         organizerList = new ArrayList<User>();
@@ -103,6 +103,12 @@ public class AdministratorOrganizersActivity extends AppCompatActivity {
                 // Set the fragment's background colour
                 FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
                 fragmentContainer.setBackgroundColor(Color.WHITE);
+
+                // Make header and list view invisible
+                View header = findViewById(R.id.header);
+                header.setVisibility(View.GONE);
+                organizerListView.setVisibility(View.GONE);
+
 
                 AdministratorUserFragment userFragment = AdministratorUserFragment.newInstance(clickedOrganizer.getProfile().getUser_id());
 

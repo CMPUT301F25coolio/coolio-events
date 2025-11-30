@@ -2,6 +2,7 @@ package com.example.coolioevents.administrator;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
@@ -110,6 +111,11 @@ public class AdministratorImagesActivity extends AppCompatActivity implements Im
         // Set the fragment's background colour
         FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
         fragmentContainer.setBackgroundResource(R.drawable.whitebackground);
+
+        // Make the header and RecyclierView invisible
+        View header = findViewById(R.id.header);
+        header.setVisibility(View.GONE);
+        imagesRecyclerView.setVisibility(View.GONE);
 
         AdministratorImageFragment fragment = AdministratorImageFragment.newInstance(imageURL);
 
