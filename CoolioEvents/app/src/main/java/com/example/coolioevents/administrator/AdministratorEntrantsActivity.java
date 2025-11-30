@@ -65,7 +65,7 @@ public class AdministratorEntrantsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_administrator_entrants);
 
         // Establishing views
-        ImageButton backButton = findViewById(R.id.btnBack);
+        FrameLayout backButton = findViewById(R.id.btnBack);
         entrantListView = findViewById(R.id.entrant_list_view);
 
         // Establishing Adapter

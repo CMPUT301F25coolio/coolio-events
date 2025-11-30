@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,8 @@ public class AdministratorUserFragment extends Fragment {
     private TextView email;
     private Button deleteButton;
     private Button closeButton;
+    private ImageView profileCircle;
+    private TextView profileText;
 
     /**
      * This is a constructor for the user fragment
@@ -93,6 +96,8 @@ public class AdministratorUserFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Establishing UI components for the user's details
+        profileCircle = view.findViewById(R.id.profile_circle);
+        profileText = view.findViewById(R.id.profile_text);
         username = view.findViewById(R.id.profile_username);
         name = view.findViewById(R.id.profile_name);
         email = view.findViewById(R.id.profile_email);
@@ -104,11 +109,24 @@ public class AdministratorUserFragment extends Fragment {
         userViewModel.getUserMap().observe(getViewLifecycleOwner(), userMap -> {
             if (userMap != null && userMap.containsKey(currentUserId)) {
                 Profile userProfile = userMap.get(currentUserId).getProfile();
+
+                String currentName = userProfile.getName();
+
+                if (currentName != null) {
+                    String initials = getInitials(currentName);
+                    profileText.setText(initials);
+                }
+
                 username.setText(userProfile.getUsername());
                 name.setText(userProfile.getName());
                 email.setText(userProfile.getEmail());
             }
         });
+
+        // Setting profile colour
+        int colourId = getColour(currentUserId);
+        int userColour = ContextCompat.getColor(getContext(), colourId);
+        profileCircle.getBackground().setTint(userColour);
 
         // Establishing buttons and fragment container
         deleteButton = view.findViewById(R.id.deleteButton);
@@ -137,5 +155,57 @@ public class AdministratorUserFragment extends Fragment {
                 fragmentContainer.setBackgroundColor(Color.TRANSPARENT);
             }
         });
+    }
+
+    /**
+     * This function uses hashing to return a colour based on a
+     * user's ID. The function will return the same colour
+     * for the same user ID every time.
+     * @param userId
+     *      The user ID that is to be hashed
+     * @return
+     *      an integer representing a colour
+     */
+    private int getColour(String userId) {
+        int[] colourPalette = new int[]{
+                R.color.medium_purple,
+                R.color.medium_green,
+                R.color.medium_blue,
+                R.color.medium_yellow,
+        };
+
+        int hash = userId.hashCode();
+
+        int index = Math.abs(hash % colourPalette.length);
+
+        return colourPalette[index];
+    }
+
+    /**
+     * This method returns a string of initials or a single initial
+     * based on the provided string name.
+     * @param name
+     *      String name from which the initials will be obtained
+     */
+    private String getInitials(String name) {
+        String[] words = name.split(" ");
+        int size = words.length;
+
+        if (size == 1) {
+            // If there is one whole name just return the first initial
+            String firstWord = words[0];
+            char firstLetter = firstWord.charAt(0);
+            return String.valueOf(firstLetter);
+        }
+        else if (size >= 2) {
+            // Regardless of how many other words are in the name take the first
+            // two words and get their first letters
+            String firstWord = words[0];
+            String secondWord = words[1];
+            char firstLetter = firstWord.charAt(0);
+            char secondLetter = secondWord.charAt(0);
+            return "" + firstLetter + secondLetter;
+        }
+        return ""; // If no words are found
     }
 }

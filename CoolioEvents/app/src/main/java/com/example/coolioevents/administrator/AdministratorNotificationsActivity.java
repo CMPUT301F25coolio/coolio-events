@@ -2,6 +2,7 @@ package com.example.coolioevents.administrator;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -61,7 +62,7 @@ public class AdministratorNotificationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_administrator_notifications);
 
         // Establishing views
-        ImageButton backButton = findViewById(R.id.btnBack);
+        FrameLayout backButton = findViewById(R.id.btnBack);
         notificationsListView = findViewById(R.id.notifications_list_view);
 
         // Establishing Adapter

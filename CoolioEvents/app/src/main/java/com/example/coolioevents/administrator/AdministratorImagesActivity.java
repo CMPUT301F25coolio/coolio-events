@@ -67,7 +67,7 @@ public class AdministratorImagesActivity extends AppCompatActivity implements Im
         setContentView(R.layout.activity_administrator_images);
 
         // Establish Views
-        ImageButton backButton = findViewById(R.id.btnBack);
+        FrameLayout backButton = findViewById(R.id.btnBack);
         imagesRecyclerView = findViewById(R.id.images_recycler_view);
 
         // Establish Adapter
