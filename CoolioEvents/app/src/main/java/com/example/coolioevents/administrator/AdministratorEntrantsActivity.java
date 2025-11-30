@@ -13,13 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.coolioevents.Entrant.UserViewModel;
 import com.example.coolioevents.R;
 import com.example.coolioevents.User;
-import com.example.coolioevents.events.EventViewModel;
-import com.example.coolioevents.events.EventViewModelFactory;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Copyright 2025 Avery Dancocks & Juliane Phan
@@ -52,7 +52,7 @@ import java.util.ArrayList;
  */
 
 public class AdministratorEntrantsActivity extends AppCompatActivity {
-    EventViewModel eventViewModel; // View Model eventList up to date with database
+    UserViewModel userViewModel;
     ArrayList<User> entrantsList; // My Entrant specific arraylist for array adapter ()
     UserArrayAdapter profileAdapter; // Array adapter for organizer
     ListView entrantListView;
@@ -74,15 +74,16 @@ public class AdministratorEntrantsActivity extends AppCompatActivity {
         entrantListView.setAdapter(profileAdapter);
 
         // Establish ViewModel
-        eventViewModel = new ViewModelProvider(this, new EventViewModelFactory(db)).get(EventViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        eventViewModel.getUserList("Entrant").observe(this, new Observer<ArrayList<User>>() {
-            // When entrant list in viewmodel is updated, update entrantList too (as well as notify array adapter)
+        userViewModel.getUserMap().observe(this, new Observer<Map<String, User>>() {
             @Override
-            public void onChanged(ArrayList<User> entrants) {
+            public void onChanged(Map<String, User> userMap) {
+                // Update entrantsList and notify array adapter whenever it changes
                 entrantsList.clear();
-                System.out.println("CHANGED OMG");
-                entrantsList.addAll(entrants);
+                if (userMap != null) {
+                    entrantsList.addAll(userMap.values());
+                }
                 profileAdapter.notifyDataSetChanged();
             }
         });
