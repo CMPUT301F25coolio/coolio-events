@@ -21,10 +21,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.Entrant.EntrantActivity;
 import com.example.coolioevents.R;
-import com.example.coolioevents.organizer.Organizer;
 import com.example.coolioevents.organizer.OrganizerActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -81,6 +79,8 @@ public class SignupActivity extends AppCompatActivity {
     Button organizerButton; // Choose organizer button
     Button entrantButton; // Choose entrant button
     TextView warnText; // Textview used for warnings (eg. invalid password, email, etc.)
+    TextView emailOptionalText; // Textview used for optional email for entrants
+    TextView passwordOptionalText; // Textview used for optional password for entrants
     Button createAccountButton; // Button which creates account
     Boolean usernameExists; // Textview used for warnings (eg. invalid password, email, etc.)
     ArrayList<String> usernamelist; // Contains all usernames in firestore database
@@ -93,8 +93,8 @@ public class SignupActivity extends AppCompatActivity {
     private FirebaseAuth mAuth; // Authenticator to create user accounts
     private FirebaseFirestore db; // Database
     private CollectionReference userCollection; // Collection of users in firebase database
-    @Override
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -116,8 +116,11 @@ public class SignupActivity extends AppCompatActivity {
         entrantButton = findViewById(R.id.entrantButton);
         organizerButton = findViewById(R.id.organizerButton);
         warnText = findViewById(R.id.warnText);
-
         createAccountButton = findViewById(R.id.createAccountButton);
+
+        // small labels that show "optional for entrants"
+        emailOptionalText = findViewById(R.id.emailOptionalText);
+        passwordOptionalText = findViewById(R.id.passwordOptionalText);
 
         accountType = -1; // Initally Account type selected is none,
 
@@ -129,14 +132,15 @@ public class SignupActivity extends AppCompatActivity {
         // Makes Snapshot listener which updates username list to keep track of all usernames
         addUsernameSL();
 
-        // Back Button On Click Listener - sends user back to welcome screen
+        // Back Button On Click Listener that sends user back to welcome screen
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 finish();
             }
         });
 
-        // Organizer Button On Click Listener - User chooses their account type as organizer
+
+        // Organizer Button On Click Listener that User chooses their account type as organizer
         organizerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +148,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-        // Organizer Button On Click Listener - User chooses their account type as organizer
+        // Entrant Button On Click Listener - User chooses their account type as entrant
         entrantButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,21 +194,37 @@ public class SignupActivity extends AppCompatActivity {
 
     /**
      * Changes account type to Entrant if 0, Organizer if 1, and and update button colors
-     * @param type the type of account; 0 for Entrant, 1 for Organizer
+     * @param type the type of account and 0 for Entrant, 1 for Organizer
      */
     private void changeAccountType(int type){
 
         if (type == 0) {
-            // Change account type to Entrant and update button colors
+            // Change account type to Organizer and update button colors
             accountType = 0;
             organizerButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.purplecircularbackground));
-            entrantButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.inactive_button_border));
+            entrantButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.greybuttonbackground));
+
+            // for organizers, these are required so we hide the helper text
+            if (emailOptionalText != null) {
+                emailOptionalText.setVisibility(View.GONE);
+            }
+            if (passwordOptionalText != null) {
+                passwordOptionalText.setVisibility(View.GONE);
+            }
+
         } else if (type == 1) {
-            // Change account type to Organizer and update button colors
+            // Change account type to Entrant and update button colors
             accountType = 1;
             entrantButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.purplecircularbackground));
             organizerButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.inactive_button_border));
 
+            // for entrants, show that email/password are optional
+            if (emailOptionalText != null) {
+                emailOptionalText.setVisibility(View.VISIBLE);
+            }
+            if (passwordOptionalText != null) {
+                passwordOptionalText.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -213,10 +233,10 @@ public class SignupActivity extends AppCompatActivity {
      */
     private void doSignup(){
         String name, username, email, password;
-        name = nameEditText.getText().toString();
-        username = usernameEditText.getText().toString();
-        email = emailEditText.getText().toString();
-        password = passwordEditText.getText().toString();
+        name = nameEditText.getText().toString().trim();
+        username = usernameEditText.getText().toString().trim();
+        email = emailEditText.getText().toString().trim();
+        password = passwordEditText.getText().toString().trim();
         usernameExists = false;
         warnText.setText("");
 
@@ -238,35 +258,37 @@ public class SignupActivity extends AppCompatActivity {
 
             return;
         }
-        if (TextUtils.isEmpty(email)){
-            // If Email provided is empty warn user they need to put in an email
-            warnText.setText("Please put in an email");
-            return;
-
-        }
-        if (TextUtils.isEmpty(password)){
-            // If Password provided is empty warn user they need to put in a password
-            warnText.setText("Please put in a password");
-
-            return;
-        }
         if (accountType == -1){
-            //If user has not selected a account type yet, warn them
+            // No role chosen yet
             warnText.setText("Please select an account type");
             return;
         }
-        // Attempts to create an account on firebase
-        attemptMakeAccount(name, username, email, password);
+
+        if (accountType == 0) {
+            // organizer needs email and password
+            if (TextUtils.isEmpty(email)){
+                // If Email provided is empty warn user they need to put in an email
+                warnText.setText("Please put in an email");
+                return;
+
+            }
+            if (TextUtils.isEmpty(password)){
+                // If Password provided is empty warn user they need to put in a password
+                warnText.setText("Please put in a password");
+
+                return;
+            }
+            attemptMakeOrganizerAccount(name, username, email, password);
+        } else if (accountType == 1) {
+            // entrant: password optional, email optional
+            attemptMakeEntrantAccount(name, username, email);
+        }
     }
 
     /**
-     * Attempts to make an account for the user. Adds their account to the database if successful.
-     * @param name The user's name that they provided
-     * @param username The user's username that they provided
-     * @param email The user's email that they provided
-     * @param password The user's password that they provided
+     * Makes an organizer account using email/password auth
      */
-    private void attemptMakeAccount(String name, String username, String email, String password) {
+    private void attemptMakeOrganizerAccount(String name, String username, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -279,29 +301,15 @@ public class SignupActivity extends AppCompatActivity {
 
                             Map<String, Object> usermap = new HashMap<>();
                             usermap.put("name", name);
-                            usermap.put("username",username);
-                            usermap.put("email", user.getEmail());
-                            if (accountType == 0) {
-                                // If user selected Organizer as account type, set their role as Organizer
-                                // Send user to OrganizerActivity
-                                usermap.put("role", "Organizer");
-                                db.collection("users").document(user.getUid()).set(usermap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        startActivity(new Intent(SignupActivity.this, OrganizerActivity.class));
-                                    }
-                                });
-                            } else if (accountType == 1) {
-                                // If user selected Entrant as account type, set their role as Organizer
-                                // Send user to EntrantActivity
-                                usermap.put("role", "Entrant");
-                                db.collection("users").document(user.getUid()).set(usermap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        startActivity(new Intent(SignupActivity.this, EntrantActivity.class));
-                                    }
-                                });
-                            }
+                            usermap.put("username", username);
+                            usermap.put("email", user != null ? user.getEmail() : email);
+                            usermap.put("role", "Organizer");
+                            db.collection("users").document(user.getUid()).set(usermap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(SignupActivity.this, OrganizerActivity.class));
+                                }
+                            });
                         }
                         else {
                             // If sign in is unsuccessful, show a toast
@@ -316,8 +324,47 @@ public class SignupActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Makes an entrant account identified by this device (anonymous auth).
+     * Email and password are NOT used for login
+     */
+    private void attemptMakeEntrantAccount(String name, String username, String email) {
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(SignupActivity.this, "Entrant account created.",
+                                    Toast.LENGTH_SHORT).show();
+                            FirebaseUser user = mAuth.getCurrentUser();
 
+                            if (user == null) {
+                                warnText.setText("Could not get user after signup.");
+                                return;
+                            }
 
+                            Map<String, Object> usermap = new HashMap<>();
+                            usermap.put("name", name);
+                            usermap.put("username", username);
+                            usermap.put("email", email);      // optional
+                            usermap.put("role", "Entrant");
 
+                            db.collection("users").document(user.getUid()).set(usermap)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            startActivity(new Intent(SignupActivity.this, EntrantActivity.class));
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(SignupActivity.this, "Entrant signup failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            if (task.getException() != null) {
+                                warnText.setText(task.getException().getMessage());
+                            }
+                        }
+                    }
+                });
+    }
 
 }
