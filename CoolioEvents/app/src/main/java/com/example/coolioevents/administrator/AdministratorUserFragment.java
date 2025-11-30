@@ -2,6 +2,7 @@ package com.example.coolioevents.administrator;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.coolioevents.Entrant.Entrant;
 import com.example.coolioevents.Entrant.UserViewModel;
 import com.example.coolioevents.EventDetails;
 import com.example.coolioevents.Profile;
@@ -22,7 +25,10 @@ import com.example.coolioevents.R;
 import com.example.coolioevents.User;
 import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.events.EventViewModelFactory;
+import com.example.coolioevents.organizer.Organizer;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Map;
 
 /**
  * Copyright 2025 Juliane Phan
@@ -120,7 +126,27 @@ public class AdministratorUserFragment extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userViewModel.deleteUser(currentUserId);  // Delete user
+                userViewModel.deleteUser(currentUserId);  // Delete user from the "users" collection in the database
+
+                // If clicked user is an entrant --> Call entrant-specific deletion methods
+                MutableLiveData<Map<String, Entrant>> entrantMap = userViewModel.getEntrantMap();
+                if (entrantMap.getValue() != null && entrantMap.getValue().containsKey(currentUserId)) {
+                    userViewModel.deleteEntrantFromWaitlistLocations(currentUserId);
+                    userViewModel.removeUserFromAllEventLists(currentUserId)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("ViewModel", "SUCCESS: User " + currentUserId + " deleted from event lists");
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("ViewModel", "FAILURE: Could not delete user " + currentUserId + " from event lists", e);
+                            });
+                }
+
+                // If clicked user is an organizer --> Call organizer-specific deletion methods
+                MutableLiveData<Map<String, Organizer>> organizerMap = userViewModel.getOrganizerMap();
+                if (organizerMap.getValue() != null && organizerMap.getValue().containsKey(currentUserId)) {
+                    userViewModel.deleteEventsMadeByOrganizer(currentUserId);
+                }
+
                 getParentFragmentManager().popBackStack();  // Go back to Entrants/Organizers screen
                 // Remove white background from fragment container
                 fragmentContainer.setBackgroundColor(Color.TRANSPARENT);

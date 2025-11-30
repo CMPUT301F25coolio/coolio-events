@@ -158,7 +158,7 @@ public class UserViewModel extends ViewModel {
      * Deletes the specific user from the firebase
      *
      * @param userId
-     *      event that the administrator wishes to delete
+     *      user ID of the user that the administrator wishes to delete
      */
     public void deleteUser(String userId) {
         if (userId == null) {
@@ -178,6 +178,9 @@ public class UserViewModel extends ViewModel {
      * Remove this user from all event entrant lists:
      * waitlistEntrants, chosenEntrants, acceptedEntrants, cancelledEntrants.
      * Can be used by any fragment that has access to this ViewModel.
+     *
+     * @param uid
+     *      user id of user to remove
      */
     public Task<Void> removeUserFromAllEventLists(String uid) {
         if (uid == null) {
@@ -250,6 +253,48 @@ public class UserViewModel extends ViewModel {
                     }
 
                     return batch.commit();
+                });
+    }
+
+    /**
+     * This is called when an administrator chooses to delete an entrant.
+     * Deletes any waitlist_location documents associated with the user from the database.
+     * @param userId
+     *      the user ID of the entrant the administrator wishes to delete
+     */
+    public void deleteEntrantFromWaitlistLocations(String userId) {
+        db.collection("waitlist_locations")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        documentSnapshot.getReference().delete();
+                    }
+                    Log.d("ViewModel", "SUCCESS: Deleted waitlist locations for user " + userId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "FAILURE: Could not delete waitlist locations for user " + userId, e);
+                });
+    }
+
+    /**
+     * This is called when an administrator chooses to delete an organizer.
+     * Deletes any events created by the organizer from the database.
+     * @param userID
+     *      the user ID of the organizer the administrator wishes to delete
+     */
+    public void deleteEventsMadeByOrganizer(String userID) {
+        db.collection("events")
+                .whereEqualTo("organizerId", userID)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        documentSnapshot.getReference().delete();
+                    }
+                    Log.d("ViewModel", "SUCCESS: Deleted events made by organizer " + userID);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewModel", "FAILURE: Could not delete events made by organizer " + userID, e);
                 });
     }
 
