@@ -1,6 +1,7 @@
 package com.example.coolioevents.events;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,11 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Copyright 2025 Ethan Diep & Avery Dancocks & Juliane Phan
@@ -76,22 +80,28 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
         TextView eventOrganizer = view.findViewById(R.id.eventOrganizer);
         TextView eventDescription = view.findViewById(R.id.eventDescription);
         TextView eventTime = view.findViewById(R.id.eventTime);
+        TextView dateDay = view.findViewById(R.id.dateDay);
+        TextView dateMonth = view.findViewById(R.id.dateMonth);
+        TextView dateTime = view.findViewById(R.id.dateTime);
         TextView eventLocation = view.findViewById(R.id.eventLocation);
         TextView eventRegPrd = view.findViewById(R.id.eventRegPeriod);
         TextView eventMaxEntrees = view.findViewById(R.id.eventmaxEntrees);
-        TextView eventMaxWaiting = view.findViewById(R.id.waitlistLimit);
         TextView eventStatus = view.findViewById(R.id.eventStatus);
+        TextView eventUserStatus = view.findViewById(R.id.eventuserStatus);
+        TextView eventUserStatusRegistration = view.findViewById(R.id.eventUserStatusRegistration);
+        TextView eventWaitingCount = view.findViewById(R.id.eventWaitingCount);
         ChipGroup tagsChipGroup = view.findViewById(R.id.tagsGroup);
 
-
-        TextView eventWaitingCount = view.findViewById(R.id.eventWaitingCount);
-
         eventName.setText(event.getDetails().getEventName());
-        eventOrganizer.setText(String.format("Posted By: %s", event.getOrganizer().getProfile().getUsername())); // Sets event organizer text
+        eventOrganizer.setText(String.format("%s", event.getOrganizer().getProfile().getUsername())); // Sets event organizer text
         eventDescription.setText(String.format("Description: %s", event.getDetails().getEventDescription())); // Sets event description text
         eventRegPrd.setText(String.format("Registration Period: %s", event.getDetails().getRegistrationPeriod())); // Sets event registration period text
         eventMaxEntrees.setText(String.format("Entrant Limit: %s", String.valueOf(event.getDetails().getEntrantLimit()))); // Sets entrant limit organizer text
-        eventMaxWaiting.setText(String.format("Waiting List Limit: %s", String.valueOf(event.getDetails().getWaitingListLimit()))); // Sets waiting list limit organizer text);
+
+        // Setting Certain Views Invisible for search and home fragments
+        eventStatus.setVisibility(View.GONE);
+        eventUserStatus.setVisibility(View.GONE);
+        eventUserStatusRegistration.setVisibility(View.GONE);
 
         //https://stackoverflow.com/questions/45232608/how-to-load-image-into-imageview-from-url-using-glide-v4-0-0rc1
         // Set event image with Glide
@@ -103,23 +113,97 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
                 .into(eventImageView);
 
         if (event.getDetails().getEventLocation() != null){
-            eventLocation.setText(String.format("Event Location: %s",event.getDetails().getEventLocation())); // Sets event location if not null
-        }
-        if (event.getDetails().getEventDateTime() != null){
-            eventTime.setText(String.format("Time: %s",event.getDetails().getEventDateTime())); // Sets event time if not null
+            eventLocation.setText(String.format("%s",event.getDetails().getEventLocation())); // Sets event location if not null
         }
 
+        // Setting Event Date
+        if (event.getDetails().getEventDateTime() != null){
+            Calendar calendar = Calendar.getInstance(); // Make new calender object based on date and Time
+            calendar.setTime(event.getDetails().getEventDateTime());
+
+
+            SimpleDateFormat monthAbrv = new SimpleDateFormat("MMM", Locale.ENGLISH); // Converts calender to 3 month format
+            SimpleDateFormat dayAbrv = new SimpleDateFormat("dd", Locale.ENGLISH); // Converts calender to day format
+            SimpleDateFormat timeAbrv = new SimpleDateFormat("hh:mm a", Locale.ENGLISH); // Converts calender to time format
+
+            dateMonth.setText(monthAbrv.format(calendar.getTime()).toUpperCase());
+            dateDay.setText(dayAbrv.format(calendar.getTime()));
+            dateTime.setText(timeAbrv.format(calendar.getTime()));
+
+            eventTime.setText(String.format("Time: %s",event.getDetails().getEventDateTime())); // Sets event time if not null
+
+
+        }
+
+
+        /*
         // Setting event status text
         if (event.getDetails().getStatus().equals("open")) {
             // If event open make text open with green background
             eventStatus.setText("Open");
             eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
-        }
-        else{
+        } else if (event.getDetails().getStatus().equals("closed")) {
+            eventStatus.setText("Closed");
+            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
+        } else {
             // If event closed make text open with red background
             eventStatus.setText(event.getDetails().getStatus());
             eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
         }
+
+         */
+
+        /*
+        List<String> waitlist = event.getWaitlistEntrants();
+        List<String> chosenEntrants = event.getChosenEntrants();
+        List<String> acceptedEntrants = event.getAcceptedEntrants();
+        String userId = currentUser.getUid();
+
+        boolean isUserOnWaitList = waitlist.contains(userId);
+        boolean isUserChosen = chosenEntrants.contains(userId);
+        boolean isUserAccepted = acceptedEntrants.contains(userId);
+
+        System.out.println(isUserOnWaitList);
+
+        // Setting user status text
+        if (isUserOnWaitList) {
+            // Set Visibility of registration status
+            eventUserStatusRegistration.setVisibility(View.GONE);
+
+            // If the current user is in the waitlist, display an indicator that user is in the waiting list
+            eventUserStatus.setText("In Waiting List");
+            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
+        }
+        if (!isUserOnWaitList && !isUserChosen && !isUserAccepted) {
+            // Set Visibility of registration status
+            eventUserStatusRegistration.setVisibility(View.GONE);
+
+            // If the current user is not in the waitlist, display an indicator that user is  not in the waiting list
+            eventUserStatus.setText("Not In Waiting List");
+            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greybackground));
+        }
+        if (isUserChosen) {
+            // Set Visibility of registration status
+            eventUserStatusRegistration.setVisibility(View.VISIBLE);
+
+            // If the current user is chosen, display an indicator that user is chosen
+            eventUserStatus.setText("Chosen");
+            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
+        }
+        if (isUserAccepted) {
+            // Set visibility of registration status
+            eventUserStatusRegistration.setVisibility(View.VISIBLE);
+
+            // Set text and colour of user status
+            eventUserStatus.setText("Chosen");
+            eventUserStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
+
+            eventUserStatusRegistration.setText("Registered");
+            eventUserStatusRegistration.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
+        }
+
+         */
+
         //Setting tags
         tagsChipGroup.removeAllViews();
         if (event.getDetails().getTags() != null){
@@ -127,21 +211,22 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
                 Chip tag = new Chip(context);
                 final float scale = getContext().getResources().getDisplayMetrics().density;
                 tag.setText(tagString);
-                tag.setHeight(40);
+                tag.setChipStrokeWidth(0);
+                tag.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.white)));
                 tag.setClickable(false);
                 tagsChipGroup.addView(tag);
             }
         }
-
         // Set waiting list count text
         if (event.getWaitlistEntrants().size() == 1){
 
-            eventWaitingCount.setText("1 PERSON IN WAITING LIST"); //Set waiting list count
+            eventWaitingCount.setText("People in Waitlist: 1"); //Set waiting list count
         }
         else {
-            eventWaitingCount.setText(String.format("%s PEOPLE IN WAITING LIST", String.valueOf(event.getWaitlistEntrants().size()))); //Set waiting list count
+            eventWaitingCount.setText(String.format("People in Waitlist: %s", String.valueOf(event.getWaitlistEntrants().size()))); //Set waiting list count
         }
 
         return view;
     }
+
 }
