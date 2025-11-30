@@ -66,7 +66,7 @@ public class AdministratorOrganizersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_administrator_organizers);
 
         // Establishing views
-        ImageButton backButton = findViewById(R.id.btnBack);
+        FrameLayout backButton = findViewById(R.id.btnBack);
         organizerListView = findViewById(R.id.user_list_view);
 
         // Establishing Adapter

@@ -15,14 +15,16 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:paddingBottom="16dp"
-        android:paddingTop="16dp">
+        android:paddingTop="16dp"
+        android:background="@color/white">
 
         <!-- ImageView for the organizer's event picture -->
         <ImageView
             android:id="@+id/event_image"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="96dp"
+            android:layout_height="144dp"
             android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="2:3"
             tools:src="@tools:sample/avatars" />
 
         <!-- TextView for the organizer's username -->
@@ -35,7 +37,7 @@
             android:layout_marginEnd="8dp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textStyle="bold"
+            android:fontFamily="@font/poppins_bold"
             tools:text="Organizer" />
 
     </LinearLayout>

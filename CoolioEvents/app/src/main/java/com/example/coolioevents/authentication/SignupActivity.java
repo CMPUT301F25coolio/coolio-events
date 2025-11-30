@@ -216,7 +216,7 @@ public class SignupActivity extends AppCompatActivity {
             // Change account type to Entrant and update button colors
             accountType = 1;
             entrantButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.purplecircularbackground));
-            organizerButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.greybuttonbackground));
+            organizerButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.inactive_button_border));
 
             // for entrants, show that email/password are optional
             if (emailOptionalText != null) {

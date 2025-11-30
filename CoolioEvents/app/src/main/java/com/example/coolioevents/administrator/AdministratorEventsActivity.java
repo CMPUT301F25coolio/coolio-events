@@ -69,7 +69,7 @@ public class AdministratorEventsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_administrator_events);
 
         // Establishing views
-        ImageButton backButton = findViewById(R.id.btnBack);
+        FrameLayout backButton = findViewById(R.id.btnBack);
         ListView eventsListView = findViewById(R.id.eventList);
 
         // Establishing Adapter
@@ -125,4 +125,6 @@ public class AdministratorEventsActivity extends AppCompatActivity {
 
 
     }
+
+
 }

@@ -68,7 +68,7 @@ public class AdministratorNotificationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_administrator_notifications);
 
         // Establishing views
-        ImageButton backButton = findViewById(R.id.btnBack);
+        FrameLayout backButton = findViewById(R.id.btnBack);
         notificationsListView = findViewById(R.id.notifications_list_view);
 
         // Establishing Adapter
