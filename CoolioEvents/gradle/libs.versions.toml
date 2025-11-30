@@ -13,6 +13,7 @@ firebaseStorage = "22.0.1"
 playServicesMaps = "18.2.0"
 firebaseFunctions = "22.1.0"
 rules = "1.7.0"
+espressoContrib = "3.7.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -27,6 +28,7 @@ firebase-storage = { group = "com.google.firebase", name = "firebase-storage", v
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 firebase-functions = { group = "com.google.firebase", name = "firebase-functions", version.ref = "firebaseFunctions" }
 rules = { group = "androidx.test", name = "rules", version.ref = "rules" }
+espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espressoContrib" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
