@@ -9,6 +9,7 @@ import com.example.coolioevents.organizer.Organizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class EventTest {
         // Makes a mock event for testing which is open (Today is within registration period time)
         String eventName = "Test Event";
         String eventDescription = "This is the description";
-        String eventTime = "2025/12/25";
+        Date eventTime = new GregorianCalendar(2099, 12, 26).getTime();
         String eventLocation = "Edmonton";
         String registrationPeriod = "2025/10/25-2099/12/25"; // In registration period
         int entrantLimit = 50;
@@ -32,7 +33,7 @@ public class EventTest {
         // Makes a mock event for testing which is open (Today is within registration period time)
         String eventName = "Test Event";
         String eventDescription = "This is the description";
-        String eventTime = "2010/12/25";
+        Date eventTime = new GregorianCalendar(2010, 12, 21).getTime();
         String eventLocation = "Edmonton";
         String registrationPeriod = "2010/10/25-2010/12/20"; // Out of registration period
         int entrantLimit = 50;
@@ -42,6 +43,8 @@ public class EventTest {
 
         return new Event(eventID, organizer.getProfile().getUser_id(), testDetails);
     }
+
+
 
     public Organizer makeMockOrganizer(){
         // Makes a mock organizer for testing
@@ -129,6 +132,12 @@ public class EventTest {
         assert(closedEvent.getDetails().getStartDate().equals(closedEventStartDate));
         assert(closedEvent.getDetails().getEndDate().equals(closedEventEndDate));
     }
+
+
+
+
+
+
 
 
 
