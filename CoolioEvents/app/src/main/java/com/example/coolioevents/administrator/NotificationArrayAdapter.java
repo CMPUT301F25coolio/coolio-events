@@ -97,7 +97,7 @@ public class NotificationArrayAdapter extends ArrayAdapter<NotificationData> {
 
         // Set View - Receiver
         String receiverString = notification.getReceiver();
-        if (senderString != null) {
+        if (receiverString != null) {
             receiver.setText(receiverString);
         }
         else{

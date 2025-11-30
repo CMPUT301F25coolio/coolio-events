@@ -2,6 +2,9 @@ package com.example.coolioevents.administrator;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -17,9 +20,13 @@ import com.example.coolioevents.events.EventViewModel;
 import com.example.coolioevents.events.EventViewModelFactory;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Copyright 2025 Avery Dancocks
  *
@@ -79,6 +86,53 @@ public class AdministratorNotificationsActivity extends AppCompatActivity {
                 notificationsList.addAll(notificationData); // Add all notification objects
                 Collections.sort(notificationsList); // Sort notifications based on date
                 notificationsAdapter.notifyDataSetChanged(); // Tell adapter data has been changed
+            }
+        });
+
+        // Click specific notification --> Show fragment with notification details
+        notificationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NotificationData clickedNotification = (NotificationData) parent.getItemAtPosition(position);
+                Date notificationDate = clickedNotification.getCreatedAt();
+
+                /*
+                Taken From: https://stackoverflow.com/questions/17807777/simpledateformatstring-template-locale-locale-with-for-example-locale-us-for
+                    License: https://creativecommons.org/licenses/by-sa/3.0/
+                    Authored by: jasdmystery
+                    Taken by: Avery Dancocks
+                    Taken on: 11/19/25
+                 */
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+                String dateString = format.format(notificationDate);
+
+                String senderString = clickedNotification.getSender();
+                String receiverString = clickedNotification.getReceiver();
+                String typeString = clickedNotification.getType();
+                String messageString = clickedNotification.getMessage();
+
+                // If notification is null do nothing
+                if (clickedNotification == null) {
+                    return;
+                }
+
+                // Set the fragment's background colour
+                FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
+                fragmentContainer.setBackgroundResource(R.drawable.whitebackground);
+
+                // Make header and column layout invisible
+                View header = findViewById(R.id.header);
+                View columnLayout = findViewById(R.id.column_layout);
+                header.setVisibility(View.GONE);
+                columnLayout.setVisibility(View.GONE);
+
+                // Create and display the fragment
+                AdministratorNotificationFragment notificationFragment = AdministratorNotificationFragment.newInstance(dateString, senderString, receiverString, typeString, messageString);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, notificationFragment) // Replace the current fragment
+                        .addToBackStack(null) // This allows the user to press the close button to return to the list
+                        .commit();
             }
         });
 
