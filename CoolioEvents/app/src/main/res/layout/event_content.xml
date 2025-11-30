@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:maxWidth="250sp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10sp"
+        android:layout_marginStart="15sp"
         android:maxLines="2"
         android:fontFamily="@font/poppins_bold"
         android:text="Event Title"
@@ -59,7 +59,7 @@
         android:id="@+id/eventOrganizer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10sp"
+        android:layout_marginLeft="15sp"
         android:maxLines="1"
         android:autoSizeTextType="uniform"
         android:fontFamily="@font/poppins_bold"
@@ -142,7 +142,7 @@
         android:id="@+id/eventLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10sp"
+        android:layout_marginStart="15sp"
         android:maxWidth="250sp"
         android:maxLines="1"
         android:fontFamily="@font/poppins_regular"
@@ -338,6 +338,7 @@
             android:layout_height="wrap_content"
 
             android:layout_marginBottom="10sp"
+            android:layout_marginTop="2sp"
             android:autoSizeTextType="uniform"
 
 

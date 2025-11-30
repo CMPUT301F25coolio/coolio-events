@@ -190,6 +190,14 @@ public class EntrantMyEventArrayAdapter extends ArrayAdapter<Event> {
                 tagsChipGroup.addView(tag);
             }
         }
+        if (tagsChipGroup.getChildCount() == 0) {
+            // If there are no chips hide the entire group
+            tagsChipGroup.setVisibility(View.GONE);
+        } else {
+            // If there are chips make sure the group is visible
+            tagsChipGroup.setVisibility(View.VISIBLE);
+        }
+
         // Set waiting list count text
         if (event.getWaitlistEntrants().size() == 1){
 

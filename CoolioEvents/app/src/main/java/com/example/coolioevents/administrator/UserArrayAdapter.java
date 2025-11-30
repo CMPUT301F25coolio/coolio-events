@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.example.coolioevents.R;
 import com.example.coolioevents.User;
@@ -61,12 +63,77 @@ public class UserArrayAdapter extends ArrayAdapter<User> {
             view = LayoutInflater.from(context).inflate(R.layout.profile_content, parent, false);
         }
 
-        User organizer = userList.get(position);
+        User user = userList.get(position);
         // Get Views
-        TextView organizerName = view.findViewById(R.id.profile_name);
+        TextView userName = view.findViewById(R.id.profile_name);
+        ImageView profileCircle = view.findViewById(R.id.profile_circle);
+        TextView profileText = view.findViewById(R.id.icon_text);
         // Set View
-        organizerName.setText(organizer.getProfile().getUsername());
+        userName.setText(user.getProfile().getUsername());
+
+        // Setting Profile Colour
+        int colourId = getColour(user.getProfile().getUser_id());
+        int userColour = ContextCompat.getColor(getContext(), colourId);
+        profileCircle.getBackground().setTint(userColour);
+
+        String name = user.getProfile().getName();
+        if (name != null) {
+            String initials = getInitials(name);
+            profileText.setText(initials);
+        }
 
         return view;
+    }
+
+    /**
+     * This function uses hashing to return a colour based on a
+     * user's ID. The function will return the same colour
+     * for the same user ID every time.
+     * @param userId
+     *      The user ID that is to be hashed
+     * @return
+     *      an integer representing a colour
+     */
+    private int getColour(String userId) {
+        int[] colourPalette = new int[]{
+                R.color.medium_purple,
+                R.color.medium_green,
+                R.color.medium_blue,
+                R.color.medium_yellow,
+        };
+
+        int hash = userId.hashCode();
+
+        int index = Math.abs(hash % colourPalette.length);
+
+        return colourPalette[index];
+    }
+
+    /**
+     * This method returns a string of initials or a single initial
+     * based on the provided string name.
+     * @param name
+     *      String name from which the initials will be obtained
+     */
+    private String getInitials(String name) {
+        String[] words = name.split(" ");
+        int size = words.length;
+
+        if (size == 1) {
+            // If there is one whole name just return the first initial
+            String firstWord = words[0];
+            char firstLetter = firstWord.charAt(0);
+            return String.valueOf(firstLetter);
+        }
+        else if (size >= 2) {
+            // Regardless of how many other words are in the name take the first
+            // two words and get their first letters
+            String firstWord = words[0];
+            String secondWord = words[1];
+            char firstLetter = firstWord.charAt(0);
+            char secondLetter = secondWord.charAt(0);
+            return "" + firstLetter + secondLetter;
+        }
+        return ""; // If no words are found
     }
 }
