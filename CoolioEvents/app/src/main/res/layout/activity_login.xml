@@ -6,118 +6,127 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".authentication.SignupActivity">
+    android:padding="0dp"
+    android:layout_margin="0dp"
+    android:background="@color/white"
+    tools:context=".authentication.LoginActivity">
 
+    <!-- TOP WAVE HEADER -->
 
-    <EditText
-        android:id="@+id/emailEditText"
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:background="@drawable/edittextbackground"
-        android:ems="10"
-        android:fontFamily="@font/clearsans_bold"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:text=""
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/topWave"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/finalscreen"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintVertical_bias="0.131" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHeight_percent="0.45"/>
 
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="350dp"
-        android:layout_height="50dp"
-        android:background="@drawable/edittextbackground"
-        android:ems="10"
-        android:fontFamily="@font/clearsans_bold"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:text=""
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+    <!-- Back arrow on top of header -->
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/arrow_back_white"
+        android:padding="4dp"
+        app:tint="@color/white"
+        android:contentDescription="Back"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailEditText"
-        app:layout_constraintVertical_bias="0.085" />
+        app:layout_constraintTop_toTopOf="@id/topWave" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/loginButton"
+    <!-- LOGIN title -->
+    <TextView
+        android:id="@+id/screenTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="72dp"
-        android:width="250dp"
-        android:background="@drawable/purplebutton"
-        android:fontFamily="@font/clearsans_bold"
-        android:text="Log in"
+        android:text="LOG IN"
         android:textColor="@color/white"
+        android:textSize="32sp"
+        android:fontFamily="@font/poppins_bold"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topWave" />
+
+    <!-- FORM AREA -->
+
+    <ScrollView
+        android:id="@+id/formScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/topWave"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/warnText"
-        app:layout_constraintVertical_bias="0.129" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <TextView
-        android:id="@+id/warnText"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="24dp"
-        android:text=""
-        android:textColor="#BD0000"
-        android:autoSizeTextType="uniform"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@drawable/bluebackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/screenTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="92dp"
-            android:fontFamily="@font/clearsans_bold"
-            android:gravity="center"
-            android:text="Welcome Back!\n\n LOGIN"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-            android:textColor="@color/white"
-            android:textSize="40dp"
+            <!-- Email -->
+            <EditText
+                android:id="@+id/emailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/searchbar_background"
+                android:ems="10"
+                android:fontFamily="@font/poppins_bold"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textColorHint="#66000000"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginTop="8dp" />
 
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:width="100dp"
-            android:background="@drawable/whitebutton"
-            android:fontFamily="@font/clearsans_bold"
-            android:text="Back"
+            <!-- Password -->
+            <EditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/searchbar_background"
+                android:ems="10"
+                android:fontFamily="@font/poppins_bold"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textColorHint="#66000000"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginTop="8dp" />
 
-            android:textColor="#8917E4"
+            <!-- Warning text -->
+            <TextView
+                android:id="@+id/warnText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#BD0000"
+                android:autoSizeTextType="uniform"
+                android:layout_marginTop="12dp" />
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <!-- Login button -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/button_primary_green"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Log in"
+                android:textColor="@color/white" />
 
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

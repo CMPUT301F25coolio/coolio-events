@@ -51,7 +51,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.coolioevents.Entrant.UserViewModel;
 import com.example.coolioevents.Entrant.EntrantSettingsFragment;
 import com.example.coolioevents.authentication.WelcomeActivity;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -106,6 +108,8 @@ public class ProfileFragment extends Fragment {
 
     // Firebase Firestore instance used to fetch user profile data
     private FirebaseFirestore db;
+    private UserViewModel userViewModel;
+
 
     public ProfileFragment() {
         // Required empty constructor
@@ -168,6 +172,7 @@ public class ProfileFragment extends Fragment {
         // Initialize Firebase services
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
 
         // Load user's profile from Firestore
         loadUserProfile();
@@ -383,76 +388,7 @@ public class ProfileFragment extends Fragment {
      * Remove this user from all event lists:
      * waitlistEntrants, chosenEntrants, acceptedEntrants, cancelledEntrants.
      */
-    private Task<Void> removeUserFromAllEventLists(String uid) {
-        // Query events where any of the 4 arrays contain this uid
-        Task<QuerySnapshot> waitListTask = db.collection("events")
-                .whereArrayContains("waitlistEntrants", uid)
-                .get();
 
-        Task<QuerySnapshot> chosenTask = db.collection("events")
-                .whereArrayContains("chosenEntrants", uid)
-                .get();
-
-        Task<QuerySnapshot> acceptedTask = db.collection("events")
-                .whereArrayContains("acceptedEntrants", uid)
-                .get();
-
-        Task<QuerySnapshot> canceledTask = db.collection("events")
-                .whereArrayContains("cancelledEntrants", uid)
-                .get();
-
-        return Tasks.whenAllComplete(waitListTask, chosenTask, acceptedTask, canceledTask)
-                .onSuccessTask(tasks -> {
-                    WriteBatch batch = db.batch();
-
-                    if (waitListTask.isSuccessful()) {
-                        QuerySnapshot snap = waitListTask.getResult();
-                        if (snap != null) {
-                            for (QueryDocumentSnapshot doc : snap) {
-                                batch.update(doc.getReference(),
-                                        "waitlistEntrants",
-                                        FieldValue.arrayRemove(uid));
-                            }
-                        }
-                    }
-
-                    if (chosenTask.isSuccessful()) {
-                        QuerySnapshot snap = chosenTask.getResult();
-                        if (snap != null) {
-                            for (QueryDocumentSnapshot doc : snap) {
-                                batch.update(doc.getReference(),
-                                        "chosenEntrants",
-                                        FieldValue.arrayRemove(uid));
-                            }
-                        }
-                    }
-
-                    if (acceptedTask.isSuccessful()) {
-                        QuerySnapshot snap = acceptedTask.getResult();
-                        if (snap != null) {
-                            for (QueryDocumentSnapshot doc : snap) {
-                                batch.update(doc.getReference(),
-                                        "acceptedEntrants",
-                                        FieldValue.arrayRemove(uid));
-                            }
-                        }
-                    }
-
-                    if (canceledTask.isSuccessful()) {
-                        QuerySnapshot snap = canceledTask.getResult();
-                        if (snap != null) {
-                            for (QueryDocumentSnapshot doc : snap) {
-                                batch.update(doc.getReference(),
-                                        "cancelledEntrants",
-                                        FieldValue.arrayRemove(uid));
-                            }
-                        }
-                    }
-
-                    // Commit all array updates
-                    return batch.commit();
-                });
-    }
     /**
      * After successful re-authentication, actually delete everything:
      * 1) remove from all event entrant lists
@@ -462,8 +398,8 @@ public class ProfileFragment extends Fragment {
     private void performAccountDeletion(FirebaseUser user) {
         String uid = user.getUid();
 
-        // 1. Remove user from all event lists
-        removeUserFromAllEventLists(uid)
+        // 1. Remove user from all event lists via ViewModel
+        userViewModel.removeUserFromAllEventLists(uid)
                 .addOnSuccessListener(unused -> {
                     // 2. Delete Firestore user document
                     db.collection("users").document(uid).delete()

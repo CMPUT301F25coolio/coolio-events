@@ -14,6 +14,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -168,5 +174,84 @@ public class UserViewModel extends ViewModel {
                     Log.e("ViewModel", "FAILURE: Could not delete user " + userId, e);
                 });
     }
+    /**
+     * Remove this user from all event entrant lists:
+     * waitlistEntrants, chosenEntrants, acceptedEntrants, cancelledEntrants.
+     * Can be used by any fragment that has access to this ViewModel.
+     */
+    public Task<Void> removeUserFromAllEventLists(String uid) {
+        if (uid == null) {
+            return Tasks.forResult(null);
+        }
+
+        // Query events where any of the 4 arrays contain this uid
+        Task<QuerySnapshot> waitListTask = db.collection("events")
+                .whereArrayContains("waitlistEntrants", uid)
+                .get();
+
+        Task<QuerySnapshot> chosenTask = db.collection("events")
+                .whereArrayContains("chosenEntrants", uid)
+                .get();
+
+        Task<QuerySnapshot> acceptedTask = db.collection("events")
+                .whereArrayContains("acceptedEntrants", uid)
+                .get();
+
+        Task<QuerySnapshot> canceledTask = db.collection("events")
+                .whereArrayContains("cancelledEntrants", uid)
+                .get();
+
+        return Tasks.whenAllComplete(waitListTask, chosenTask, acceptedTask, canceledTask)
+                .onSuccessTask(tasks -> {
+                    WriteBatch batch = db.batch();
+
+                    if (waitListTask.isSuccessful()) {
+                        QuerySnapshot snap = waitListTask.getResult();
+                        if (snap != null) {
+                            for (QueryDocumentSnapshot doc : snap) {
+                                batch.update(doc.getReference(),
+                                        "waitlistEntrants",
+                                        FieldValue.arrayRemove(uid));
+                            }
+                        }
+                    }
+
+                    if (chosenTask.isSuccessful()) {
+                        QuerySnapshot snap = chosenTask.getResult();
+                        if (snap != null) {
+                            for (QueryDocumentSnapshot doc : snap) {
+                                batch.update(doc.getReference(),
+                                        "chosenEntrants",
+                                        FieldValue.arrayRemove(uid));
+                            }
+                        }
+                    }
+
+                    if (acceptedTask.isSuccessful()) {
+                        QuerySnapshot snap = acceptedTask.getResult();
+                        if (snap != null) {
+                            for (QueryDocumentSnapshot doc : snap) {
+                                batch.update(doc.getReference(),
+                                        "acceptedEntrants",
+                                        FieldValue.arrayRemove(uid));
+                            }
+                        }
+                    }
+
+                    if (canceledTask.isSuccessful()) {
+                        QuerySnapshot snap = canceledTask.getResult();
+                        if (snap != null) {
+                            for (QueryDocumentSnapshot doc : snap) {
+                                batch.update(doc.getReference(),
+                                        "cancelledEntrants",
+                                        FieldValue.arrayRemove(uid));
+                            }
+                        }
+                    }
+
+                    return batch.commit();
+                });
+    }
+
 
 }

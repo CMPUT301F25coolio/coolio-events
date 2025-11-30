@@ -1,13 +1,17 @@
 package com.example.coolioevents.authentication;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -73,7 +77,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText emailEditText; // Edittext where user inputs email
     EditText passwordEditText; // Edittext where user inputs password
 
-    Button backButton; // Button to go back to welcome screen
+    ImageButton backButton; // Button to go back to welcome screen
     Button organizerButton; // Choose organizer button
     Button entrantButton; // Choose entrant button
     TextView warnText; // Textview used for warnings (eg. invalid password, email, etc.)
@@ -95,12 +99,14 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_signup);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, 0, 0, systemBars.bottom);
             return insets;
         });
-
+        ImageView topWave = findViewById(R.id.topWave);
+        ScrollView formScroll = findViewById(R.id.formScroll);
         nameEditText = findViewById(R.id.nameEditText);
         usernameEditText = findViewById(R.id.usernameEditText);
         emailEditText = findViewById(R.id.emailEditText);
@@ -152,6 +158,18 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 doSignup();
             }
+        });
+        //please don't remove this, it's to make the scroll ui better
+        topWave.post(() -> {
+            int headerHeight = topWave.getHeight();
+            // Push content down so it starts below the wave
+            formScroll.setPadding(
+                    formScroll.getPaddingLeft(),
+                    headerHeight,
+                    formScroll.getPaddingRight(),
+                    formScroll.getPaddingBottom()
+            );
+            formScroll.setClipToPadding(false); // important: lets content scroll into padded area
         });
     }
 
