@@ -516,7 +516,7 @@ public class EventFragment extends Fragment {
                             }
                             else {
                                 int limit = limitObject.intValue();
-                                Log.e("Waitlist limit", "Limit: "+ limit);
+
                                 //Block user from joining if full
                                 if (waitlistCount >= limit) {
                                     Toast.makeText(getContext(),

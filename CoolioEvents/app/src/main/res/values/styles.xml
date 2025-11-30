@@ -5,7 +5,10 @@
         <item name="cornerSize">20sp</item>
     </style>
 
-
+    <!-- Taken From: Google Gemini -->
+    <!-- Prompt: How do I modify a tage widget?-->
+    <!-- Taken By: Avery Dancocks -->
+    <!-- Taken On: 11/29/25 -->
     <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/light_green</item>
         <item name="shapeAppearance">@style/MyIndicatorShape</item>
