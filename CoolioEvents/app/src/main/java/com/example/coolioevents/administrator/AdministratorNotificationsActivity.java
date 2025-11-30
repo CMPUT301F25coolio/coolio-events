@@ -103,9 +103,12 @@ public class AdministratorNotificationsActivity extends AppCompatActivity {
                     Taken by: Avery Dancocks
                     Taken on: 11/19/25
                  */
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
-                String dateString = format.format(notificationDate);
+                String dateString = dateFormat.format(notificationDate);
+
+                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                String timeString = timeFormat.format(notificationDate);
 
                 String senderString = clickedNotification.getSender();
                 String receiverString = clickedNotification.getReceiver();
@@ -121,14 +124,15 @@ public class AdministratorNotificationsActivity extends AppCompatActivity {
                 FrameLayout fragmentContainer = findViewById(R.id.fragment_container);
                 fragmentContainer.setBackgroundResource(R.drawable.whitebackground);
 
-                // Make header and column layout invisible
+                // Make ListView, header, and column layout invisible
                 View header = findViewById(R.id.header);
                 View columnLayout = findViewById(R.id.column_layout);
                 header.setVisibility(View.GONE);
                 columnLayout.setVisibility(View.GONE);
+                notificationsListView.setVisibility(View.GONE);
 
                 // Create and display the fragment
-                AdministratorNotificationFragment notificationFragment = AdministratorNotificationFragment.newInstance(dateString, senderString, receiverString, typeString, messageString);
+                AdministratorNotificationFragment notificationFragment = AdministratorNotificationFragment.newInstance(dateString, timeString, senderString, receiverString, typeString, messageString);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, notificationFragment) // Replace the current fragment
                         .addToBackStack(null) // This allows the user to press the close button to return to the list

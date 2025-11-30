@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ import com.example.coolioevents.R;
 
 public class AdministratorNotificationFragment extends Fragment {
     private String dateString;
+    private String timeString;
     private String senderString;
     private String receiverString;
     private String typeString;
@@ -49,6 +51,7 @@ public class AdministratorNotificationFragment extends Fragment {
 
     // UI components
     private TextView dateView;
+    private TextView timeView;
     private TextView senderView;
     private TextView receiverView;
     private TextView typeView;
@@ -61,6 +64,8 @@ public class AdministratorNotificationFragment extends Fragment {
      *
      * @param dateString
      *      the date of the notification
+     * @param timeString
+     *      the time of the notification
      * @param senderString
      *      the sender of the notification
      * @param receiverString
@@ -71,10 +76,11 @@ public class AdministratorNotificationFragment extends Fragment {
      *      the message of the notification
      * @return the fragment
      */
-    public static AdministratorNotificationFragment newInstance(String dateString, String senderString, String receiverString, String typeString, String messageString) {
+    public static AdministratorNotificationFragment newInstance(String dateString, String timeString, String senderString, String receiverString, String typeString, String messageString) {
         AdministratorNotificationFragment fragment = new AdministratorNotificationFragment();
         Bundle args = new Bundle();
         args.putString("date", dateString);
+        args.putString("time", timeString);
         args.putString("sender", senderString);
         args.putString("receiver", receiverString);
         args.putString("type", typeString);
@@ -86,6 +92,7 @@ public class AdministratorNotificationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dateString = getArguments().getString("date");
+        timeString = getArguments().getString("time");
         senderString = getArguments().getString("sender");
         receiverString = getArguments().getString("receiver");
         typeString = getArguments().getString("type");
@@ -102,6 +109,7 @@ public class AdministratorNotificationFragment extends Fragment {
 
         // Establishing UI components for the notification's details
         dateView = view.findViewById(R.id.date);
+        timeView = view.findViewById(R.id.time);
         senderView = view.findViewById(R.id.sender);
         receiverView = view.findViewById(R.id.receiver);
         typeView = view.findViewById(R.id.type);
@@ -109,6 +117,9 @@ public class AdministratorNotificationFragment extends Fragment {
 
         // Set text for the notification's date
         dateView.setText(dateString);
+
+        // Set text for the notification's time
+        timeView.setText(timeString);
 
         // Set text for the notification's sender
         if (senderString != null) {
@@ -152,12 +163,13 @@ public class AdministratorNotificationFragment extends Fragment {
         // Set text for the notification's message
         messageView.setText(messageString);
 
-
         // Establishing views needed for closing the fragment
         closeButton = view.findViewById((R.id.close_button));
         FrameLayout fragmentContainer = getActivity().findViewById(R.id.fragment_container);
         View header = getActivity().findViewById(R.id.header);
         View columnLayout = getActivity().findViewById(R.id.column_layout);
+        ListView notificationsListView = getActivity().findViewById(R.id.notifications_list_view);
+
 
         // Close button onclick activity --> Goes back to Notifications screen
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -168,9 +180,10 @@ public class AdministratorNotificationFragment extends Fragment {
                 // Remove white background from fragment container
                 fragmentContainer.setBackgroundColor(Color.TRANSPARENT);
 
-                // Make header and column layout visible
+                // Make ListView, header, and column layout visible
                 header.setVisibility(View.VISIBLE);
                 columnLayout.setVisibility(View.VISIBLE);
+                notificationsListView.setVisibility(View.VISIBLE);
             }
         });
     }
