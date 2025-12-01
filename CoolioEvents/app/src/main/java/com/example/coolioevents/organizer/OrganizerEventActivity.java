@@ -122,24 +122,21 @@ public class OrganizerEventActivity extends AppCompatActivity {
             if ((numberOfChosenEntrants < maxEntrants) && (numberInWaitlist >= 1)) {
                 drawNewEntrant.setEnabled(true);
                 // Set UI
-                drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.drawfromlottery)));
-                drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.white));
-                drawNewEntrant.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
+                drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_green)));
+                drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.dark_green));
             }
             if (numberInWaitlist == 0) {
                 drawNewEntrant.setEnabled(false);
                 // Set UI
-                drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
-                drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.grey));
-                drawNewEntrant.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey)));
+                drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_grey)));
+                drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
             }
             // The chosen list is full
             if (numberOfChosenEntrants == maxEntrants) {
                 drawNewEntrant.setEnabled(false);
                 // Set UI
-                drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
-                drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.grey));
-                drawNewEntrant.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey)));
+                drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_grey)));
+                drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
             }
         }
         /*
@@ -203,13 +200,13 @@ public class OrganizerEventActivity extends AppCompatActivity {
                         // If event open make text open with green background
                         if (eventStatusTextView != null) {
                             eventStatusTextView.setText("Open");
-                            eventStatusTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.greenshapebackground));
+                            eventStatusTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.medium_green_widget));
                         }
                     } else {
                         // If event closed make text open with red background
                         if (eventStatusTextView != null) {
                             eventStatusTextView.setText("Closed");
-                            eventStatusTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.redshapebackground));
+                            eventStatusTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.red_widget));
                         }
                     }
 
@@ -230,12 +227,12 @@ public class OrganizerEventActivity extends AppCompatActivity {
                     }
 
                     if (eventDescriptionTextView != null) {
-                        eventDescriptionTextView.setText(String.format("Description: %s", event.getDetails().getEventDescription()));
+                        eventDescriptionTextView.setText(String.format("%s", event.getDetails().getEventDescription()));
                     }
 
                     if (eventLocationTextView != null) {
                         if (event.getDetails().getEventLocation() != null) {
-                            eventLocationTextView.setText(String.format("Event Location: %s", event.getDetails().getEventLocation()));
+                            eventLocationTextView.setText(String.format("%s", event.getDetails().getEventLocation()));
                         } else {
                             eventLocationTextView.setText("Event Location: Not Available");
                         }
@@ -243,26 +240,26 @@ public class OrganizerEventActivity extends AppCompatActivity {
 
                     if (eventTimeTextView != null) {
                         if (event.getDetails().getEventDateTime() != null) {
-                            eventTimeTextView.setText(String.format("Time: %s", event.getDetails().getEventDateTime()));
+                            eventTimeTextView.setText(String.format("%s", event.getDetails().getEventDateTime()));
                         } else {
                             eventTimeTextView.setText("Time: Not Available");
                         }
                     }
 
                     if (eventRegistrationPeriodTextView != null) {
-                        eventRegistrationPeriodTextView.setText(String.format("Registration Period: %s", String.valueOf(details.getRegistrationPeriod())));
+                        eventRegistrationPeriodTextView.setText(String.format("%s", String.valueOf(details.getRegistrationPeriod())));
                     }
 
                     if (eventEntrantLimitTextView != null) {
-                        eventEntrantLimitTextView.setText(String.format("Max Entrees: %s", String.valueOf(details.getEntrantLimit())));
+                        eventEntrantLimitTextView.setText(String.format("%s", String.valueOf(details.getEntrantLimit())));
                     }
 
                     if (eventWaitlistLimitTextView != null) {
                         Integer waitlistLimit = details.getWaitingListLimit();
                         if (waitlistLimit != null) {
-                            eventWaitlistLimitTextView.setText(String.format("Waitlist Limit: %s", String.valueOf(waitlistLimit)));
+                            eventWaitlistLimitTextView.setText(String.format("%s", String.valueOf(waitlistLimit)));
                         } else {
-                            eventWaitlistLimitTextView.setText("Waitlist Limit: Not Set");
+                            eventWaitlistLimitTextView.setText("Not Set");
                         }
                     }
 
@@ -278,7 +275,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
                                 String username = organizer.getProfile().getUsername();
                                 if (eventOrganizerTextView != null) {
                                     if (username != null) {
-                                        eventOrganizerTextView.setText(String.format("Posted By: %s", username));
+                                        eventOrganizerTextView.setText(String.format("%s", username));
                                     } else {
                                         eventOrganizerTextView.setText("Posted By: Unknown");
                                     }

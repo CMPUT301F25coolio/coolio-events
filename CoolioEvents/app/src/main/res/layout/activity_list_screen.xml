@@ -10,13 +10,11 @@
     <!-- Top bar -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="97dp"
+        android:layout_height="84dp"
         android:background="@color/medium_purple"
-        android:elevation="4dp"
+        android:elevation="10dp"
         android:gravity="center_vertical"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="10dp"
+        android:padding="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,6 +25,7 @@
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:layout_marginLeft="-10dp"
             android:contentDescription="Back"
             android:focusable="true">
 
@@ -48,7 +47,7 @@
             android:fontFamily="@font/poppins_bold"
             android:text="Lists"
             android:textColor="@color/white"
-            android:textSize="30sp" />
+            android:textSize="24sp"/>
     </LinearLayout>
 
     <!-- Wait List -->

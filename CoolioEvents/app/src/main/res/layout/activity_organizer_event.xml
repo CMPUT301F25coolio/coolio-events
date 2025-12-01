@@ -332,19 +332,6 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
 
-                <Button
-                    android:id="@+id/view_lists_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:text="View Event Lists"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textAllCaps="false"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="14dp"
-                    style="@style/PurpleButton" />
-
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/draw_new_user_button"
                     android:layout_width="match_parent"
@@ -358,6 +345,19 @@
                     android:paddingTop="14dp"
                     android:paddingBottom="14dp"
                     style="@style/GreyButton" />
+
+                <Button
+                    android:id="@+id/view_lists_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:text="View Event Lists"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    style="@style/PurpleButton" />
 
                 <Button
                     android:id="@+id/sendNotificationsButton"
@@ -579,6 +579,7 @@
         android:clickable="true"
         android:focusable="true"
         android:padding="8dp"
+        android:layout_marginTop="5dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -595,12 +596,14 @@
     <!-- Map Button (Top right, floating) -->
     <FrameLayout
         android:id="@+id/organizer_event_map_button"
-        android:layout_width="63dp"
-        android:layout_height="63dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:clickable="true"
         android:focusable="true"
-        android:padding="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:background="@drawable/purple_widget"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="8dp"
         app:layout_constraintEnd_toStartOf="@+id/organizer_event_edit_button"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -609,19 +612,22 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:src="@drawable/ic_map"
-            app:tint="@color/dark_grey" />
+            app:tint="@color/dark_purple" />
 
     </FrameLayout>
 
     <!-- Edit Button (Top right, floating) -->
     <FrameLayout
         android:id="@+id/organizer_event_edit_button"
-        android:layout_width="63dp"
-        android:layout_height="63dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:clickable="true"
         android:focusable="true"
-        android:padding="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/green_widget"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -630,7 +636,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:src="@drawable/ic_edit_event"
-            app:tint="@color/dark_grey" />
+            app:tint="@color/dark_green" />
 
     </FrameLayout>
 

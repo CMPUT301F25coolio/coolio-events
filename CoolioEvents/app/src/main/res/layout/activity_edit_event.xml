@@ -11,11 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="84dp"
         android:background="@color/medium_purple"
-        android:elevation="4dp"
+        android:elevation="10dp"
         android:gravity="center_vertical"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="10dp"
+        android:padding="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,6 +24,7 @@
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:layout_marginLeft="-10dp"
             android:contentDescription="Back"
             android:focusable="true">
 
@@ -47,7 +46,7 @@
             android:fontFamily="@font/poppins_bold"
             android:text="Edit an Event"
             android:textColor="@color/white"
-            android:textSize="30sp" />
+            android:textSize="24sp" />
     </LinearLayout>
 
     <ScrollView
@@ -265,13 +264,15 @@
             <!-- Geolocation Verification -->
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/geolocation_switch"
-                android:fontFamily="@font/poppins_regular"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Enable Geolocation Verification for this Event"
+                android:text="Geolocation Varification"
                 android:textColor="#212121"
-                android:textSize="16sp"
-                android:layout_marginBottom="8dp"
+                android:textSize="20sp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:fontFamily="@font/poppins_regular"
+                app:switchPadding="19dp"
                 app:thumbTint="@color/switch_thumb_tint"
                 app:trackTint="@color/switch_track_tint"/>
 
@@ -294,61 +295,85 @@
 
                 <!-- chips (unchanged) -->
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Contest"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Dance"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Party"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Kids"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Tech"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Sports"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Arts"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Food"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Workshop"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Music"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Learning"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true"/>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Games"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -361,8 +386,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Upload Poster"
-                android:textColor="#212121"
-                android:textSize="14sp" />
+                android:fontFamily="@font/poppins_regular"
+                android:textSize="14sp"
+                android:textColor="#212121" />
 
             <ImageView
                 android:id="@+id/imgPosterPreview"
@@ -381,7 +407,6 @@
                 android:textAllCaps="false"
                 style="@style/PurpleButton"
                 android:text="Choose Poster Image"
-                android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
             <!-- QR section: simple and obvious for organizers -->
@@ -390,6 +415,7 @@
                 android:layout_height="wrap_content"
                 android:text="Event QR Code"
                 android:textColor="#212121"
+                android:fontFamily="@font/poppins_regular"
                 android:textSize="14sp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp" />
@@ -412,7 +438,6 @@
                 android:textAllCaps="false"
                 style="@style/PurpleButton"
                 android:text="Generate QR Code"
-                android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -428,7 +453,6 @@
         style="@style/GreenButton"
         android:elevation="2dp"
         android:text="Save"
-        android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold" />
 </LinearLayout>

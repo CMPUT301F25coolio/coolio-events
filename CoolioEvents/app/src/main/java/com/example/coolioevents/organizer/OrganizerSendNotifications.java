@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.coolioevents.Event;
@@ -57,7 +58,6 @@ public class OrganizerSendNotifications extends AppCompatActivity {
 
     FrameLayout btnBack;
 
-    private TextView eventNameTextView;
 
     private Button waitListButton;
     private Button chosenButton;
@@ -85,7 +85,6 @@ public class OrganizerSendNotifications extends AppCompatActivity {
 
         // Initializing view items
         btnBack = findViewById(R.id.btnBack);
-        eventNameTextView = findViewById(R.id.eventViewName);
         waitListButton = findViewById(R.id.waitListButton);
         chosenButton = findViewById(R.id.chosenButton);
         cancelledButton = findViewById(R.id.cancelledButton);
@@ -98,7 +97,6 @@ public class OrganizerSendNotifications extends AppCompatActivity {
         if (eventId != null){
             eventViewModel.getEventById(eventId).observe(this, event -> {
                 currentEvent = event;
-                eventNameTextView.setText(event.getDetails().getEventName());
                 waitListButton.setText(String.format("Waitlist Entrants (%d)", event.getWaitlistEntrants().size()));
                 chosenButton.setText(String.format("Chosen Entrants (%d)", event.getChosenEntrants().size()));
                 cancelledButton.setText(String.format("Cancelled Entrants (%d)", event.getCancelledEntrants().size()));
@@ -157,10 +155,17 @@ public class OrganizerSendNotifications extends AppCompatActivity {
             // If option is waitlist entrants - change buttons and text to allign with this
             if (currentEvent.getWaitlistEntrants().isEmpty()){return;} // If there is nobody in the waitlist, dont allow user to select the option
             messageRecipient = recipient;
-            waitListButton.setBackgroundColor(Color.parseColor("#2962FF"));
-            chosenButton.setBackgroundColor(Color.parseColor("#8F949B"));
-            cancelledButton.setBackgroundColor(Color.parseColor("#8F949B"));
-            acceptedButton.setBackgroundColor(Color.parseColor("#8F949B"));
+            waitListButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_purple));
+            waitListButton.setTextColor(ContextCompat.getColor(this, R.color.dark_purple));
+
+            chosenButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            chosenButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+
+            cancelledButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            cancelledButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+
+            acceptedButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            acceptedButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
 
             sendMessageButton.setText(String.format("Send Notifications to %d %s", currentEvent.getWaitlistEntrants().size(), messageRecipient));
         }
@@ -168,10 +173,17 @@ public class OrganizerSendNotifications extends AppCompatActivity {
             // If recipient is chosen entrants - change buttons and text to allign with this
             if (currentEvent.getChosenEntrants().isEmpty()){return;} // If there is nobody in the chosen list, dont allow user to select the option
             messageRecipient = recipient;
-            waitListButton.setBackgroundColor(Color.parseColor("#8F949B"));
-            chosenButton.setBackgroundColor(Color.parseColor("#2962FF"));
-            cancelledButton.setBackgroundColor(Color.parseColor("#8F949B"));
-            acceptedButton.setBackgroundColor(Color.parseColor("#8F949B"));
+            waitListButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            waitListButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+
+            chosenButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_purple));
+            chosenButton.setTextColor(ContextCompat.getColor(this, R.color.dark_purple));
+
+            cancelledButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            cancelledButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+
+            acceptedButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            acceptedButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
 
             sendMessageButton.setText(String.format("Send Notifications to %d %s", currentEvent.getChosenEntrants().size(), messageRecipient));
         }
@@ -179,10 +191,17 @@ public class OrganizerSendNotifications extends AppCompatActivity {
             // If recipient is cancelled entrants - change buttons and text to allign with this
             if (currentEvent.getCancelledEntrants().isEmpty()){return;} // If there is nobody in the cancelled list, dont allow user to select the option
             messageRecipient = recipient;
-            waitListButton.setBackgroundColor(Color.parseColor("#8F949B"));
-            chosenButton.setBackgroundColor(Color.parseColor("#8F949B"));
-            cancelledButton.setBackgroundColor(Color.parseColor("#2962FF"));
-            acceptedButton.setBackgroundColor(Color.parseColor("#8F949B"));
+            waitListButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            waitListButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+
+            chosenButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            chosenButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+
+            cancelledButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_purple));
+            cancelledButton.setTextColor(ContextCompat.getColor(this, R.color.dark_purple));
+
+            acceptedButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            acceptedButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
 
             sendMessageButton.setText(String.format("Send Notifications to %d %s", currentEvent.getCancelledEntrants().size(), messageRecipient));
         }
@@ -190,10 +209,17 @@ public class OrganizerSendNotifications extends AppCompatActivity {
             // If recipient is accepted entrants - change buttons and text to allign with this
             if (currentEvent.getAcceptedEntrants().isEmpty()){return;} // If there is nobody in the cancelled list, dont allow user to select the option
             messageRecipient = recipient;
-            waitListButton.setBackgroundColor(Color.parseColor("#8F949B"));
-            chosenButton.setBackgroundColor(Color.parseColor("#8F949B"));
-            cancelledButton.setBackgroundColor(Color.parseColor("#8F949B"));
-            acceptedButton.setBackgroundColor(Color.parseColor("#2962FF"));
+            waitListButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            waitListButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+
+            chosenButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            chosenButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+
+            cancelledButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_grey));
+            cancelledButton.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+
+            acceptedButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.light_purple));
+            acceptedButton.setTextColor(ContextCompat.getColor(this, R.color.dark_purple));
 
             sendMessageButton.setText(String.format("Send Notifications to %d %s", currentEvent.getAcceptedEntrants().size(), messageRecipient));
         }

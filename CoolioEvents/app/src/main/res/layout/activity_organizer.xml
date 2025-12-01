@@ -1,24 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
-    android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/white">
 
-    <!-- Row 1: Two small tiles -->
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/finalscreenflip">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:elevation="10dp">
 
-        <!-- Make Event -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:textColor="#a3bcfe"
+            android:fontFamily="@font/poppins_bold"
+            android:textSize="70sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:shadowColor="#40000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="4"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <!-- Row 1: Two small tiles -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Make Event -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/optMakeEvent"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="6dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@color/light_green">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/ic_add_event"
+                        android:tint="@color/dark_green" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="New Event"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/dark_green"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- My Profile -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/optMyProfile"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="6dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@color/light_blue">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/ic_profile"
+                        android:tint="@color/dark_blue" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="My Profile"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/dark_blue"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <!-- Row 2: Large wide rectangle -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/optMakeEvent"
-            android:layout_width="0dp"
-            android:layout_height="160dp"
-            android:layout_weight="1"
+            android:id="@+id/optMyEvents"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
             android:layout_margin="8dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="6dp"
@@ -30,101 +139,28 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="#D8FFD8">
+                android:background="@color/light_purple">
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_add_event"
-                    android:tint="#00A86B" />
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ic_my_events"
+                    android:tint="@color/dark_purple" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="MAKE AN EVENT"
-                    android:textStyle="bold"
-                    android:textColor="#00A86B"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    android:layout_marginTop="12dp"
+                    android:text="My Events"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textColor="@color/dark_purple"
+                    android:textSize="20sp" />
 
-        </androidx.cardview.widget.CardView>
-
-        <!-- My Profile -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/optMyProfile"
-            android:layout_width="0dp"
-            android:layout_height="160dp"
-            android:layout_weight="1"
-            android:layout_margin="8dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="6dp"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="#DDE8FF">
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_profile"
-                    android:tint="#3366CC" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="MY PROFILE"
-                    android:textStyle="bold"
-                    android:textColor="#294D99"
-                    android:textSize="14sp" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
-
-    <!-- Row 2: Large wide rectangle -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/optMyEvents"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="6dp"
-        android:clickable="true"
-        android:focusable="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="#E6D6FF">
-
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/ic_my_events"
-                android:tint="#7A3FFF" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="MY EVENTS"
-                android:textStyle="bold"
-                android:textColor="#5E2BBF"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
+</RelativeLayout>
 </LinearLayout>
 
