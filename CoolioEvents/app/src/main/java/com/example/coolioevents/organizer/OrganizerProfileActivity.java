@@ -3,19 +3,28 @@ package com.example.coolioevents.organizer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.coolioevents.Entrant.UserViewModel;
 import com.example.coolioevents.R;
 import com.example.coolioevents.UpdateProfileFragment;
 import com.example.coolioevents.authentication.WelcomeActivity;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -55,15 +64,20 @@ public class OrganizerProfileActivity extends AppCompatActivity {
     private TextView textEmail;
     private Button btnEditProfile;
     private Button logoutButton;
+    private Button deleteButton;
     private FrameLayout btnBack;
     private FirebaseAuth auth;
     private FirebaseFirestore db;
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_organizer_profile);
+
+        // Initialize viewModel
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         // Initialize UI elements
         profileCircle = findViewById(R.id.profile_circle);
@@ -74,6 +88,7 @@ public class OrganizerProfileActivity extends AppCompatActivity {
         btnEditProfile = findViewById(R.id.btn_edit_profile);
         btnBack = findViewById(R.id.btnBack);
         logoutButton = findViewById(R.id.logoutButton);
+        deleteButton = findViewById(R.id.deleteAccountButton);
 
         // Initialize Firebase services
         auth = FirebaseAuth.getInstance();
@@ -90,6 +105,9 @@ public class OrganizerProfileActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(v -> {
             logout(); // If logout button pressed - perform logout
         });
+
+        // Delete button -> delete organizer from database
+        deleteButton.setOnClickListener(v -> showDeleteConfirmationDialog());
 
         // Back button -> goes to organizer home
         btnBack.setOnClickListener(v -> {
@@ -225,5 +243,114 @@ public class OrganizerProfileActivity extends AppCompatActivity {
         auth.signOut();
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * This function shows the dialogue to confirm deleting the account
+     * or to cancel
+     */
+    private void showDeleteConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Account")
+                .setMessage("Are you sure you want to delete your account? This cannot be undone.")
+                .setPositiveButton("Delete", (dialog, which) -> showReauthDialog())
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    /**
+     * This method shows a dialog asking the user to re-enter their password
+     * before deleting their account : like a confirmation
+     * If password incorrect : account deleting won't go through
+     */
+    private void showReauthDialog() {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) return;
+
+        View view = LayoutInflater.from(this)
+                .inflate(R.layout.dialogue_reauth, null);
+        EditText etPassword = view.findViewById(R.id.etPassword);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm Password")
+                .setView(view)
+                .setPositiveButton("Confirm", (dialog, which) -> {
+                    String password = etPassword.getText().toString().trim();
+                    if (password.isEmpty()) {
+                        Toast.makeText(this,
+                                "Password cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    reauthenticateAndDelete(user, password);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    /**
+     * This method reauthenticates the user with their password
+     */
+    private void reauthenticateAndDelete(FirebaseUser user, String password) {
+        String email = user.getEmail();
+        if (email == null) {
+            Toast.makeText(this,
+                    "No email associated with this account.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+        user.reauthenticate(credential)
+                .addOnSuccessListener(unused -> {
+                    Log.d("ProfileFragment", "Re-authentication successful");
+                    performAccountDeletion(user);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ProfileFragment", "Re-authentication failed", e);
+                    Toast.makeText(this,
+                            "Re-authentication failed: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                });
+    }
+
+    /**
+     * Remove this user from from users and remove all of their events
+     *
+     * After successful re-authentication, actually delete everything:
+     * 1) delete all of the events they made
+     * 2) delete Firestore user doc
+     * 3) delete FirebaseAuth user
+     */
+    private void performAccountDeletion(FirebaseUser user) {
+        String uid = user.getUid();
+
+        if (userViewModel != null) {
+            // Delete from database
+            userViewModel.deleteUser(uid);
+
+            // Delete all events
+            userViewModel.deleteEventsMadeByOrganizer(uid);
+
+            // Deleting from Firebase Auth
+            // 3. Delete FirebaseAuth user (now recently re-authenticated)
+            user.delete()
+                    .addOnSuccessListener(unusedAuth -> {
+                        Toast.makeText(this,
+                                "Account deleted",
+                                Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(this, WelcomeActivity.class);
+                        startActivity(intent);
+                        this.finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("ProfileFragment", "Failed to delete auth user", e);
+                        Toast.makeText(this,
+                                "Failed to delete auth user: " + e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    });
+
+
+        }
     }
 }

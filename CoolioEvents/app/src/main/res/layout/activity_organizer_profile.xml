@@ -320,59 +320,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_border"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:orientation="vertical"
-            android:layout_marginBottom="20dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:id="@+id/help_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Help"
-                    android:textSize="25sp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:paddingLeft="10dp"
-                    android:textColor="#000000"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <Button
-                    android:id="@+id/criteria_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
-                    android:textSize="20sp"
-                    android:text="Criteria and Guidlines"
-                    android:textAllCaps="false"
-                    style="@style/GreyButton"/>
-
-            </LinearLayout>
-        </LinearLayout>
-
     </LinearLayout>
 
 </ScrollView>

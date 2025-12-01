@@ -198,12 +198,12 @@ public class SignupActivity extends AppCompatActivity {
             // Change account type to Entrant and update button colors
             accountType = 0;
             organizerButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.purplecircularbackground));
-            entrantButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.greybuttonbackground));
+            entrantButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.inactive_button_border));
         } else if (type == 1) {
             // Change account type to Organizer and update button colors
             accountType = 1;
             entrantButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.purplecircularbackground));
-            organizerButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.greybuttonbackground));
+            organizerButton.setBackground(ContextCompat.getDrawable(SignupActivity.this, R.drawable.inactive_button_border));
 
         }
     }
