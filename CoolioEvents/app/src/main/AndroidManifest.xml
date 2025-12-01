@@ -40,7 +40,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBZaj2jevGK8DyFMlGb-lnsRm_1bHC9oio" /> <!-- Administrator side -->
+            android:value="${MAPS_API_KEY}" /> <!-- Administrator side -->
         <activity
             android:name=".administrator.AdministratorHomeActivity"
             android:exported="false" />
