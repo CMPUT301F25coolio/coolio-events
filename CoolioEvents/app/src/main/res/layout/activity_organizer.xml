@@ -30,13 +30,13 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="#CFF4FF">
+                android:background="#D8FFD8">
 
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/ic_add_event"
-                    android:tint="#2979FF" />
+                    android:tint="#00A86B" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
                     android:layout_marginTop="10dp"
                     android:text="MAKE AN EVENT"
                     android:textStyle="bold"
-                    android:textColor="#2979FF"
+                    android:textColor="#00A86B"
                     android:textSize="14sp" />
             </LinearLayout>
 
