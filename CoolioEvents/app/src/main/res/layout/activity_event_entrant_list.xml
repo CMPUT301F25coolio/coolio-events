@@ -4,30 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FBF7FF">
+    android:background="@color/white">
 
     <!-- Top bar -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="#3F51B5"
+        android:layout_height="84dp"
+        android:background="@color/medium_purple"
+        android:elevation="10dp"
         android:gravity="center_vertical"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp">
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
             android:id="@+id/btnBack"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:focusable="true"
             android:contentDescription="Back"
-            android:background="?attr/selectableItemBackgroundBorderless">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_marginLeft="-10dp"
                 android:src="@drawable/ic_arrow_back"
                 app:tint="@color/white" />
 
@@ -38,20 +42,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Wait List"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Waitlist"
+            android:textColor="@color/white"
+            android:textSize="24sp"/>
     </LinearLayout>
 
     <!-- Header row: Entrants | Registered -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#E8EDFF"
+        android:layout_height="50dp"
+        android:background="@color/white"
         android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/headerEntrants"
@@ -59,8 +66,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Entrants"
-            android:textStyle="bold"
-            android:textColor="#444444" />
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/headerRegistered"
@@ -69,30 +77,44 @@
             android:layout_weight="1"
             android:gravity="end"
             android:text="Registered"
-            android:textStyle="bold"
-            android:textColor="#444444" />
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
     </LinearLayout>
 
-    <!-- Export CSV button (shown only for Enrolled list in code) -->
-    <Button
-        android:id="@+id/exportCsvButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_gravity="end"
-        android:text="Export CSV"
-        android:backgroundTint="#3F51B5"
-        android:textColor="#FFFFFF" />
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
 
     <!-- List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerEntrants"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="457dp"
         android:layout_weight="1"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:background="@color/white"
+        android:fontFamily="@font/poppins_regular"/>
+
+    <!-- Export CSV button at bottom -->
+    <Button
+        android:id="@+id/exportCsvButton"
+        style="@style/PurpleButton"
+        android:textAllCaps="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="Export CSV"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

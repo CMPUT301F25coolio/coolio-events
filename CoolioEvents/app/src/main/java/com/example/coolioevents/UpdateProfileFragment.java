@@ -49,6 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -140,6 +141,8 @@ public class UpdateProfileFragment extends Fragment {
             updateUserprofile(username, name, email);
 
             // Navigate back to the previous fragment (ProfileFragment)
+            Toast.makeText(getContext(), "Refresh may be needed to see updated profile",
+                    Toast.LENGTH_LONG).show();
             requireActivity().getSupportFragmentManager().popBackStack();
         });
 
@@ -179,7 +182,6 @@ public class UpdateProfileFragment extends Fragment {
                     if (document.exists()) {
                         String username = document.getString("username");
                         String name = document.getString("name");
-                        String email = document.getString("email");
 
                         if (name != null) {
                             String initials = getInitials(name);
@@ -188,7 +190,7 @@ public class UpdateProfileFragment extends Fragment {
 
                         editUsername.setText((username != null ? username : ""));
                         editName.setText((name != null ? name : ""));
-                        editEmail.setText((email != null ? email : ""));
+                        editEmail.setText(auth.getCurrentUser().getEmail());
                     } else {
                         Toast.makeText(getContext(), "Profile not found", Toast.LENGTH_SHORT).show();
                     }
@@ -293,6 +295,16 @@ public class UpdateProfileFragment extends Fragment {
         updates.put("username", username);
         updates.put("name", name);
         updates.put("email", email);
+
+        // Update email on authenticator if provided email is not the same as current user's email
+        if (!auth.getCurrentUser().getEmail().equals(email)){
+            auth.getCurrentUser().updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    return;
+                }
+            });
+        }
 
         // Actually do the update on firestore
         userRef.update(updates)

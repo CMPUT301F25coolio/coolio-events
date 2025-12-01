@@ -257,7 +257,8 @@ public class UserViewModel extends ViewModel {
     }
 
     /**
-     * This is called when an administrator chooses to delete an entrant.
+     * This is called when an administrator chooses to delete an entrant, or an
+     * entrant deletes their own account.
      * Deletes any waitlist_location documents associated with the user from the database.
      * @param userId
      *      the user ID of the entrant the administrator wishes to delete
@@ -278,7 +279,8 @@ public class UserViewModel extends ViewModel {
     }
 
     /**
-     * This is called when an administrator chooses to delete an organizer.
+     * This is called when an administrator chooses to delete an organizer, or
+     * when the organizer chooses to delete their own account.
      * Deletes any events created by the organizer from the database.
      * @param userID
      *      the user ID of the organizer the administrator wishes to delete

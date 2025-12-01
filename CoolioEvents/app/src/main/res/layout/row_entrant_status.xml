@@ -11,8 +11,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="u6"
+        android:fontFamily="@font/poppins_regular"
         android:textColor="#000000"
-        android:textSize="15sp" />
+        android:layout_marginLeft="15dp"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/txtRegistered"
@@ -21,7 +23,9 @@
         android:layout_weight="1"
         android:gravity="end"
         android:text="No"
+        android:fontFamily="@font/poppins_regular"
         android:textColor="#000000"
-        android:textSize="15sp" />
+        android:layout_marginRight="15dp"
+        android:textSize="20sp" />
 
 </LinearLayout>

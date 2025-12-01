@@ -3,22 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EDF0ED"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <!-- Header -->
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#2962FF"
-        android:elevation="4dp"
+        android:layout_height="84dp"
+        android:background="@color/medium_purple"
+        android:elevation="10dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingTop="48dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp"
+        android:padding="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,10 +22,11 @@
             android:id="@+id/btnBack"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:focusable="true"
+            android:layout_marginLeft="-10dp"
             android:contentDescription="Back"
-            android:background="?attr/selectableItemBackgroundBorderless">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -42,14 +38,15 @@
         </FrameLayout>
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_weight="1"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/poppins_bold"
             android:text="Create an Event"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="@color/white"
+            android:textSize="24sp" />
     </LinearLayout>
 
     <!-- Content -->
@@ -70,8 +67,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:fontFamily="@font/poppins_bold"
                 android:text="Event Details"
                 android:textColor="#212121"
+
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -80,30 +79,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
+                android:fontFamily="@font/poppins_regular"
                 android:text="Title"
                 android:textColor="#212121"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
+            <!-- Description -->
             <EditText
                 android:id="@+id/etEventTitle"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/edittextbackground"
-                android:hint="e.g., Campus Blood Drive"
+                android:layout_height="50dp"
+                android:background="@drawable/searchbar_background"
+                android:fontFamily="@font/poppins_regular"
+                android:hint="e.g. Campus Blood Drive"
+                android:layout_marginBottom="25dp"
                 android:inputType="text"
-                android:maxLines="1"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:textColor="#212121"
-                android:textColorHint="#9E9E9E" />
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textColorHint="#66000000"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginTop="8dp" />
 
-            <!-- Description -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:text="Description"
+                android:fontFamily="@font/poppins_regular"
                 android:textColor="#212121"
                 android:textSize="14sp" />
 
@@ -111,23 +114,26 @@
                 android:id="@+id/etEventDescription"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/edittextbackground"
+                android:layout_marginBottom="25dp"
                 android:gravity="top"
+                android:background="@drawable/searchbar_background"
+                android:fontFamily="@font/poppins_regular"
                 android:hint="Details entrants should know..."
-                android:inputType="textMultiLine"
+                android:inputType="text"
+                android:textSize="16sp"
                 android:maxLines="5"
-                android:paddingStart="12dp"
-                android:paddingTop="12dp"
-                android:paddingEnd="12dp"
-                android:textColor="#212121"
-                android:textColorHint="#9E9E9E" />
+                android:textColor="@color/black"
+                android:textColorHint="#66000000"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginTop="8dp" />
 
             <!-- Registration Period -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
+                android:fontFamily="@font/poppins_regular"
                 android:text="Registration period"
                 android:textColor="#212121"
                 android:textSize="14sp" />
@@ -135,21 +141,25 @@
             <EditText
                 android:id="@+id/etRegistrationPeriod"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/edittextbackground"
+                android:layout_height="50dp"
+                android:layout_marginBottom="25dp"
+                android:fontFamily="@font/poppins_regular"
+                android:background="@drawable/searchbar_background"
                 android:hint="YYYY/MM/DD - YYYY/MM/DD"
                 android:inputType="text"
                 android:maxLines="1"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:textColor="#212121"
-                android:textColorHint="#9E9E9E" />
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textColorHint="#66000000"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginTop="8dp" />
 
             <!-- Entrant Limit -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
                 android:layout_marginBottom="4dp"
                 android:text="Entrant limit"
                 android:textColor="#212121"
@@ -157,23 +167,27 @@
 
             <EditText
                 android:id="@+id/etEntrantLimit"
+                android:fontFamily="@font/poppins_regular"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:layout_marginBottom="24dp"
-                android:background="@drawable/edittextbackground"
+                android:background="@drawable/searchbar_background"
                 android:hint="Maximum participants"
                 android:inputType="number"
                 android:maxLines="1"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:textColor="#212121"
-                android:textColorHint="#9E9E9E" />
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textColorHint="#66000000"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginTop="8dp" />
 
             <!-- Waiting list Limit -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
+                android:fontFamily="@font/poppins_regular"
                 android:text="Waiting list limit (optional)"
                 android:textColor="#212121"
                 android:textSize="14sp" />
@@ -181,21 +195,24 @@
             <EditText
                 android:id="@+id/etWaitingListLimit"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/edittextbackground"
+                android:layout_height="50dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/searchbar_background"
                 android:hint="Maximum entrants allowed in waiting list"
                 android:inputType="number"
                 android:maxLines="1"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:textColor="#212121"
-                android:textColorHint="#9E9E9E" />
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textColorHint="#66000000"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginTop="8dp" />
 
             <!-- Event Date and Time -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
                 android:text="Event date and time"
                 android:textColor="#212121"
                 android:textSize="14sp"
@@ -204,21 +221,25 @@
             <EditText
                 android:id="@+id/etEventDateTime"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/edittextbackground"
+                android:fontFamily="@font/poppins_regular"
+                android:layout_height="50dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/searchbar_background"
                 android:hint="Time of the event"
-                android:textColorHint="#9E9E9E"
-                android:textColor="#212121"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
                 android:inputType="text"
                 android:maxLines="1"
-                android:layout_marginBottom="24dp"/>
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textColorHint="#66000000"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginTop="8dp"/>
 
             <!-- Event Location -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
                 android:text="Event Location"
                 android:textColor="#212121"
                 android:textSize="14sp"
@@ -228,30 +249,31 @@
                 android:id="@+id/etEventLocation"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/edittextbackground"
+                android:fontFamily="@font/poppins_regular"
+                android:background="@drawable/searchbar_background"
                 android:hint="Location of the event"
-                android:textColorHint="#9E9E9E"
-                android:textColor="#212121"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
                 android:inputType="text"
                 android:maxLines="1"
-                android:layout_marginBottom="16dp"/>
-
-            <!-- Taken from: https://stackoverflow.com/questions/62074652/how-to-style-google-switchmaterial-button-on-android -->
-            <!-- License: https://creativecommons.org/licenses/by-sa/4.0/                                                      -->
-            <!-- Taken by: Avery Dancocks                                                                                      -->
-            <!-- Taken on: 09/30/25                                                                                            -->
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textColorHint="#66000000"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="25dp"/>
 
             <!-- Geolocation Verification -->
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/geolocation_switch"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Enable Geolocation Verification for this Event"
+                android:text="Geolocation Varification"
                 android:textColor="#212121"
-                android:textSize="16sp"
-                android:layout_marginBottom="8dp"
+                android:textSize="20sp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:fontFamily="@font/poppins_regular"
+                app:switchPadding="19dp"
                 app:thumbTint="@color/switch_thumb_tint"
                 app:trackTint="@color/switch_track_tint"/>
 
@@ -271,6 +293,8 @@
                 android:layout_gravity="center"
                 >
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Contest"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -278,24 +302,32 @@
                     >
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Dance"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true">
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Party"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true">
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Kids"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true">
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Tech"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -303,42 +335,56 @@
                     >
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Sports"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true">
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Arts"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true">
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Food"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true">
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Workshop"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true">
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Music"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true">
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Learning"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:checkable="true">
                 </com.google.android.material.chip.Chip>
                 <com.google.android.material.chip.Chip
+                    android:theme="@style/Theme.App.Chip"
+                    android:background="@drawable/tag_selector"
                     android:text="Games"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -352,8 +398,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Upload Poster"
-                android:textColor="#212121"
-                android:textSize="14sp" />
+                android:fontFamily="@font/poppins_regular"
+                android:textSize="14sp"
+                android:textColor="#212121" />
 
             <ImageView
                 android:id="@+id/imgPosterPreview"
@@ -369,16 +416,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/createbutton"
+                android:textAllCaps="false"
+                style="@style/PurpleButton"
                 android:text="Choose Poster Image"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
             <!-- qr section: same style as Edit Event -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Event QR Code"
                 android:textColor="#212121"
+                android:fontFamily="@font/poppins_regular"
                 android:textSize="14sp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp" />
@@ -398,9 +446,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/createbutton"
+                android:textAllCaps="false"
+                style="@style/PurpleButton"
                 android:text="Generate QR Code"
-                android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
 
@@ -415,10 +463,10 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_margin="16dp"
-        android:background="@drawable/createbutton"
+        android:textAllCaps="false"
+        style="@style/GreenButton"
         android:elevation="2dp"
-        android:text="Create"
-        android:textColor="#FFFFFF"
+        android:text="Save"
         android:textSize="16sp"
         android:textStyle="bold" />
 </LinearLayout>

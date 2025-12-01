@@ -8,6 +8,7 @@
     android:background="@drawable/rounded_border">
 
     <TextView
+        android:id="@+id/messageLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="For security reasons, please re-enter your password to delete your account."
