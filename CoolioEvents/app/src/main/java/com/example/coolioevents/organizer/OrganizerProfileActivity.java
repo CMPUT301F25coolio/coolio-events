@@ -99,7 +99,7 @@ public class OrganizerProfileActivity extends AppCompatActivity {
 
         // Navigate to the update profile screen when the button is clicked
         btnEditProfile.setOnClickListener(v -> {
-            startActivity(new Intent(this, OrganizerUpdateProfileActivity.class));
+            promptPasswordEditProfile();
         });
 
         logoutButton.setOnClickListener(v -> {
@@ -147,7 +147,6 @@ public class OrganizerProfileActivity extends AppCompatActivity {
                     if (document.exists()) {
                         String username = document.getString("username");
                         String name = document.getString("name");
-                        String email = document.getString("email");
 
                         if (name != null) {
                             String initials = getInitials(name);
@@ -156,7 +155,7 @@ public class OrganizerProfileActivity extends AppCompatActivity {
 
                         textUsername.setText((username != null ? username : ""));
                         textName.setText((name != null ? name : ""));
-                        textEmail.setText((email != null ? email : ""));
+                        textEmail.setText(auth.getCurrentUser().getEmail());
                     } else {
                         Toast.makeText(this, "Profile not found", Toast.LENGTH_SHORT).show();
                     }
@@ -353,4 +352,69 @@ public class OrganizerProfileActivity extends AppCompatActivity {
 
         }
     }
+    /**
+     * Prompts user with Alert Dialog to enter their password in order to update their profile.
+     */
+    private void  promptPasswordEditProfile(){
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) return;
+
+        View view = LayoutInflater.from(this)
+                .inflate(R.layout.dialogue_reauth, null);
+        EditText etPassword = view.findViewById(R.id.etPassword);
+        TextView DialogMessage = view.findViewById(R.id.messageLabel);
+
+        DialogMessage.setText("Confirm password to Edit Profile");
+        new AlertDialog.Builder(this)
+                .setView(view)
+                .setPositiveButton("Confirm", (dialog, which) -> {
+                    String password = etPassword.getText().toString().trim();
+                    if (password.isEmpty()) {
+                        Toast.makeText(this,
+                                "Password cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    authenticateEditProfile(password);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+
+    }
+    /**
+     * Method that checks to see if password provided is correct, if correct
+     * send user to update profile activity
+     */
+    private void authenticateEditProfile(String password){
+        FirebaseUser user = auth.getCurrentUser();
+        String email = user.getEmail();
+
+        if (email == null) {
+            Toast.makeText(this,
+                    "No email associated with this account.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+        user.reauthenticate(credential)
+                .addOnSuccessListener(unused -> {
+                    Log.d("ProfileFragment", "Re-authentication successful");
+                    goToUpdateProfile();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ProfileFragment", "Re-authentication failed", e);
+                    Toast.makeText(this,
+                            "Re-authentication failed: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                });
+    }
+    /**
+     * Send user to update profile activity
+     */
+    private void goToUpdateProfile(){
+        startActivity(new Intent(this, OrganizerUpdateProfileActivity.class));
+    }
+
+
+
 }
