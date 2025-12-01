@@ -121,7 +121,7 @@ public class EntrantsRepository {
                 });
     }
     /**
-     * Removes an entrant from ALL possible lists (waitlist, chosen, enrolled, cancelled).
+     * Removes an entrant from chosen list and add to cancelled list.
      */
     public Task<Void> removeEntrant(String eventId, String entrantId) {
         DocumentReference ref = db.collection("events").document(eventId);
