@@ -356,7 +356,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
                                 .load(event.getDetails().getPosterUrl())
                                 .placeholder(R.drawable.ic_image_placeholder)
                                 .error(R.drawable.ic_image_error)
-                                .fallback(R.drawable.ic_image_placeholder)
+                                .fallback(R.drawable.logo)
                                 .into(eventPosterImageView);
                     }
                 }

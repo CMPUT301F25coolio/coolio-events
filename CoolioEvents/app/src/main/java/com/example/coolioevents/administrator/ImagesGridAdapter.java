@@ -110,7 +110,7 @@ public class ImagesGridAdapter extends RecyclerView.Adapter<ImagesGridAdapter.Vi
                 .load(data.getEventPoster()) // loads poster URL
                 .placeholder(R.drawable.ic_image_placeholder)
                 .error(R.drawable.ic_image_error)
-                .fallback(R.drawable.ic_image_placeholder) // If imageURL is null
+                .fallback(R.drawable.logo) // If imageURL is null
                 .into(viewHolder.eventImageView);
 
         // Set organizer username
