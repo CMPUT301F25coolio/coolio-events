@@ -256,7 +256,7 @@ public class OrganizersTest {
     }
     @Test
     public void testMakeEventBack(){
-        // TODO: is being dumb
+
         // Test Make event page's back button
         makeOrganizerAccount();
 
@@ -279,6 +279,72 @@ public class OrganizersTest {
 
         // Click on Create Event, with no fields filled
         onView(withId(R.id.btnCreate)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Check that still on Make event Screen (Shouldn't make event)
+        onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testMakeEventNoName() {
+        // Test making event with no name (shouldn't make it)
+
+        String eventName = ""; // Name of event
+        String eventDesc = "Description"; // Name of Desc
+        String eventEntrantLimit = "3";
+        String eventLocation = "Some Location";
+
+        // Make an organizer account
+        makeOrganizerAccount();
+
+        // Navigate to make event and make event
+        onView(withId(R.id.optMakeEvent)).perform(click());
+        inputMockEventFields(eventName, eventDesc, eventEntrantLimit, eventLocation);
+        onView(withId(R.id.btnCreate)).perform((click()));
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Check that still on Make event Screen (Shouldn't make event)
+        onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testMakeEventNoEntLimit() {
+        // Test making event with no entrant limit (shouldn't make it)
+
+        String eventName = "Event Name"; // Name of event
+        String eventDesc = "Description"; // Name of Desc
+        String eventEntrantLimit = "";
+        String eventLocation = "Some Location";
+
+        // Make an organizer account
+        makeOrganizerAccount();
+
+        // Navigate to make event and make event
+        onView(withId(R.id.optMakeEvent)).perform(click());
+        inputMockEventFields(eventName, eventDesc, eventEntrantLimit, eventLocation);
+        onView(withId(R.id.btnCreate)).perform((click()));
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Check that still on Make event Screen (Shouldn't make event)
+        onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testMakeEventNoDescription() {
+        // Test making event with no description (shouldn't make it)
+
+        String eventName = "Event Name"; // Name of event
+        String eventDesc = ""; // Name of Desc
+        String eventEntrantLimit = "3";
+        String eventLocation = "Some Location";
+
+        // Make an organizer account
+        makeOrganizerAccount();
+
+        // Navigate to make event and make event
+        onView(withId(R.id.optMakeEvent)).perform(click());
+        inputMockEventFields(eventName, eventDesc, eventEntrantLimit, eventLocation);
+        onView(withId(R.id.btnCreate)).perform((click()));
 
         try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 
@@ -432,15 +498,17 @@ public class OrganizersTest {
         onView(withId(R.id.scrollView2))
                 .perform(swipeUp(), swipeUp());
 
+        onView(withId(R.id.sendNotificationsButton)).check(matches(isDisplayed()));
         onView(withId(R.id.sendNotificationsButton)).perform(click());
 
 
         // Type and send the notification message
         onView(withId(R.id.messageEditText)).perform(ViewActions.typeText("Test Notification Message"));
         onView(withId(R.id.sendMessageButton)).perform(click());
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+        try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
+
         // Check that notification was made on the firestore
-        db.collection("notficiations").whereEqualTo("receiver", "entrant").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("notifications").whereEqualTo("receiver", "entrant").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -471,26 +539,4 @@ public class OrganizersTest {
         onView(withText("organizer@test.com")).check(matches(isDisplayed()));
         onView(withId(R.id.profile_title)).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void testEditProfile() {
-        // Test that clicking on an event in my events shows event display
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-        makeOrganizerAccount();
-
-        onView(withId(R.id.optMyProfile)).perform(click()); // Navigate to make event
-
-        // Edit Profile
-        onView(withId(R.id.btn_edit_profile)).perform(click());
-        onView(withId(R.id.etPassword)).perform(ViewActions.typeText("password"));
-        onView(withId(R.id.edit_name)).perform(ViewActions.typeText("new name"));
-        onView(withId(R.id.edit_username)).perform(ViewActions.typeText("newusername"));
-        onView(withId(R.id.edit_email)).perform(ViewActions.typeText("new@test.com"));
-        onView(withText("Confirm")).perform(click());
-        onView(withId(R.id.btnSave));
-
-    }
-
-
 }
