@@ -1,5 +1,6 @@
 package com.example.coolioevents;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -11,6 +12,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.Matchers.anything;
 import static org.junit.Assert.fail;
 
 import android.Manifest;
@@ -118,6 +120,7 @@ public class OrganizersTest {
     }
 
     public void makeOrganizerAccount(){
+        // Signs up or Makes an Account for Organizer through signup screen
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -181,29 +184,161 @@ public class OrganizersTest {
         onView(withText("Contest")).perform(scrollTo(), (click()));
     }
 
+    /* ORGANIZER MAKE EVENT TESTS ------------------------------------------------------------ */
 
     @Test
+    public void testGoToMakeEvent() {
+        // Test that Organizer navigating to make events works
+        makeOrganizerAccount();
+
+        // Go to Make event
+        onView(withId(R.id.optMakeEvent)).perform(click());
+        onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testMakeEventBack(){
+        // Test Make event page's back button
+        makeOrganizerAccount();
+
+        // Go to Make Events
+        onView(withId(R.id.optMakeEvent)).perform(click());
+
+        // Click Back Button
+        onView(withId(R.id.btnBack)).perform(click());
+
+        // Check that screen is back to Organizer home
+        onView(withId(R.id.optMakeEvent)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testMakeEventWithNoFields() {
+        // Test to make sure event that has no fields is not created
+        makeOrganizerAccount();
+
+        // Go to Make Event
+        onView(withId(R.id.optMakeEvent)).perform(click());
+
+        // Click on Create Event, with no fields filled
+        onView(withId(R.id.btnCreate)).perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Check that still on Make event Screen (Shouldn't make event)
+        onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
+    }
+    @Test
     public void testMakeEvent(){
+        // Test that making an event actually works (on firestore side and displays on my events)
+
         String eventName = "Test Event Name"; // Name of event
         String eventDesc = "Description"; // Name of Desc
         String eventEntrantLimit = "3";
         String eventLocation = "Some Location";
 
+        // Make an organizer account
         makeOrganizerAccount();
-        onView(withId(R.id.optMakeEvent)).perform(click());
 
+        // Navigate to make event and make event
+        onView(withId(R.id.optMakeEvent)).perform(click());
         inputMockEventFields(eventName, eventDesc, eventEntrantLimit, eventLocation);
         onView(withId(R.id.btnCreate)).perform((click()));
-        onView(withId(R.id.optMyEvents)).perform((click())); // Navigate to my events to see if event was made
 
-        boolean eventOnDB = false;
-        onView(withText("Test Event Name")).check(matches(isDisplayed())); // Check if the event was made (should appear in my events)
+        // Navigate to my events to see if event was made
+        onView(withId(R.id.optMyEvents)).perform((click()));
+
+        // Check if the event was made (should appear in my events) + check if document made on db
+        onView(withText("Test Event Name")).check(matches(isDisplayed()));
         db.collection("events").whereEqualTo("details.eventName", eventName).get().addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 // If document not found, fail the test
-                fail("Couldn't find event with eventname in db");
+                fail("Couldn't find event with eventname in firestore db");
             }
-        }); // Check that event document was made in db
+        });
     }
+
+    /* ORGANIZER MY EVENTS TESTS ------------------------------------------------------------ */
+
+    @Test
+    public void testGoToMyEvents() {
+        // Test navigation to my events
+        makeOrganizerAccount();
+
+        // Go to My Events
+        onView(withId(R.id.optMyEvents)).perform(click());
+
+        // Check that eventList on myEvents is displayed
+        onView(withId(R.id.eventList)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testMyEventsBack(){
+        // Test Make event page's back button
+        makeOrganizerAccount();
+
+        // Go to Make Events
+        onView(withId(R.id.optMyEvents)).perform(click());
+
+        // Click Back Button
+        onView(withId(R.id.btnBack)).perform(click());
+
+        // Check that screen is back to Organizer home
+        onView(withId(R.id.optMakeEvent)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testClickedEventMyEvents() {
+        // Test that clicking on an event in my events shows event display
+
+        String eventName = "Test Event Name"; // Name of event
+        String eventDesc = "Description"; // Name of Desc
+        String eventEntrantLimit = "3"; // Entrant Limit of Event
+        String eventLocation = "Some Location"; // Location of event
+
+        // Make Account
+        makeOrganizerAccount();
+
+        // Navigate to make event and make event
+        onView(withId(R.id.optMakeEvent)).perform(click());
+        inputMockEventFields(eventName, eventDesc, eventEntrantLimit, eventLocation);
+        onView(withId(R.id.btnCreate)).perform((click()));
+
+        onView(withId(R.id.optMyEvents)).perform((click())); // Navigate to my events
+
+        // Click on the newly created event
+        onData(anything()).inAdapterView(withId(R.id.eventList)).atPosition(0).perform(click());
+
+        onView(withText(eventName)).check(matches(isDisplayed())); // Check that the event is displayed
+    }
+
+    /* ORGANIZER PROFILE TESTS ------------------------------------------------------------ */
+
+    @Test
+    public void testGotoProfile() {
+        // Test that clicking on an event in my events shows event display
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        makeOrganizerAccount();
+
+        onView(withId(R.id.optMyProfile)).perform(click()); // Navigate to make event
+
+        // Check if user is signed into correct account (with same email) + if on profile screen
+        onView(withText("organizer@test.com")).check(matches(isDisplayed()));
+        onView(withId(R.id.profile_title)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testEditProfile() {
+        // Test that clicking on an event in my events shows event display
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        makeOrganizerAccount();
+
+        onView(withId(R.id.optMyProfile)).perform(click()); // Navigate to make event
+
+        // Edit Profile
+        onView(withId(R.id.btn_edit_profile)).perform(click());
+        onView(withId(R.id.edit_email)).perform(ViewActions.typeText("new@cool"));
+
+
+    }
+
+
 }

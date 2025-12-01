@@ -48,6 +48,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -293,10 +294,7 @@ public class UpdateProfileFragment extends Fragment {
         updates.put("name", name);
         updates.put("email", email);
 
-        // Disable the save button to prevent multiple clicks
-        btnSave.setEnabled(false);
-
-        // Actually do the update
+        // Actually do the update on firestore
         userRef.update(updates)
                 .addOnSuccessListener(aVoid -> {
                     /*
