@@ -22,7 +22,6 @@ import java.util.Map;
  *
  * OUTSTANDING ISSUES:
  * This class is not fully complete or functional, still need to testing and debugging,
- * which  will be complete in project part 4
  *
  * @author Niharika
  * @version 1.0

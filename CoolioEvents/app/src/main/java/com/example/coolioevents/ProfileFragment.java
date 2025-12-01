@@ -30,7 +30,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -43,7 +42,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
-import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -55,22 +53,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.coolioevents.Entrant.EntrantCriteriaGuidelinesActivity;
 import com.example.coolioevents.Entrant.UserViewModel;
-import com.example.coolioevents.Entrant.EntrantSettingsFragment;
 import com.example.coolioevents.authentication.WelcomeActivity;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.WriteBatch;
 
 /**
  * A Fragment that displays the current user's profile.

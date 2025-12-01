@@ -51,10 +51,12 @@ public class EntrantStatusAdapter extends RecyclerView.Adapter<EntrantStatusAdap
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
-    /*
+    /**
      * Update the data set.
-     * @param ids entrant IDs to show
-     * @param registeredYes true then Yes, false then No (when the column is visible)
+     * @param ids
+     *      entrant IDs to show
+     * @param registeredYes
+     *      true then Yes, false then No (when the column is visible)
      */
     public void update(List<String> ids, boolean registeredYes) {
         entrantIds.clear();

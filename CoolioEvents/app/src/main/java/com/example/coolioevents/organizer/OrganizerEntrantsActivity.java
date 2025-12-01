@@ -114,9 +114,10 @@ public class OrganizerEntrantsActivity extends AppCompatActivity {
                 toast("Pick a list type first");
         }
     }
-    /*
+    /**
       Binds the list to the recycler and shows a tiny toast with count.
-      If your adapter still uses submit or swap updateData for submit*/
+      If your adapter still uses submit or swap updateData for submit
+      */
     private void show(List<String> ids) {
         adapter.updateData(ids);  //use submit(ids) if didnt change the adapter
         toast("Loaded " + (ids == null ? 0 : ids.size()));

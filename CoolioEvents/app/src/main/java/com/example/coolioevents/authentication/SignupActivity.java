@@ -190,7 +190,8 @@ public class SignupActivity extends AppCompatActivity {
 
     /**
      * Changes account type to Entrant if 0, Organizer if 1, and and update button colors
-     * @param type the type of account; 0 for Entrant, 1 for Organizer
+     * @param type
+     *      the type of account; 0 for Entrant, 1 for Organizer
      */
     private void changeAccountType(int type){
 
@@ -261,10 +262,14 @@ public class SignupActivity extends AppCompatActivity {
 
     /**
      * Attempts to make an account for the user. Adds their account to the database if successful.
-     * @param name The user's name that they provided
-     * @param username The user's username that they provided
-     * @param email The user's email that they provided
-     * @param password The user's password that they provided
+     * @param name
+     *      The user's name that they provided
+     * @param username
+     *      The user's username that they provided
+     * @param email
+     *      The user's email that they provided
+     * @param password
+     *      The user's password that they provided
      */
     private void attemptMakeAccount(String name, String username, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)

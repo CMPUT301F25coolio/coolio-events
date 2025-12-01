@@ -180,7 +180,8 @@ public class EntrantActivity extends AppCompatActivity {
 
     /**
      * Switches fragment to fragment in the fragment container
-     * @param fragment The fragment to switch to
+     * @param fragment
+     *      The fragment to switch to
      */
     public void SwitchFragment(Fragment fragment){
         FragmentManager fragManager = getSupportFragmentManager();
@@ -193,7 +194,7 @@ public class EntrantActivity extends AppCompatActivity {
     /**
      * Shows any new notifications with a given notificationList
      * @param notificationList
-     * List of notifications to display to the user
+     *      List of notifications to display to the user
      */
     private void showNewNotifications(ArrayList<NotificationData> notificationList){
         int i = 1; // Notification Id to increment for each new notification
@@ -207,11 +208,11 @@ public class EntrantActivity extends AppCompatActivity {
     /**
      * Displays a notification with a given title, text, and id
      * @param title
-     * Title of the notification
+     *      Title of the notification
      * @param text
-     * Text to be displayed within the notification
+     *      Text to be displayed within the notification
      * @param id
-     * Notification id (NOT TO BE CONFUSED WITH THE ACTUAL NOTIFICATION ID OF THE OBJECT/DOCUMENT ID)
+     *      Notification id (NOT TO BE CONFUSED WITH THE ACTUAL NOTIFICATION ID OF THE OBJECT/DOCUMENT ID)
      */
     private void showNotification(String title, String text, int id){
         // Source Help - https://developer.android.com/develop/ui/views/notifications/build-notification#java_1

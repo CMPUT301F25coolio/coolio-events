@@ -1,3 +1,11 @@
+package com.example.coolioevents.events;
+
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.example.coolioevents.Event;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 /**
  * Copyright 2025 Juliane Phan
  *
@@ -25,15 +33,6 @@
  * @version 1.0
  * @since 2025-11-06
  */
-
-package com.example.coolioevents.events;
-
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-
-import com.example.coolioevents.Event;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 // Source - https://stackoverflow.com/questions/46283981/android-viewmodel-additional-arguments
 // Posted by mlykotom
 // Retrieved by Juliane Phan on 2025-11-06, License - CC BY-SA 4.0
