@@ -41,7 +41,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.time.setText(formattedTime);
         holder.message.setText(notif.getMessage());
 
+        if (!notif.isShown()) {
+            holder.blueDot.setVisibility(View.VISIBLE);
+        } else {
+            holder.blueDot.setVisibility(View.GONE);
+        }
     }
+
 
     @Override
     public int getItemCount() {
@@ -51,11 +57,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView message, time;
+        View blueDot;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             message = itemView.findViewById(R.id.notifMessage);
             time = itemView.findViewById(R.id.notifTime);
+            blueDot = itemView.findViewById(R.id.blue_dot);
         }
     }
 }

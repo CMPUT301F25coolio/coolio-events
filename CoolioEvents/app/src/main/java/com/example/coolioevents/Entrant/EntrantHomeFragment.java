@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.View;
 
 import com.example.coolioevents.Event;
 import com.example.coolioevents.R;
@@ -38,6 +39,10 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,9 +91,11 @@ public class EntrantHomeFragment extends Fragment {
     FrameLayout filterButton; // Button to filter events
     FrameLayout clearFilterButton; // Button to clear filter
     ImageButton notificationButton; //ImageButton for notifications
+    View notificationBadge; // image button for new notification
     Pair<Date, Date> dateRange; // dateRange to apply
     ArrayList<String> selectedTags; // tags to apply
     Boolean filterApplied = false; // Boolean checking if filter is applied or not
+    String currentUid; //
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -141,6 +148,7 @@ public class EntrantHomeFragment extends Fragment {
         eventsListView.setAdapter(eventAdapter); // Make listview have adapter connected to eventList
         // Find the new Notification Button
         notificationButton = view.findViewById(R.id.notification_button);
+        notificationBadge = view.findViewById(R.id.notification_badge);
 
         eventAdapter = new EntrantEventArrayAdapter(getActivity(), eventsList);
         eventsListView.setAdapter(eventAdapter);
@@ -168,6 +176,11 @@ public class EntrantHomeFragment extends Fragment {
                             .commit();
                 }
             });
+        }
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            currentUid = currentUser.getUid();
+            listenForUnreadNotifications();
         }
 
         // Navigating to Event Fragment
@@ -328,5 +341,38 @@ public class EntrantHomeFragment extends Fragment {
         SimpleDateFormat SDF = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
         return UTC.getTime();
 
+    }
+    /**
+     * Listens to Firestore for unread notifications belonging to the current user.
+     * This method attaches a real-time snapshot listener that checks for all
+     * notifications where 'shown' is false. If any unread notifications exist,
+     * the red notification badge is displayed. Otherwise, the badge is hidden.
+     *
+     * @return
+     *      Nothing is returned. The method updates the UI state based on changes.
+     */
+    private void listenForUnreadNotifications() {
+        if (currentUid == null || getContext() == null) return;
+
+        db.collection("notifications")
+                .whereEqualTo("uid", currentUid)
+                .whereEqualTo("shown", false) // only unread
+                .addSnapshotListener((value, error) -> {
+                    if (!isAdded()) return; // fragment not attached
+
+                    if (error != null) {
+                        // optional: log error
+                        notificationBadge.setVisibility(View.GONE);
+                        return;
+                    }
+
+                    if (value != null && !value.isEmpty()) {
+                        // There are unread notifications → show red dot
+                        notificationBadge.setVisibility(View.VISIBLE);
+                    } else {
+                        // No unread notifications → hide
+                        notificationBadge.setVisibility(View.GONE);
+                    }
+                });
     }
 }
