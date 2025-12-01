@@ -73,7 +73,7 @@ import java.util.Locale;
  * and updates the existing Firestore document instead of creating a new one.
  *
  * @author Aasta Tsai
- * @version 1.0
+ * @version 2.0
  * @since 2025-11-16
  */
 public class EditEventActivity extends AppCompatActivity {

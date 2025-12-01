@@ -442,6 +442,7 @@ public class EventFragment extends Fragment {
 
                     //Set event tags
                     if (event.getDetails().getTags() != null){
+                        tagsGroup.removeAllViews();
                         /*
                         Taken From: Google Gemini
                             Prompt: How do i customize tags?
