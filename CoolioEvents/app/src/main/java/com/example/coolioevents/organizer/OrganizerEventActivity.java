@@ -307,8 +307,8 @@ public class OrganizerEventActivity extends AppCompatActivity {
         sendNotifications = findViewById(R.id.sendNotificationsButton);
         saveQrButton = findViewById(R.id.save_qr_button);
         FrameLayout backButton = findViewById(R.id.organizer_event_back_button);
-        ImageButton editButton = findViewById(R.id.organizer_event_edit_button);
-        ImageButton mapButton = findViewById(R.id.organizer_event_map_button);
+        FrameLayout editButton = findViewById(R.id.organizer_event_edit_button);
+        FrameLayout mapButton = findViewById(R.id.organizer_event_map_button);
 
         viewLists.setOnClickListener(v -> {
             if (currentEventId == null || currentEventId.isEmpty()) {
