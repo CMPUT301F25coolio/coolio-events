@@ -105,51 +105,76 @@ public class OrganizerEventActivity extends AppCompatActivity {
      */
     private void updateButtonState() {
         // Event is still open
-        if (eventStatus.equals("open")) {
+        if ("open".equals(eventStatus)) {
             //drawLottery.setEnabled(false);
             drawNewEntrant.setEnabled(false);
+            // keep it grey while event is open
+            drawNewEntrant.setBackgroundTintList(
+                    ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_grey)));
+            drawNewEntrant.setTextColor(
+                    ContextCompat.getColor(this, R.color.dark_grey));
+            // IMPORTANT: dont run the rest of the logic when event is open
+            return;
         }
+
         // Lottery has already been drawn
-        if (lotteryDone) {
-            /*
-            drawLottery.setEnabled(false);
-            // Set UI
-            drawLottery.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
-            drawLottery.setTextColor(ContextCompat.getColor(this, R.color.grey));
-            drawLottery.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey)));
-             */
+        // NOTE: we no longer depend on lotteryDone for the replacement button,
+        // because the draw lottery UI is commented out.
+        // if (lotteryDone) {
+        {
+        /*
+        drawLottery.setEnabled(false);
+        // Set UI
+        drawLottery.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
+        drawLottery.setTextColor(ContextCompat.getColor(this, R.color.grey));
+        drawLottery.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey)));
+         */
             // Someone left the chosen list, and there is still people in the waitlist
             if ((numberOfChosenEntrants < maxEntrants) && (numberInWaitlist >= 1)) {
                 drawNewEntrant.setEnabled(true);
                 // Set UI
-                drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_green)));
-                drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.dark_green));
-            }
-            if (numberInWaitlist == 0) {
+                drawNewEntrant.setBackgroundTintList(
+                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_green)));
+                drawNewEntrant.setTextColor(
+                        ContextCompat.getColor(this, R.color.dark_green));
+            } else {
+                // Either waitlist empty or chosen list full → keep disabled/grey
                 drawNewEntrant.setEnabled(false);
-                // Set UI
-                drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_grey)));
-                drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+                drawNewEntrant.setBackgroundTintList(
+                        ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_grey)));
+                drawNewEntrant.setTextColor(
+                        ContextCompat.getColor(this, R.color.dark_grey));
             }
-            // The chosen list is full
-            if (numberOfChosenEntrants == maxEntrants) {
-                drawNewEntrant.setEnabled(false);
-                // Set UI
-                drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_grey)));
-                drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
-            }
-        }
-        /*
-        // Lottery has not been drawn
-        if (!lotteryDone && eventStatus.equals("closed")) {
 
-            drawLottery.setEnabled(true);
+            // The old extra checks below are now covered by the if/else above,
+            // so we don't need separate blocks.
+        /*
+        if (numberInWaitlist == 0) {
+            drawNewEntrant.setEnabled(false);
             // Set UI
-            drawLottery.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.drawfromlottery)));
-            drawLottery.setTextColor(ContextCompat.getColor(this, R.color.white));
-            drawLottery.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
+            drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_grey)));
+            drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
+        }
+        // The chosen list is full
+        if (numberOfChosenEntrants == maxEntrants) {
+            drawNewEntrant.setEnabled(false);
+            // Set UI
+            drawNewEntrant.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.light_grey)));
+            drawNewEntrant.setTextColor(ContextCompat.getColor(this, R.color.dark_grey));
         }
          */
+        }
+    /*
+    // Lottery has not been drawn
+    if (!lotteryDone && eventStatus.equals("closed")) {
+
+        drawLottery.setEnabled(true);
+        // Set UI
+        drawLottery.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.drawfromlottery)));
+        drawLottery.setTextColor(ContextCompat.getColor(this, R.color.white));
+        drawLottery.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
+    }
+     */
     }
 
     @Override

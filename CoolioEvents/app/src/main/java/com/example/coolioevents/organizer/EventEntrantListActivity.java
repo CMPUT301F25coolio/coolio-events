@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import com.google.firebase.firestore.FirebaseFirestore;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -140,8 +141,43 @@ public class EventEntrantListActivity extends AppCompatActivity {
         if (ids != null) {
             currentEntrants.addAll(ids);
         }
-        adapter.update(ids, registeredYes);
+        fetchUsernamesFromUIDs(ids, registeredYes);
+
     }
+
+
+    // Converts UID list to username list before showing on screen
+    private void fetchUsernamesFromUIDs(List<String> uidList, boolean registeredYes) {
+        if (uidList == null || uidList.isEmpty()) {
+            adapter.update(new ArrayList<>(), registeredYes);
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<String> usernames = new ArrayList<>();
+        final int total = uidList.size();
+
+        for (String uid : uidList) {
+            db.collection("users").document(uid).get()
+                    .addOnSuccessListener(doc -> {
+                        if (doc.exists() && doc.getString("username") != null) {
+                            usernames.add(doc.getString("username"));
+                        } else {
+                            usernames.add(uid); // fallback if no username found
+                        }
+                        if (usernames.size() == total) { // only update when all converted
+                            adapter.update(usernames, registeredYes);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        usernames.add(uid); // fallback
+                        if (usernames.size() == total) {
+                            adapter.update(usernames, registeredYes);
+                        }
+                    });
+        }
+    }
+
     private String titleFor(int type) {
         switch (type) {
             case TYPE_ENROLLED:
