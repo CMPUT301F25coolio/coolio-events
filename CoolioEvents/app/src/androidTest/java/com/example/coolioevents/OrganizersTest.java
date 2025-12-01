@@ -197,12 +197,13 @@ public class OrganizersTest {
     }
     @Test
     public void testMakeEventBack(){
+        // TODO: is being dumb
         // Test Make event page's back button
         makeOrganizerAccount();
 
         // Go to Make Events
         onView(withId(R.id.optMakeEvent)).perform(click());
-
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
         // Click Back Button
         onView(withId(R.id.btnBack)).perform(click());
 
@@ -335,7 +336,14 @@ public class OrganizersTest {
 
         // Edit Profile
         onView(withId(R.id.btn_edit_profile)).perform(click());
-        onView(withId(R.id.edit_email)).perform(ViewActions.typeText("new@cool"));
+        onView(withId(R.id.etPassword)).perform(ViewActions.typeText("password"));
+        onView(withId(R.id.edit_name)).perform(ViewActions.typeText("new name"));
+        onView(withId(R.id.edit_username)).perform(ViewActions.typeText("newusername"));
+        onView(withId(R.id.edit_email)).perform(ViewActions.typeText("new@test.com"));
+        onView(withText("Confirm")).perform(click());
+        onView(withId(R.id.btnSave));
+
+
 
 
     }

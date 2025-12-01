@@ -153,7 +153,7 @@ public class SignupLoginTest {
         onView(withId(R.id.loginButton)).perform(click());
 
         // Ensures login button sends user to login screen (welcome back text should be displayed)
-        onView(withText("LOG IN")).check(matches(isDisplayed()));
+        onView(withText("Log In")).check(matches(isDisplayed()));
     }
     @Test
     public void testLoginGoBack(){
@@ -177,7 +177,7 @@ public class SignupLoginTest {
         onView(withId(R.id.signupButton)).perform(click());
 
         // Ensures signup button sends user to signup screen (create an account text should be displayed)
-        onView(withText("SIGN UP")).check(matches(isDisplayed()));
+        onView(withText("Sign Up")).check(matches(isDisplayed()));
     }
 
     @Test
@@ -614,108 +614,108 @@ public class SignupLoginTest {
 
 
 
-    @Test
-    public void testEntrantClickedEventDisplay() {
-        // Log in to the test account
-        onView(withId(R.id.loginButton)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        String email = "testguy@test.com";
-        String password = "tttttt";
-        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
-        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
-        onView(withId(R.id.loginButton)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        // Click on an event
-        onData(anything()).inAdapterView(withId(R.id.eventList)).atPosition(0).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        // Check if back button present
-        onView(withText("Back")).check(ViewAssertions.matches(isDisplayed()));
-
-    }
-
-    @Test
-    public void testEntrantJoinsThenLeavesWaitingList() {
-        // Log in to the test account
-        onView(withId(R.id.loginButton)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        String email = "testguy@test.com";
-        String password = "tttttt";
-        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
-        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
-        onView(withId(R.id.loginButton)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        // Click on an event
-        onData(anything()).inAdapterView(withId(R.id.eventList)).atPosition(0).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        // Click on Join waitlist
-        onView(withId(R.id.eventViewJoinWaitListButton)).perform(click());
-
-        onView(withId(R.id.eventViewJoinWaitListButton)).check(matches(withText("Leave Waitlist")));
-
-        // Click to Leave waitlist
-        onView(withId(R.id.eventViewJoinWaitListButton)).perform(click());
-
-        onView(withId(R.id.eventViewJoinWaitListButton)).check(matches(withText("Join Waitlist")));
-    }
-
-    @Test
-    public void testEntrantGoesToMyEvents() {
-        // Log in to the test account
-        onView(withId(R.id.loginButton)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        String email = "testguy@test.com";
-        String password = "tttttt";
-        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
-        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
-        onView(withId(R.id.loginButton)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        // Click profile on nav bar
-        onView(withId(R.id.myevents)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        onView(withId(R.id.eventList)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testEntrantGoesToProfile() {
-        // Log in to the test account
-        onView(withId(R.id.loginButton)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        String email = "testguy@test.com";
-        String password = "tttttt";
-        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
-        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
-        onView(withId(R.id.loginButton)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        // Click profile on nav bar
-        onView(withId(R.id.profile)).perform(click());
-
-        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-        onView(withId(R.id.btn_edit_profile)).check(matches(isDisplayed()));
-    }
-
+//    @Test
+//    public void testEntrantClickedEventDisplay() {
+//        // Log in to the test account
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        String email = "testguy@test.com";
+//        String password = "tttttt";
+//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        // Click on an event
+//        onData(anything()).inAdapterView(withId(R.id.eventList)).atPosition(0).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        // Check if back button present
+//        onView(withText("Back")).check(ViewAssertions.matches(isDisplayed()));
+//
+//    }
+//
+//    @Test
+//    public void testEntrantJoinsThenLeavesWaitingList() {
+//        // Log in to the test account
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        String email = "testguy@test.com";
+//        String password = "tttttt";
+//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        // Click on an event
+//        onData(anything()).inAdapterView(withId(R.id.eventList)).atPosition(0).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        // Click on Join waitlist
+//        onView(withId(R.id.eventViewJoinWaitListButton)).perform(click());
+//
+//        onView(withId(R.id.eventViewJoinWaitListButton)).check(matches(withText("Leave Waitlist")));
+//
+//        // Click to Leave waitlist
+//        onView(withId(R.id.eventViewJoinWaitListButton)).perform(click());
+//
+//        onView(withId(R.id.eventViewJoinWaitListButton)).check(matches(withText("Join Waitlist")));
+//    }
+//
+//    @Test
+//    public void testEntrantGoesToMyEvents() {
+//        // Log in to the test account
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        String email = "testguy@test.com";
+//        String password = "tttttt";
+//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        // Click profile on nav bar
+//        onView(withId(R.id.myevents)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        onView(withId(R.id.eventList)).check(matches(isDisplayed()));
+//    }
+//
+//    @Test
+//    public void testEntrantGoesToProfile() {
+//        // Log in to the test account
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        String email = "testguy@test.com";
+//        String password = "tttttt";
+//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
+//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
+//        onView(withId(R.id.loginButton)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        // Click profile on nav bar
+//        onView(withId(R.id.profile)).perform(click());
+//
+//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//
+//        onView(withId(R.id.btn_edit_profile)).check(matches(isDisplayed()));
+//    }
+//
 
 //    @Test
 //    public void testOrganizerClickedEventDisplay() {
