@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * Copyright 2025 Parth Mittal
+ * Copyright 2025 Parth Mittal & Aasta Tsai
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import java.util.List;
  * is loaded from Firestore through EntrantsRepository and displayed using
  * EntrantStatusAdapter. The layout can optionally show a "Registered" column depending
  * on which list is being viewed (Enrolled = Yes, Chosen = No, others hidden).
+ * The users are able to cancel/delete the entrants that did not sign up for the event.
  *
  * The activity also handles CSV exporting for the final enrolled entrant list.
  * A button becomes visible only when the user is viewing enrolled entrants, and
