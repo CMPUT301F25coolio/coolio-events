@@ -7,10 +7,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
+        android:fontFamily="@font/poppins_bold"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="@drawable/purple_banner_3"
+        android:layout_height="wrap_content"
+        android:background="@color/medium_purple"
         android:gravity="center"
+        android:paddingBottom="10dp"
+        android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,7 +23,7 @@
             android:id="@+id/map_back_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="30dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
@@ -33,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="@color/dark_grey" />
+                app:tint="@color/white" />
 
         </FrameLayout>
 
@@ -41,13 +44,12 @@
             android:id="@+id/textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/poppins_bold"
             android:gravity="center_vertical"
             android:text="Waitlist Entrants Locations"
             android:textColor="@color/white"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/map_back_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/map_back_button"
