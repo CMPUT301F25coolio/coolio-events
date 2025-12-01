@@ -26,7 +26,18 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * Fragment responsible for displaying and managing user notifications.
+ *
+ * Features:
+ *  • Real-time Firestore listener to automatically update notifications.
+ *  • Swipe left to delete a notification permanently.
+ *  • Swipe right to mark a notification as read.
+ *  • Custom colored swipe backgrounds for better user feedback.
+ *
+ * This fragment requires a logged-in Firebase user. If none is found,
+ * the user is prompted to log in.
+ */
 public class NotificationFragment extends Fragment {
 
     private RecyclerView recyclerView;
@@ -34,7 +45,15 @@ public class NotificationFragment extends Fragment {
     private List<NotificationData> notificationList = new ArrayList<>();
     private FirebaseFirestore db;
     private String currentUid;
-
+    /**
+     * Initializes the fragment UI, RecyclerView, swipe actions,
+     * and starts the notification listener.
+     *
+     * @param inflater  LayoutInflater used to inflate the fragment layout.
+     * @param container Parent container for the fragment.
+     * @param savedInstanceState Previous state data, if any.
+     * @return The fully created View to display.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,14 +67,25 @@ public class NotificationFragment extends Fragment {
         //adding the delete notification feature
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-
+                    /**
+                     * Drag & drop is disabled in this RecyclerView.
+                     */
                     @Override
                     public boolean onMove(@NonNull RecyclerView recyclerView,
                                           @NonNull RecyclerView.ViewHolder viewHolder,
                                           @NonNull RecyclerView.ViewHolder target) {
                         return false; // no drag & drop
                     }
-
+                    /**
+                     * Handles swipe logic for each notification item.
+                     *
+                     * Swipe directions:
+                     *  • LEFT  → Delete notification from Firestore and remove from UI.
+                     *  • RIGHT → Mark the notification as read and update Firestore.
+                     *
+                     * @param viewHolder The swiped ViewHolder.
+                     * @param direction  Direction of the swipe.
+                     */
                     @Override
                     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                         int position = viewHolder.getAdapterPosition();
@@ -95,7 +125,15 @@ public class NotificationFragment extends Fragment {
                             adapter.notifyItemChanged(position);
                         }
                     }
-
+                    /**
+                     * Draws colored backgrounds as the user swipes.
+                     *
+                     * Colors:
+                     *  • Left swipe  → Red (delete)
+                     *  • Right swipe → Green (mark as read)
+                     *
+                     * @param c Canvas for drawing.
+                     */
                     @Override
                     public void onChildDraw(@NonNull Canvas c,
                                             @NonNull RecyclerView recyclerView,
@@ -149,7 +187,15 @@ public class NotificationFragment extends Fragment {
         // Removed the duplicate listenForNotifications() call that was in your original code.
         return view;
     }
-
+    /**
+     * Sets up a real-time Firestore listener that loads all notifications
+     * for the current user. Automatically updates the UI whenever data changes.
+     *
+     * Behavior:
+     *  • Clears the existing list.
+     *  • Converts each document into a NotificationData object.
+     *  • Updates the RecyclerView adapter.
+     */
     private void listenForNotifications() {
         if (currentUid == null || getContext() == null) return;
 
