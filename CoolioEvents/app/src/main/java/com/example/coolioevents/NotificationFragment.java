@@ -76,8 +76,8 @@ public class NotificationFragment extends Fragment {
                             notificationList.remove(position);
                             adapter.notifyItemRemoved(position);
 
-                        } else if (direction == ItemTouchHelper.RIGHT) {
-                            // ✅ Optional: swipe right = mark as read
+                        }  else if (direction == ItemTouchHelper.RIGHT) {
+                            // ✅ swipe right = mark as read
                             db.collection("notifications")
                                     .document(notif.getNotifId())
                                     .update("shown", true)
@@ -88,7 +88,10 @@ public class NotificationFragment extends Fragment {
                                         Toast.makeText(getContext(), "Error updating", Toast.LENGTH_SHORT).show();
                                     });
 
-                            // put it back visually (we didn't remove it)
+                            // update local object too
+                            notif.setShown(true);
+
+                            // rebind the same item (so blue dot disappears)
                             adapter.notifyItemChanged(position);
                         }
                     }

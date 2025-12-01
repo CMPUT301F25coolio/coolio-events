@@ -402,8 +402,9 @@ public class ProfileFragment extends Fragment {
     /**
      * After successful re-authentication, actually delete everything:
      * 1) remove from all event entrant lists
-     * 2) delete Firestore user doc
-     * 3) delete FirebaseAuth user
+     * 2) delete waitlist_locations docs
+     * 3) delete Firestore user doc
+     * 4) delete FirebaseAuth user
      */
     private void performAccountDeletion(FirebaseUser user) {
         String uid = user.getUid();
@@ -411,10 +412,14 @@ public class ProfileFragment extends Fragment {
         // 1. Remove user from all event lists via ViewModel
         userViewModel.removeUserFromAllEventLists(uid)
                 .addOnSuccessListener(unused -> {
-                    // 2. Delete Firestore user document
+
+                    // 2. Also delete any waitlist_locations docs for this entrant
+                    userViewModel.deleteEntrantFromWaitlistLocations(uid);
+
+                    // 3. Delete Firestore user document
                     db.collection("users").document(uid).delete()
                             .addOnSuccessListener(unusedUser -> {
-                                // 3. Delete FirebaseAuth user (now recently re-authenticated)
+                                // 4. Delete FirebaseAuth user (now recently re-authenticated)
                                 user.delete()
                                         .addOnSuccessListener(unusedAuth -> {
                                             Toast.makeText(getContext(),
