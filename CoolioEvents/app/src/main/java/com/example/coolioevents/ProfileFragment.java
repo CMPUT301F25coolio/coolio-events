@@ -184,10 +184,7 @@ public class ProfileFragment extends Fragment {
 
         // Navigate to the update profile screen when the button is clicked
         btnEditProfile.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new UpdateProfileFragment())
-                    .addToBackStack(null)
-                    .commit();
+            promptPasswordEditProfile();
         });
 
         logoutButton.setOnClickListener(v -> {
@@ -233,7 +230,6 @@ public class ProfileFragment extends Fragment {
                     if (document.exists()) {
                         String username = document.getString("username");
                         String name = document.getString("name");
-                        String email = document.getString("email");
 
                         if (name != null) {
                             String initials = getInitials(name);
@@ -242,7 +238,7 @@ public class ProfileFragment extends Fragment {
 
                         textUsername.setText((username != null ? username : ""));
                         textName.setText((name != null ? name : ""));
-                        textEmail.setText((email != null ? email : ""));
+                        textEmail.setText(auth.getCurrentUser().getEmail());
                     } else {
                         Toast.makeText(getContext(), "Profile not found", Toast.LENGTH_SHORT).show();
                     }
@@ -251,6 +247,7 @@ public class ProfileFragment extends Fragment {
                     Log.e("ProfileFragment", "Error fetching profile", e);
                     Toast.makeText(getContext(), "Error loading profile", Toast.LENGTH_SHORT).show();
                 });
+
     }
 
     /**
@@ -527,5 +524,69 @@ public class ProfileFragment extends Fragment {
             notificationSwitch.setChecked(false);
         }
         userChecked = true; // Set userChecked back to true to allow user to switch the switch again
+    }
+    /**
+     * Prompts user with Alert Dialog to enter their password in order to update their profile.
+     */
+    private void  promptPasswordEditProfile(){
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) return;
+
+        View view = LayoutInflater.from(getContext())
+                .inflate(R.layout.dialogue_reauth, null);
+        EditText etPassword = view.findViewById(R.id.etPassword);
+        TextView DialogMessage = view.findViewById(R.id.messageLabel);
+
+        DialogMessage.setText("Confirm password to Edit Profile");
+        new AlertDialog.Builder(requireContext())
+                .setView(view)
+                .setPositiveButton("Confirm", (dialog, which) -> {
+                    String password = etPassword.getText().toString().trim();
+                    if (password.isEmpty()) {
+                        Toast.makeText(getContext(),
+                                "Password cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    authenticateEditProfile(password);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+    /**
+     * Method that checks to see if password provided is correct, if correct
+     * send user to update profile fragment
+     */
+    private void authenticateEditProfile(String password){
+        FirebaseUser user = auth.getCurrentUser();
+        String email = user.getEmail();
+
+        if (email == null) {
+            Toast.makeText(getContext(),
+                    "No email associated with this account.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+        user.reauthenticate(credential)
+                .addOnSuccessListener(unused -> {
+                    Log.d("ProfileFragment", "Re-authentication successful");
+                    goToUpdateProfile();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ProfileFragment", "Re-authentication failed", e);
+                    Toast.makeText(getContext(),
+                            "Re-authentication failed: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                });
+    }
+    /**
+     * Method sends user to UpdateProfileFrgament
+     */
+    private void goToUpdateProfile(){
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new UpdateProfileFragment())
+                .addToBackStack(null)
+                .commit();
     }
 }

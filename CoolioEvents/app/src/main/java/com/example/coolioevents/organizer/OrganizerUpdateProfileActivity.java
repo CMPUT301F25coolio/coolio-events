@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.coolioevents.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -94,6 +95,8 @@ public class OrganizerUpdateProfileActivity extends AppCompatActivity {
             updateUserprofile(username, name, email);
 
             // Navigate back to the previous activity (OrganizerProfileActivity)
+            Toast.makeText(this, "Refresh may be needed to see updated profile",
+                    Toast.LENGTH_LONG).show();
             finish();
         });
 
@@ -125,7 +128,7 @@ public class OrganizerUpdateProfileActivity extends AppCompatActivity {
                     if (document.exists()) {
                         String username = document.getString("username");
                         String name = document.getString("name");
-                        String email = document.getString("email");
+
 
                         if (name != null) {
                             String initials = getInitials(name);
@@ -134,7 +137,7 @@ public class OrganizerUpdateProfileActivity extends AppCompatActivity {
 
                         editUsername.setText((username != null ? username : ""));
                         editName.setText((name != null ? name : ""));
-                        editEmail.setText((email != null ? email : ""));
+                        editEmail.setText(auth.getCurrentUser().getEmail());
                     } else {
                         Toast.makeText(this, "Profile not found", Toast.LENGTH_SHORT).show();
                     }
@@ -243,6 +246,15 @@ public class OrganizerUpdateProfileActivity extends AppCompatActivity {
         // Disable the save button to prevent multiple clicks
         btnSave.setEnabled(false);
 
+        // Update email on authenticator if provided email is not the same as current user's email
+        if (!auth.getCurrentUser().getEmail().equals(email)){
+            auth.getCurrentUser().updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    return;
+                }
+            });
+        }
         // Actually do the update
         userRef.update(updates)
             .addOnSuccessListener(aVoid -> {
