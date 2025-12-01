@@ -41,11 +41,12 @@ import java.util.Map;
  * PURPOSE:
  * This class represents an user viewmodel, it is used to do any
  * user related queries like getting a user with a given userid.
+ * Allows interactions with users in the database.
  *
  *
  * RATIONALE:
  * This class was designed to allow users to browse events they may be
- * interested in.
+ * interested in and to allow interaction with users in the database.
  *
  * @author Ethan Diep & Juliane Phan
  * @version 1.5
