@@ -318,12 +318,12 @@ public class ProfileFragment extends Fragment {
         }
         return ""; // If no words are found
     }
+
     /**
      * This method shows a dialog asking the user to re-enter their password
      * before deleting their account : like a confirmation
      * If password incorrect : account deleting won't go through
      */
-
     private void showReauthDialog() {
         FirebaseUser user = auth.getCurrentUser();
         if (user == null) return;
@@ -347,10 +347,10 @@ public class ProfileFragment extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+
     /**
      * This method reauthenticates the user with their password
      */
-
     private void reauthenticateAndDelete(FirebaseUser user, String password) {
         String email = user.getEmail();
         if (email == null) {
@@ -386,6 +386,11 @@ public class ProfileFragment extends Fragment {
         startActivity(intent);
         requireActivity().finish();
     }
+
+    /**
+     * This function shows the dialogue to confirm deleting the account
+     * or to cancel
+     */
     private void showDeleteConfirmationDialog() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Account")
@@ -394,6 +399,7 @@ public class ProfileFragment extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+
     /**
      * Remove this user from all event lists:
      * waitlistEntrants, chosenEntrants, acceptedEntrants, cancelledEntrants.
