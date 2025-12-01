@@ -4,11 +4,13 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +36,7 @@ import com.example.coolioevents.util.QRCodeUtil;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.shape.RelativeCornerSize;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
@@ -76,6 +81,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
     private boolean lotteryDone;
     private String eventStatus;
     private int numberOfChosenEntrants;
+    private int numberOfAcceptedEntrants;
     private int numberInWaitlist;
     private int maxEntrants;
     private Event currentEvent;
@@ -130,7 +136,8 @@ public class OrganizerEventActivity extends AppCompatActivity {
         drawLottery.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey)));
          */
             // Someone left the chosen list, and there is still people in the waitlist
-            if ((numberOfChosenEntrants < maxEntrants) && (numberInWaitlist >= 1)) {
+            if ((numberOfChosenEntrants < maxEntrants) && (numberInWaitlist >= 1) && (numberOfChosenEntrants + numberOfAcceptedEntrants < maxEntrants)) {
+                Log.e("drawn new user", "number of chosen: " + numberOfChosenEntrants + "number of accepted :" + numberOfAcceptedEntrants + "max entrants :" + maxEntrants);
                 drawNewEntrant.setEnabled(true);
                 // Set UI
                 drawNewEntrant.setBackgroundTintList(
@@ -138,6 +145,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
                 drawNewEntrant.setTextColor(
                         ContextCompat.getColor(this, R.color.dark_green));
             } else {
+                Log.e("drawn new user", "number of chosen: " + numberOfChosenEntrants + "number of accepted :" + numberOfAcceptedEntrants + "max entrants :" + maxEntrants);
                 // Either waitlist empty or chosen list full → keep disabled/grey
                 drawNewEntrant.setEnabled(false);
                 drawNewEntrant.setBackgroundTintList(
@@ -212,6 +220,7 @@ public class OrganizerEventActivity extends AppCompatActivity {
                     System.out.println("the Lottery is Done:" + lotteryDone);
                     eventStatus = event.getDetails().getStatus();
                     numberOfChosenEntrants = event.getChosenEntrants().size();
+                    numberOfAcceptedEntrants = event.getAcceptedEntrants().size();
                     numberInWaitlist = event.getWaitlistEntrants().size();
                     maxEntrants = event.getDetails().getEntrantLimit();
                     currentEvent = event;
@@ -242,6 +251,38 @@ public class OrganizerEventActivity extends AppCompatActivity {
                             Chip tag = new Chip(this);
                             tag.setText(tagString);
                             tag.setHeight(40);
+                            tag.setClickable(false);
+                            tagsGroup.addView(tag);
+                        }
+                    }
+
+                    if (tagsGroup != null && event.getDetails().getTags() != null){
+                        tagsGroup.removeAllViews();
+                        /*
+                        Taken From: Google Gemini
+                            Prompt: How do i customize tags?
+                            Taken By: Avery Dancocks
+                            Taken On: 11/28/25
+                         */
+                        final Typeface poppinsFont = ResourcesCompat.getFont(this, R.font.poppins_bold);
+
+                        for (String tagString : event.getDetails().getTags()){
+                            Chip tag = new Chip(this);
+                            final float scale = this.getResources().getDisplayMetrics().density;
+                            tag.setText(tagString);
+                            tag.setChipStrokeWidth(1.5f * this.getResources().getDisplayMetrics().density); // Use dp for consistency
+                            tag.setChipStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.dark_grey)));
+                            tag.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
+                            tag.setTextColor(ContextCompat.getColor(this, R.color.black));
+
+                            tag.setTypeface(poppinsFont);
+
+                            tag.setShapeAppearanceModel(
+                                    tag.getShapeAppearanceModel()
+                                            .toBuilder()
+                                            .setAllCornerSizes(new RelativeCornerSize(0.5f))
+                                            .build()
+                            );
                             tag.setClickable(false);
                             tagsGroup.addView(tag);
                         }
@@ -345,23 +386,6 @@ public class OrganizerEventActivity extends AppCompatActivity {
 
         });
 
-        // Draw lottery button
-        /*
-        // Draw lottery button calls function to draw lottery
-        drawLottery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentEvent != null && !lotteryDone) {
-                    eventViewModel.runLottery(currentEvent);
-                    Toast.makeText(OrganizerEventActivity.this, "Running lottery...", Toast.LENGTH_SHORT).show();
-                    currentEvent.setLotteryDone(true);
-                    lotteryDone = true;
-                    updateButtonState();
-                }
-            }
-        });
-         */
-
         // Send Notifications button
         sendNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -391,12 +415,29 @@ public class OrganizerEventActivity extends AppCompatActivity {
                 PoolingService poolingService = new PoolingService();
                 poolingService.drawReplacement(currentEventId)
                         .addOnSuccessListener(uid -> {
-                            Toast.makeText(OrganizerEventActivity.this,
-                                    "Selected replacement: " + uid,
-                                    Toast.LENGTH_SHORT).show();
+                            eventViewModel.getOrganizerById(uid).observe(OrganizerEventActivity.this, new Observer<Organizer>() {
+                                @Override
+                                public void onChanged(Organizer organizer) {
+                                    eventViewModel.getOrganizerById(uid).removeObserver(this);
 
-                            numberInWaitlist--;
-                            updateButtonState();
+                                    if (organizer != null) {
+                                        String organizerName = organizer.getProfile().getUsername();
+
+                                        Toast.makeText(OrganizerEventActivity.this,
+                                                "Selected replacement: " + organizerName,
+                                                Toast.LENGTH_SHORT).show();
+
+                                        numberInWaitlist--;
+                                        numberOfChosenEntrants++;
+                                        updateButtonState();
+                                    }
+                                    else {
+                                        Toast.makeText(OrganizerEventActivity.this,
+                                                "Could not find details for user: " + uid,
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(OrganizerEventActivity.this,

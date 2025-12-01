@@ -1,4 +1,5 @@
 package com.example.coolioevents.repo;
+import com.google.android.gms.common.internal.service.Common;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
@@ -41,29 +42,61 @@ public class EntrantsRepository {
     // Single Firestore reference that this repo will reuse
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    // Fetches people who are still waiting for the event.
+    /**
+     * Fetches people who are still waiting for the event.
+     *
+     * @param eventId
+     *      The ID of the event
+     * @return
+     *      List of Strings
+     */
     public Task<List<String>> getWaitlist(String eventId) {
         // some teams called it waitingEntrants instead of waitlistEntrants
         return fetchEntrantArray(eventId,
                 Arrays.asList("waitlistEntrants", "waitingEntrants"));
     }
-    // Fetches the ones who were selected or invited
+
+    /**
+     * Fetches the ones who were selected or invited
+     *
+     * @param eventId
+     *      The ID of the event
+     * @return
+     *      List of Strings
+     */
     public Task<List<String>> getChosen(String eventId) {
         // different versions of the field names across groups
         return fetchEntrantArray(eventId,
                 Arrays.asList("chosenEntrants", "invitedEntrants", "selectedEntrants"));
     }
-    // Fetches people that actually enrolled or got accepted in the end
+
+    /**
+     * Fetches people that actually enrolled or got accepted in the end
+     *
+     * @param eventId
+     *      The ID of the event
+     * @return
+     *      List of Strings
+     */
     public Task<List<String>> getFinalEnrolled(String eventId) {
         return fetchEntrantArray(eventId,
                 Arrays.asList("acceptedEntrants", "enrolledEntrants", "finalEntrants"));
     }
-    // Fetches people that were cancelled / removed from the event
+
+    /**
+     * Fetches people that were cancelled / removed from the event
+     *
+     * @param eventId
+     *      The ID of the event
+     * @return
+     *      List of Strings
+     */
     public Task<List<String>> getCancelled(String eventId) {
         return fetchEntrantArray(eventId,
                 Arrays.asList("canceledEntrants", "cancelledEntrants"));
     }
-    /*
+
+    /**
       Common helper to check multiple possible field names.
       I wrote this way so I don't have to duplicate the same Firestore call.
      */

@@ -99,7 +99,6 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
         eventMaxEntrees.setText(String.format("Entrant Limit: %s", String.valueOf(event.getDetails().getEntrantLimit()))); // Sets entrant limit organizer text
 
         // Setting Certain Views Invisible for search and home fragments
-        eventStatus.setVisibility(View.GONE);
         eventUserStatus.setVisibility(View.GONE);
         eventUserStatusRegistration.setVisibility(View.GONE);
 
@@ -135,74 +134,19 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
 
         }
 
-
-        /*
         // Setting event status text
         if (event.getDetails().getStatus().equals("open")) {
             // If event open make text open with green background
             eventStatus.setText("Open");
-            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
+            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.medium_green_widget));
         } else if (event.getDetails().getStatus().equals("closed")) {
             eventStatus.setText("Closed");
-            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
+            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.red_widget));
         } else {
             // If event closed make text open with red background
             eventStatus.setText(event.getDetails().getStatus());
-            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.redshapebackground));
+            eventStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.red_widget));
         }
-
-         */
-
-        /*
-        List<String> waitlist = event.getWaitlistEntrants();
-        List<String> chosenEntrants = event.getChosenEntrants();
-        List<String> acceptedEntrants = event.getAcceptedEntrants();
-        String userId = currentUser.getUid();
-
-        boolean isUserOnWaitList = waitlist.contains(userId);
-        boolean isUserChosen = chosenEntrants.contains(userId);
-        boolean isUserAccepted = acceptedEntrants.contains(userId);
-
-        System.out.println(isUserOnWaitList);
-
-        // Setting user status text
-        if (isUserOnWaitList) {
-            // Set Visibility of registration status
-            eventUserStatusRegistration.setVisibility(View.GONE);
-
-            // If the current user is in the waitlist, display an indicator that user is in the waiting list
-            eventUserStatus.setText("In Waiting List");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
-        }
-        if (!isUserOnWaitList && !isUserChosen && !isUserAccepted) {
-            // Set Visibility of registration status
-            eventUserStatusRegistration.setVisibility(View.GONE);
-
-            // If the current user is not in the waitlist, display an indicator that user is  not in the waiting list
-            eventUserStatus.setText("Not In Waiting List");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greybackground));
-        }
-        if (isUserChosen) {
-            // Set Visibility of registration status
-            eventUserStatusRegistration.setVisibility(View.VISIBLE);
-
-            // If the current user is chosen, display an indicator that user is chosen
-            eventUserStatus.setText("Chosen");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.greenshapebackground));
-        }
-        if (isUserAccepted) {
-            // Set visibility of registration status
-            eventUserStatusRegistration.setVisibility(View.VISIBLE);
-
-            // Set text and colour of user status
-            eventUserStatus.setText("Chosen");
-            eventUserStatus.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
-
-            eventUserStatusRegistration.setText("Registered");
-            eventUserStatusRegistration.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.greenshapebackground));
-        }
-
-         */
 
         //Setting tags
         tagsChipGroup.removeAllViews();
@@ -217,6 +161,14 @@ public class OrganizerEventArrayAdapter extends ArrayAdapter<Event> {
                 tagsChipGroup.addView(tag);
             }
         }
+        if (tagsChipGroup.getChildCount() == 0) {
+            // If there are no chips hide the entire group
+            tagsChipGroup.setVisibility(View.GONE);
+        } else {
+            // If there are chips make sure the group is visible
+            tagsChipGroup.setVisibility(View.VISIBLE);
+        }
+
         // Set waiting list count text
         if (event.getWaitlistEntrants().size() == 1){
 
