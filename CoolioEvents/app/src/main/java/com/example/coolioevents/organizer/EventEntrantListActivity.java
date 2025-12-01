@@ -48,7 +48,7 @@ import java.util.List;
  * and Firestore logic separate by using EntrantsRepository and an adapter, which made
  * development cleaner and easier to modify later.
  *
- * @author Parth Mittal
+ * @author Parth Mittal & Aasta Tsai
  * @version 1.0
  * @since 2025-11-27
  */

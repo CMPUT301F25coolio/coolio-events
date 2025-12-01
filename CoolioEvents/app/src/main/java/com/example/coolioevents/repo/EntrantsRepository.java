@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Copyright 2025 Parth Mittal
+ * Copyright 2025 Parth Mittal & Aasta Tsai
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import java.util.List;
  * avoids repeating the same query logic in multiple activities. Also supports
  * different field names used by teammates for better understanding.
  *
- * @author Parth Mittal
+ * @author Parth Mittal & Aasta Tsai
  * @version 1.1
  * @since 2025-11-07
  */
