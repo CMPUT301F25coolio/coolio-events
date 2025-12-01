@@ -16,6 +16,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 import static org.junit.Assert.fail;
 
+import static java.util.EnumSet.allOf;
+
 import android.Manifest;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -26,8 +28,10 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.example.coolioevents.authentication.WelcomeActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -303,11 +307,18 @@ public class OrganizersTest {
 
         // Check if the event was made (should appear in my events) + check if document made on db
         onView(withText("Test Event Name")).check(matches(isDisplayed()));
-        db.collection("events").whereEqualTo("details.eventName", eventName).get().addOnFailureListener(new OnFailureListener() {
+        db.collection("events").whereEqualTo("details.eventName", eventName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                // If document not found, fail the test
-                fail("Couldn't find event with eventname in firestore db");
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot docSnap = task.getResult();
+                    if (docSnap.isEmpty()){
+                        fail("Couldn't find event with eventName in firestore.");
+                    }
+                }
+                else{
+                    fail("Query Failed");
+                }
             }
         });
     }
@@ -396,8 +407,11 @@ public class OrganizersTest {
                 .perform(swipeUp(), swipeUp());
 
         // Click join button
+        onView(withId(R.id.eventViewJoinWaitListButton)).check(matches(isDisplayed()));
         onView(withId(R.id.eventViewJoinWaitListButton))
                 .perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 
         // Logout
         onView(withId(R.id.profile)).perform(click());
@@ -417,18 +431,27 @@ public class OrganizersTest {
         // Click the Send Notifications button
         onView(withId(R.id.scrollView2))
                 .perform(swipeUp(), swipeUp());
+
         onView(withId(R.id.sendNotificationsButton)).perform(click());
+
 
         // Type and send the notification message
         onView(withId(R.id.messageEditText)).perform(ViewActions.typeText("Test Notification Message"));
         onView(withId(R.id.sendMessageButton)).perform(click());
-
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
         // Check that notification was made on the firestore
-        db.collection("notficiations").whereEqualTo("receiver", eventName).get().addOnFailureListener(new OnFailureListener() {
+        db.collection("notficiations").whereEqualTo("receiver", "entrant").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                // If document not found, fail the test
-                fail("Couldn't find notification to entrant in waiting list in firestore.");
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot docSnap = task.getResult();
+                    if (docSnap.isEmpty()){
+                        fail("Couldn't find notification to entrant in waiting list in firestore.");
+                    }
+                }
+                else{
+                    fail("Query Failed");
+                }
             }
         });
     }
