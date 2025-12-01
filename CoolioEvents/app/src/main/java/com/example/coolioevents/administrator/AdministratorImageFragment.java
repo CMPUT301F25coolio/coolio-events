@@ -102,7 +102,7 @@ public class AdministratorImageFragment extends Fragment {
                 .load(currentImageURL) // loads poster URL
                 .placeholder(R.drawable.ic_image_placeholder)
                 .error(R.drawable.ic_image_error)
-                .fallback(R.drawable.ic_image_placeholder) // If imageURL is null
+                .fallback(R.drawable.logo) // If imageURL is null
                 .into(eventPoster);
 
         // Set organizer username

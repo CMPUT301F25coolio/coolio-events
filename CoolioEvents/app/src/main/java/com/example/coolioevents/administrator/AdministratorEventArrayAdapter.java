@@ -90,7 +90,7 @@ public class AdministratorEventArrayAdapter extends ArrayAdapter<Event> {
                 .load(event.getDetails().getPosterUrl()) // loads poster URL
                 .placeholder(R.drawable.ic_image_placeholder)
                 .error(R.drawable.ic_image_error)
-                .fallback(R.drawable.ic_image_placeholder) // If imageURL is null
+                .fallback(R.drawable.logo) // If imageURL is null
                 .into(eventPosterImageView);
 
         // Setting event details (excludes the user's status such as "In Waiting List", "Selected", etc. since this is the Administrator's screen)
