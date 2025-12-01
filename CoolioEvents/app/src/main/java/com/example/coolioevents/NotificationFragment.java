@@ -27,16 +27,30 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 /**
- * Fragment responsible for displaying and managing user notifications.
+ * Copyright 2025 Niharika Rawat
  *
- * Features:
- *  • Real-time Firestore listener to automatically update notifications.
- *  • Swipe left to delete a notification permanently.
- *  • Swipe right to mark a notification as read.
- *  • Custom colored swipe backgrounds for better user feedback.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This fragment requires a logged-in Firebase user. If none is found,
- * the user is prompted to log in.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * PURPOSE:
+ * This fragment displays and manages user notifications. It listens for
+ * real-time updates from Firestore, supports swipe gestures for deleting
+ * or marking notifications as read, and provides visual feedback through
+ * custom swipe backgrounds. A logged-in Firebase user is required for
+ * loading personal notifications.
+ *
+ * @author Niharika Rawat
+ * @version 1.0
+ * @since 2025-11-17
  */
 public class NotificationFragment extends Fragment {
 
