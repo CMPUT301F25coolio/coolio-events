@@ -148,7 +148,7 @@ public class AdministratorNotificationFragment extends Fragment {
             typeView.setText("Not Chosen");
         }
         if (typeString.equals("organizerToWaitlistEntrants")) {
-            typeView.setText("WL Entrant");
+            typeView.setText("Waitlist Entrant");
         }
         if (typeString.equals("organizerToChosenEntrants")) {
             typeView.setText("Chosen Entrant");
