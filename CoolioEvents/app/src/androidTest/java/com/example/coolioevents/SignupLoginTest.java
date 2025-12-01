@@ -23,8 +23,10 @@ import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.example.coolioevents.authentication.WelcomeActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthSettings;
@@ -32,6 +34,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -149,7 +152,6 @@ public class SignupLoginTest {
     public void testGoToLogin(){
         // Tests to make sure the Welcome Screen login button directs user to login screen
         // Click login button
-        // TODO: NEEDS TO BE FIXED
         onView(withId(R.id.loginButton)).perform(click());
 
         // Ensures login button sends user to login screen (welcome back text should be displayed)
@@ -172,7 +174,7 @@ public class SignupLoginTest {
     @Test
     public void testGoToSignup(){
         // Tests to make sure the Welcome Screen signup button directs user to signup screen
-        // TODO: UPDATE WHENEVER UI GETS UPDATED
+
         // Click signup button
         onView(withId(R.id.signupButton)).perform(click());
 
@@ -355,21 +357,28 @@ public class SignupLoginTest {
         assert(mAuth.getCurrentUser() != null); // Check that user is logged in - ie current user is not null
 
         // Check that the user was made on the database - with correct fields
-        db.collection("users").document(mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                assert(documentSnapshot.getString("name").equals(name));
-                assert(documentSnapshot.getString("username").equals(username));
-                assert(documentSnapshot.getString("email").equals(email));
-                assert(documentSnapshot.getString("role").equals("Organizer"));
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        fail("Couldn't find organizer user Document");
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot qSnap = task.getResult();
+                    if (qSnap.isEmpty()){
+                        fail("Couldn't find notification to entrant in waiting list in firestore.");
                     }
-                });;
+                    else {
+                        DocumentSnapshot doc = qSnap.getDocuments().get(0);
+                        if (!doc.getString("name").equals(name) ||
+                                !doc.getString("role").equals("Organizer") ||
+                                !doc.getString("username").equals(username)){
+                            fail("User document has wrong fields");
+                        }
+                    }
+                }
+                else{
+                    fail("Query Failed");
+                }
+            }
+        });
     }
 
     @Test
@@ -378,9 +387,9 @@ public class SignupLoginTest {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-        String name = "organizer";
-        String username = "organizer";
-        String email = "organizer@test.com";
+        String name = "entrant";
+        String username = "entrant";
+        String email = "entrant@test.com";
         String password = "password";
 
         // Click signup button
@@ -406,22 +415,28 @@ public class SignupLoginTest {
         assert(mAuth.getCurrentUser() != null); // Check that user is logged in - ie current user is not null
 
         // Check that the user's document was made on the database - with correct fields
-        db.collection("users").document(mAuth.getCurrentUser().getUid()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                assert(documentSnapshot.getString("name").equals(name));
-                assert(documentSnapshot.getString("username").equals(username));
-                assert(documentSnapshot.getString("email").equals(email));
-                assert(documentSnapshot.getString("role").equals("Entrant"));
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        fail("Couldn't find entrant user Document");
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot qSnap = task.getResult();
+                    if (qSnap.isEmpty()){
+                        fail("Couldn't find notification to entrant in waiting list in firestore.");
                     }
-                });
+                    else {
+                        DocumentSnapshot doc = qSnap.getDocuments().get(0);
+                        if (!doc.getString("name").equals(name) ||
+                                !doc.getString("role").equals("Entrant") ||
+                                !doc.getString("username").equals(username)){
+                            fail("User document has wrong fields");
+                        }
+                    }
+                }
+                else{
+                    fail("Query Failed");
+                }
+            }
+        });
     }
 
     @Test
@@ -611,166 +626,4 @@ public class SignupLoginTest {
         onView(withText(email)).check(matches(isDisplayed())); // Check if user is signed into correct account (with same email)
         assert(mAuth.getCurrentUser() != null); // Check that currentUser is not null
     }
-
-
-
-//    @Test
-//    public void testEntrantClickedEventDisplay() {
-//        // Log in to the test account
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        String email = "testguy@test.com";
-//        String password = "tttttt";
-//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
-//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        // Click on an event
-//        onData(anything()).inAdapterView(withId(R.id.eventList)).atPosition(0).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        // Check if back button present
-//        onView(withText("Back")).check(ViewAssertions.matches(isDisplayed()));
-//
-//    }
-//
-//    @Test
-//    public void testEntrantJoinsThenLeavesWaitingList() {
-//        // Log in to the test account
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        String email = "testguy@test.com";
-//        String password = "tttttt";
-//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
-//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        // Click on an event
-//        onData(anything()).inAdapterView(withId(R.id.eventList)).atPosition(0).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        // Click on Join waitlist
-//        onView(withId(R.id.eventViewJoinWaitListButton)).perform(click());
-//
-//        onView(withId(R.id.eventViewJoinWaitListButton)).check(matches(withText("Leave Waitlist")));
-//
-//        // Click to Leave waitlist
-//        onView(withId(R.id.eventViewJoinWaitListButton)).perform(click());
-//
-//        onView(withId(R.id.eventViewJoinWaitListButton)).check(matches(withText("Join Waitlist")));
-//    }
-//
-//    @Test
-//    public void testEntrantGoesToMyEvents() {
-//        // Log in to the test account
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        String email = "testguy@test.com";
-//        String password = "tttttt";
-//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
-//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        // Click profile on nav bar
-//        onView(withId(R.id.myevents)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        onView(withId(R.id.eventList)).check(matches(isDisplayed()));
-//    }
-//
-//    @Test
-//    public void testEntrantGoesToProfile() {
-//        // Log in to the test account
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        String email = "testguy@test.com";
-//        String password = "tttttt";
-//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
-//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        // Click profile on nav bar
-//        onView(withId(R.id.profile)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        onView(withId(R.id.btn_edit_profile)).check(matches(isDisplayed()));
-//    }
-//
-
-//    @Test
-//    public void testOrganizerClickedEventDisplay() {
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        String email = "test@testy.com";
-//        String password = "testpassword";
-//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));  // Type Email into name field
-//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));  // Type Password into password field
-//        onView(withId(R.id.loginButton)).perform(click());
-//
-//        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//
-//        // Go to My Events
-//        onView(withId(R.id.optMyEvents)).perform(click());
-//
-//        // Click on an event
-//        // TODO - finish (How do I make this test organizer have a test event without messing with the database?)
-//    }
-
-
-//    @Test
-//    public void testSignupAsOrganizer(){
-//        // Test to see if Signing Up as Organizer brings you to organizer screen
-//
-//        String name = "testName";
-//        String username = "testName";
-//        String email = "test@testyy.com";
-//        String password = "testpassword";
-//
-//        // Click signup button
-//        onView(withId(R.id.signupButton)).perform(click());
-//
-//        // Type Name into name field
-//        onView(withId(R.id.nameEditText)).perform(ViewActions.typeText(name));
-//        // Type Username into name field
-//        onView(withId(R.id.usernameEditText)).perform(ViewActions.typeText(username));
-//        // Type Email into name field
-//        onView(withId(R.id.emailEditText)).perform(ViewActions.typeText(email));
-//        // Type Name into name field
-//        onView(withId(R.id.passwordEditText)).perform(ViewActions.typeText(password));
-//
-//        // Click Organizer Button
-//        onView(withId(R.id.organizerButton)).perform(click());
-//
-//        // Click Create Account Button
-//        onView(withId(R.id.createAccountButton)).perform(click());
-//
-//        //Checks to see if Make event button is displayed to see if in Organizer Screen
-//        onView(withId(R.id.optMakeEvent)).check(matches(isDisplayed()));
-//
-//        //TODO: finish
-//
-//    }
-
 }

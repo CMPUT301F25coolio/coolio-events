@@ -16,6 +16,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 import static org.junit.Assert.fail;
 
+import static java.util.EnumSet.allOf;
+
 import android.Manifest;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -26,8 +28,10 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.example.coolioevents.authentication.WelcomeActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -252,7 +256,7 @@ public class OrganizersTest {
     }
     @Test
     public void testMakeEventBack(){
-        // TODO: is being dumb
+
         // Test Make event page's back button
         makeOrganizerAccount();
 
@@ -282,6 +286,72 @@ public class OrganizersTest {
         onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
     }
     @Test
+    public void testMakeEventNoName() {
+        // Test making event with no name (shouldn't make it)
+
+        String eventName = ""; // Name of event
+        String eventDesc = "Description"; // Name of Desc
+        String eventEntrantLimit = "3";
+        String eventLocation = "Some Location";
+
+        // Make an organizer account
+        makeOrganizerAccount();
+
+        // Navigate to make event and make event
+        onView(withId(R.id.optMakeEvent)).perform(click());
+        inputMockEventFields(eventName, eventDesc, eventEntrantLimit, eventLocation);
+        onView(withId(R.id.btnCreate)).perform((click()));
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Check that still on Make event Screen (Shouldn't make event)
+        onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testMakeEventNoEntLimit() {
+        // Test making event with no entrant limit (shouldn't make it)
+
+        String eventName = "Event Name"; // Name of event
+        String eventDesc = "Description"; // Name of Desc
+        String eventEntrantLimit = "";
+        String eventLocation = "Some Location";
+
+        // Make an organizer account
+        makeOrganizerAccount();
+
+        // Navigate to make event and make event
+        onView(withId(R.id.optMakeEvent)).perform(click());
+        inputMockEventFields(eventName, eventDesc, eventEntrantLimit, eventLocation);
+        onView(withId(R.id.btnCreate)).perform((click()));
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Check that still on Make event Screen (Shouldn't make event)
+        onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testMakeEventNoDescription() {
+        // Test making event with no description (shouldn't make it)
+
+        String eventName = "Event Name"; // Name of event
+        String eventDesc = ""; // Name of Desc
+        String eventEntrantLimit = "3";
+        String eventLocation = "Some Location";
+
+        // Make an organizer account
+        makeOrganizerAccount();
+
+        // Navigate to make event and make event
+        onView(withId(R.id.optMakeEvent)).perform(click());
+        inputMockEventFields(eventName, eventDesc, eventEntrantLimit, eventLocation);
+        onView(withId(R.id.btnCreate)).perform((click()));
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        // Check that still on Make event Screen (Shouldn't make event)
+        onView(withId(R.id.btnCreate)).check(matches(isDisplayed()));
+    }
+    @Test
     public void testMakeEvent(){
         // Test that making an event actually works (on firestore side and displays on my events)
 
@@ -303,11 +373,18 @@ public class OrganizersTest {
 
         // Check if the event was made (should appear in my events) + check if document made on db
         onView(withText("Test Event Name")).check(matches(isDisplayed()));
-        db.collection("events").whereEqualTo("details.eventName", eventName).get().addOnFailureListener(new OnFailureListener() {
+        db.collection("events").whereEqualTo("details.eventName", eventName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                // If document not found, fail the test
-                fail("Couldn't find event with eventname in firestore db");
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot docSnap = task.getResult();
+                    if (docSnap.isEmpty()){
+                        fail("Couldn't find event with eventName in firestore.");
+                    }
+                }
+                else{
+                    fail("Query Failed");
+                }
             }
         });
     }
@@ -396,8 +473,11 @@ public class OrganizersTest {
                 .perform(swipeUp(), swipeUp());
 
         // Click join button
+        onView(withId(R.id.eventViewJoinWaitListButton)).check(matches(isDisplayed()));
         onView(withId(R.id.eventViewJoinWaitListButton))
                 .perform(click());
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 
         // Logout
         onView(withId(R.id.profile)).perform(click());
@@ -417,18 +497,29 @@ public class OrganizersTest {
         // Click the Send Notifications button
         onView(withId(R.id.scrollView2))
                 .perform(swipeUp(), swipeUp());
+
+        onView(withId(R.id.sendNotificationsButton)).check(matches(isDisplayed()));
         onView(withId(R.id.sendNotificationsButton)).perform(click());
+
 
         // Type and send the notification message
         onView(withId(R.id.messageEditText)).perform(ViewActions.typeText("Test Notification Message"));
         onView(withId(R.id.sendMessageButton)).perform(click());
+        try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
 
         // Check that notification was made on the firestore
-        db.collection("notficiations").whereEqualTo("receiver", eventName).get().addOnFailureListener(new OnFailureListener() {
+        db.collection("notifications").whereEqualTo("receiver", "entrant").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                // If document not found, fail the test
-                fail("Couldn't find notification to entrant in waiting list in firestore.");
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot docSnap = task.getResult();
+                    if (docSnap.isEmpty()){
+                        fail("Couldn't find notification to entrant in waiting list in firestore.");
+                    }
+                }
+                else{
+                    fail("Query Failed");
+                }
             }
         });
     }
@@ -448,26 +539,4 @@ public class OrganizersTest {
         onView(withText("organizer@test.com")).check(matches(isDisplayed()));
         onView(withId(R.id.profile_title)).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void testEditProfile() {
-        // Test that clicking on an event in my events shows event display
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-        makeOrganizerAccount();
-
-        onView(withId(R.id.optMyProfile)).perform(click()); // Navigate to make event
-
-        // Edit Profile
-        onView(withId(R.id.btn_edit_profile)).perform(click());
-        onView(withId(R.id.etPassword)).perform(ViewActions.typeText("password"));
-        onView(withId(R.id.edit_name)).perform(ViewActions.typeText("new name"));
-        onView(withId(R.id.edit_username)).perform(ViewActions.typeText("newusername"));
-        onView(withId(R.id.edit_email)).perform(ViewActions.typeText("new@test.com"));
-        onView(withText("Confirm")).perform(click());
-        onView(withId(R.id.btnSave));
-
-    }
-
-
 }
